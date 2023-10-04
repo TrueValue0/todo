@@ -83,7 +83,7 @@ export default function Calendario() {
             ver: true
         }
         const calendario = clickInfo.view.calendar;
-        setEvento(calendario)
+        setEvento(nuevoEvento)
     }
 
     const handleEvents = (events) => {

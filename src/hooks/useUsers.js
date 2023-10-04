@@ -87,8 +87,9 @@ export function useUsers() {
 
         const unsubscribe = onSnapshot(usuarios, (querySnapshot) => {
             querySnapshot.forEach((documento) => {
+                const datos = documento.data()
                 setIds(prev => [prev, ...documento.id]);
-                setDatos(prev => [prev, ...documento.data()]);
+                setDatos(prev => [prev, datos]);
             })
         })
 

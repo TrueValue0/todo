@@ -19,7 +19,7 @@ export default function Informes() {
                     <Button>Buscar</Button>
                 </Form.Group>
             </Form>
-            {/* <PDFDocument /> */}
+            <PDFDocument />
         </Layout>
     )
 }

@@ -76,11 +76,11 @@ export function useTareas({ idParam } = {}) {
         updateDoc(nuevosEventos);
     }
 
-    useEffect(() => {
+    /* useEffect(() => {
         const unsubscribe = onSnapshot(tareas, (querySnapshot) => {
             console.log(querySnapshot.data());
         })
-    }, [])
+    }, []) */
 
     useEffect(() => {
         /* if (!loading)  */cargarDoc();

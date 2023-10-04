@@ -19,13 +19,14 @@ function CustomToggle({ children, eventKey }) {
 
 
 export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
-    const { title = '', id = 0, extendedProps: { completed, description = '' }, start } = evento;
+    const { title = '', id = 0, extendedProps: { completed, description = '', tipo = '' }, start } = evento;
     const pointer = { cursor: 'pointer' };
     const [tarea, setTarea] = useState({
         id,
         title,
         description,
         completed,
+        tipo,
         start
     })
     return (
@@ -48,12 +49,14 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                             </Col>
                         </Form.Group>
                             <Form.Group as={Row}>
-                                <Form.Label column sm="3" className='text-center'>Titulo</Form.Label>
+                                <Form.Label column sm="3" className='text-center'>Tipo</Form.Label>
                                 <Col sm="9">
-                                    <Form.Control
-                                        onChange={event => setTarea(prev => ({ ...prev, title: event.target.value }))}
-                                        value={tarea.title}
-                                    />
+                                    <Form.Select onChange={event => setTarea(prev => ({ ...prev, tipo: event.target.value }))}>
+                                        <option>General</option>
+                                        <option value="visita">Visita</option>
+                                        <option value="venta">Venta</option>
+                                        <option value="tour">Tour</option>
+                                    </Form.Select>
                                 </Col>
                             </Form.Group>
                             <Form.Group as={Row} className='mt-2'>

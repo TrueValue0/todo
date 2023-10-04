@@ -45,9 +45,9 @@ export const navBottom = [
         label: 'Principal',
     },
     {
-        path: '/notificaciones',
-        Icon: BiBell,
-        label: 'Notificaciones',
+        path: '/informes',
+        Icon: BiSolidBarChartAlt2,
+        label: 'Informes',
     },
     {
         path: '/user',

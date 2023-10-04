@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getDoc, doc, setDoc } from "firebase/firestore";
+import { getDoc, doc, setDoc, onSnapshot } from "firebase/firestore";
 import { tareas } from "@/config/firebaseapp";
 import { useAuth } from "@/context/AuthProvider";
 
@@ -45,9 +45,8 @@ export function useTareaDoc({ idParam } = {}) {
 
     const completeEvent = (id, completed) => {
         let events = datos.map(event => {
-            if (event.id === id) {
+            if (event.id === id)
                 return { ...event, extendedProps: { ...event.extendedProps, completed } }
-            }
             return event;
         })
         updateDoc(events)
@@ -62,7 +61,8 @@ export function useTareaDoc({ idParam } = {}) {
                     start: evento.start,
                     extendedProps: {
                         completed: evento.completed,
-                        description: evento.descripcion
+                        description: evento.descripcion,
+                        tipo: evento.tipo,
                     }
                 }
             }
@@ -77,8 +77,8 @@ export function useTareaDoc({ idParam } = {}) {
     }
 
     useEffect(() => {
-        /* if (!loading)  */cargarDoc();
-    }, [loading, datos])
+        cargarDoc();
+    }, [loading, datos]);
 
     return { datos, deleteEvent, completeEvent, updateEvent, addEvent };
 }
