@@ -1,0 +1,14 @@
+.urgent {
+    background-color: rgb(212, 157, 19);
+}
+
+.container-modal {
+    width: 150px;
+    height: 150px;
+    position: absolute;
+    border: 1px solid black;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
