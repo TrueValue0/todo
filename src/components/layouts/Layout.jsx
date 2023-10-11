@@ -9,6 +9,11 @@ import { useNavigate } from "react-router-dom";
 import { Button } from 'react-bootstrap';
 import '@/components/layouts/layout.css'
 import { MenuList } from './MenuList';
+import DropdownToggle from 'react-bootstrap/DropdownToggle'
+import DropdownMenu from 'react-bootstrap/DropdownMenu'
+import DropdownItem from 'react-bootstrap/DropdownItem'
+import Dropdown from 'react-bootstrap/Dropdown';
+import Imagen from '@/components/layouts/Imagen'
 
 export default function Layout({ children }) {
     const movil = useMediaQuery('550');
@@ -24,7 +29,7 @@ export default function Layout({ children }) {
     return (
         <>
             <div>
-                <nav className={open ? 'open' : ''}>
+                <nav className={open ? 'open' : 'd-flex justify-content-between align-items-center'}>
                     <div className="logo">
                         <BiMenu className='menu-icon' onClick={toogleMenu} />
                         <span className="logo-name">Tareas</span>
@@ -53,6 +58,17 @@ export default function Layout({ children }) {
                                 </li>
                             </div>
                         </div>
+                    </div>
+                    <div className='d-flex gap-4 p-3'>
+                        <Dropdown>
+                            <DropdownToggle as={Imagen} />
+                            <DropdownMenu>
+                                <DropdownItem eventKey='1' >Home</DropdownItem>
+                                <DropdownItem eventKey='2'>Click</DropdownItem>
+                                <DropdownItem eventKey='3'>Nombre</DropdownItem>
+                                <DropdownItem eventKey='4' disabled>Rol</DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
                     </div>
                 </nav>
                 <section className='overlay' onClick={toogleMenu}></section>
