@@ -1,4 +1,3 @@
-"use client"
 import React, { useState } from 'react'
 import Layout from '@/components/layouts/Layout'
 import FullCalendar from '@fullcalendar/react'
@@ -59,7 +58,7 @@ export default function Calendario() {
             let evento = {
                 id: crypto.randomUUID(),
                 title: newEvent.titulo,
-                start: newEvent.info.startStr,
+                start: newEvent.fecha,
                 end: newEvent.info.endStr,
                 allDay: newEvent.info.allDay,
                 extendedProps: {
@@ -75,7 +74,6 @@ export default function Calendario() {
     }
 
     const handleEventClick = (clickInfo) => {
-        console.log(clickInfo.event);
         let nuevoEvento = {
             titulo: clickInfo.event.title,
             descripcion: clickInfo.event.extendedProps.description,
@@ -89,6 +87,8 @@ export default function Calendario() {
     const handleEvents = (events) => {
         setState(prev => ({ ...prev, currentEvents: events }))
     }
+
+    console.log('aiua', datos);
 
     return (
         <Layout>
@@ -105,23 +105,26 @@ export default function Calendario() {
                         headerToolbar={{
                             left: 'prev,next',
                             center: 'title',
-                            right: 'dayGridMonth,timeGridDay'
+                            right: 'dayGridMonth,timeGridWeek,timeGridDay'
                         }}
-                        initialView={'timeGridDay'}
+                        slotDuration='00:15:00' //Intervalos de cada 15min
+                        initialView={'timeGridWeek'}
+                        slotMinTime='08:00:00' // Hora de inicio
+                        slotMaxTime='20:00:00' // Hora de fin
+                        hiddenDays={[0, 6]} // Oculta domingo (0) y sábado (6)
                         editable
                         selectable
                         selectMirror
-                        weekends
                         dayMaxEvents={true}
-                        select={(selectInfo) => setNewEvent(prev => ({ ...prev, ver: true, info: selectInfo }))}
+                        select={(selectInfo) => setNewEvent(prev => ({ ...prev, ver: true, info: selectInfo, fecha: selectInfo.startStr }))} //Funcion al crear un envento.
                         eventContent={renderEventContent} // custom render function
-                        eventClick={handleEventClick}
-                        eventsSet={handleEvents} // called after events are initialized/added/changed/removed
+                        eventClick={handleEventClick} // Funcion que se ejecuta al editar los eventos
+                        //eventsSet={handleEvents} // called after events are initialized/added/changed/removed
                         locale={esLocale} // Traduccion a español
                     />
                 </div>
-                <ModalEditarEvento evento={evento} cerrar={cerrarEvento} />
-                <ModalAnyadirEvento evento={newEvent} cerrar={cerrarNewEvento} seter={setNewEvent} guardar={handleDateSelect} />
+                {evento.ver && <ModalEditarEvento evento={evento} cerrar={cerrarEvento} />}
+                {newEvent.ver && <ModalAnyadirEvento evento={newEvent} cerrar={cerrarNewEvento} seter={setNewEvent} guardar={handleDateSelect} />}
             </div>
         </Layout>
     )

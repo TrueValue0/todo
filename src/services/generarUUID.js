@@ -7,3 +7,9 @@ export function generateUUID() {
     });
     return uuid;
 }
+
+export function formatearFecha(fecha) {
+    var partes = fecha.split("-");
+    var fechaFormateada = partes[2] + "/" + partes[1] + "/" + partes[0];
+    return fechaFormateada;
+}

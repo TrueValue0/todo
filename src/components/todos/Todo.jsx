@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { FormCheck, ListGroup, Accordion, Button, Form, Row, Col } from 'react-bootstrap'
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import { BiTrash } from 'react-icons/bi'
+import { formatearFecha } from '@/services/generarUUID.js'
 
 function CustomToggle({ children, eventKey }) {
     const decoratedOnClick = useAccordionButton(eventKey);
@@ -35,20 +36,27 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                 <Accordion className='border-bottom'>
                     <div className='d-flex justify-content-between align-items-center '>
                         <FormCheck value={completed} onChange={(event) => completeTodo(id, event.target.checked)} />
-                        <CustomToggle eventKey='0'><h4 style={pointer} className={completed ? 'text-decoration-line-through m-0 my-2' : 'm-0 my-2'}>{tarea.title}</h4></CustomToggle>
+                        <CustomToggle eventKey='1'><h4 style={pointer} className={completed ? 'text-decoration-line-through m-0 my-2' : 'm-0 my-2'}>{tarea.title}</h4></CustomToggle>
                         <BiTrash onClick={() => removeTodo(id)} style={pointer} className='fs-4' />
                     </div>
-                    <Accordion.Collapse eventKey='0'>
-                        <Form className='d-flex flex-column justify-content-center align-content-center'>           <Form.Group as={Row}>
-                            <Form.Label column sm="3" className='text-center'>Titulo</Form.Label>
-                            <Col sm="9">
-                                <Form.Control
-                                    onChange={event => setTarea(prev => ({ ...prev, title: event.target.value }))}
-                                    value={tarea.title}
-                                />
-                            </Col>
-                        </Form.Group>
+                    <Accordion.Collapse eventKey='1'>
+                        <Form className='d-flex flex-column justify-content-center align-content-center'>
                             <Form.Group as={Row}>
+                                <Form.Label column sm="3" className='text-center'>Fecha</Form.Label>
+                                <Col sm="9">
+                                    <span>{formatearFecha(tarea.start)}</span>
+                                </Col>
+                            </Form.Group>
+                            <Form.Group as={Row}>
+                                <Form.Label column sm="3" className='text-center'>Titulo</Form.Label>
+                                <Col sm="9">
+                                    <Form.Control
+                                        onChange={event => setTarea(prev => ({ ...prev, title: event.target.value }))}
+                                        value={tarea.title}
+                                    />
+                                </Col>
+                            </Form.Group>
+                            <Form.Group as={Row} className='mt-1'>
                                 <Form.Label column sm="3" className='text-center'>Tipo</Form.Label>
                                 <Col sm="9">
                                     <Form.Select onChange={event => setTarea(prev => ({ ...prev, tipo: event.target.value }))}>
@@ -59,7 +67,7 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                                     </Form.Select>
                                 </Col>
                             </Form.Group>
-                            <Form.Group as={Row} className='mt-2'>
+                            <Form.Group as={Row} className='mt-1'>
                                 <Form.Label column sm="3" className='text-center'>Descripcion</Form.Label>
                                 <Col sm="9">
                                     <Form.Control

@@ -26,10 +26,14 @@ export default function Layout({ children }) {
         logout();
         navigate('/login');
     }
+
+    const selectUser = (e) => {
+        console.log(e);
+    }
     return (
         <>
             <div>
-                <nav className={open ? 'open' : 'd-flex justify-content-between align-items-center'}>
+                <nav className={open ? 'open d-flex justify-content-between align-items-center' : 'd-flex justify-content-between align-items-center'}>
                     <div className="logo">
                         <BiMenu className='menu-icon' onClick={toogleMenu} />
                         <span className="logo-name">Tareas</span>
@@ -43,30 +47,16 @@ export default function Layout({ children }) {
                             <ul className="lists">
                                 <MenuList items={navLista} />
                             </ul>
-                            <div className="bottom-cotent" style={movil ? { marginBottom: 90 } : { marginBottom: 0 }}>
-                                <li className="list">
-                                    <NavLink to="/user">
-                                        <BiUser className='icon' />
-                                        <span className="link">Perfil</span>
-                                    </NavLink>
-                                </li>
-                                <li className="list">
-                                    <Button className="nav-link" onClick={cerrarSesion}>
-                                        <BiLogOut className='icon' />
-                                        <span className="link">Cerrar Sesion</span>
-                                    </Button>
-                                </li>
-                            </div>
                         </div>
                     </div>
-                    <div className='d-flex gap-4 p-3'>
-                        <Dropdown>
+                    <div className='d-flex gap-4 p-3 align-items-center'>
+                        <span>Nombre</span>
+                        <Dropdown align='end'>
                             <DropdownToggle as={Imagen} />
-                            <DropdownMenu>
-                                <DropdownItem eventKey='1' >Home</DropdownItem>
-                                <DropdownItem eventKey='2'>Click</DropdownItem>
-                                <DropdownItem eventKey='3'>Nombre</DropdownItem>
-                                <DropdownItem eventKey='4' disabled>Rol</DropdownItem>
+                            <DropdownMenu style={{ right: 0 }} onSelect={selectUser} >
+                                <DropdownItem onClick={() => navigate('/user')} className='text-center' eventKey='1'><BiUser className='fs-5' /> Perfil</DropdownItem>
+                                <DropdownItem onClick={cerrarSesion} className='text-center' eventKey='2'> <BiLogOut className='fs-5' /> Salir</DropdownItem>
+                                <DropdownItem disabled className='text-center' eventKey='1'> ROL</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
                     </div>

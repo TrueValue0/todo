@@ -78,7 +78,7 @@ export function useTareaDoc({ idParam } = {}) {
 
     useEffect(() => {
         cargarDoc();
-    }, [loading, datos]);
+    }, []);
 
     return { datos, deleteEvent, completeEvent, updateEvent, addEvent };
 }
