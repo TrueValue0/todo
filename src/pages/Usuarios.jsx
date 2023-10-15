@@ -1,12 +1,15 @@
+import { useState } from "react";
 import Layout from "@/components/layouts/Layout";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import { DataGrid } from '@mui/x-data-grid';
 import { ButtonGroup } from "react-bootstrap";
 import { BiEdit, BiTrash, BiPlus } from "react-icons/bi";
-/* import { useUsers } from "@/hooks/useUsers"; */
+import AddUser from "@/components/usuarios/AddUser";
 
 export default function Usuarios() {
+
+    const [add, setAdd] = useState(false)
 
     const rows = [
         { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
@@ -46,76 +49,86 @@ export default function Usuarios() {
 
     return (
         <Layout>
-            <Container className="d-flex flex-wrap flex-column align-content-center" style={{ marginTop: 70 }}>
-                <Button style={{ width: '170px' }} className="my-2 align-self-end">Añadir Usuario <BiPlus rotate={45} className="fs-5" /> </Button>
-                <DataGrid
-                    localeText={esText}
-                    rows={rows}
-                    columns={[
-                        {
-                            field: 'id',
-                            headerName: 'ID',
-                            width: 90
-                        },
-                        {
-                            field: 'firstName',
-                            headerName: 'First name',
-                            width: 150,
-                            editable: true,
-                        },
-                        {
-                            field: 'lastName',
-                            headerName: 'Apellidos',
-                            width: 150,
-                            editable: true,
-                        },
-                        {
-                            field: 'age',
-                            headerName: 'Age',
-                            type: 'number',
-                            width: 110,
-                            editable: true,
-                        },
-                        {
-                            field: 'action',
-                            headerName: 'Acciones',
-                            sortable: false,
-                            width: 260,
-                            renderCell: (params) => {
-                                const onClick = (e) => {
-                                    const currentRow = params.row;
-                                    console.log(currentRow);
-                                };
+            <Container className="d-flex flex-wrap flex-column align-content-center" style={{ marginTop: 80 }}>
+                {add ?
+                    <AddUser volver={() => setAdd(false)} />
+                    :
+                    <>
+                        <Button
+                            style={{ width: '170px' }}
+                            className="my-2 align-self-end"
+                            onClick={() => setAdd(true)}
+                        >Añadir Usuario <BiPlus rotate={45} className="fs-5" /> </Button>
+                        <DataGrid
+                            localeText={esText}
+                            rows={rows}
+                            columns={[
+                                {
+                                    field: 'id',
+                                    headerName: 'ID',
+                                    width: 90
+                                },
+                                {
+                                    field: 'firstName',
+                                    headerName: 'First name',
+                                    width: 150,
+                                    editable: true,
+                                },
+                                {
+                                    field: 'lastName',
+                                    headerName: 'Apellidos',
+                                    width: 150,
+                                    editable: true,
+                                },
+                                {
+                                    field: 'age',
+                                    headerName: 'Age',
+                                    type: 'number',
+                                    width: 110,
+                                    editable: true,
+                                },
+                                {
+                                    field: 'action',
+                                    headerName: 'Acciones',
+                                    sortable: false,
+                                    width: 260,
+                                    renderCell: (params) => {
+                                        const onClick = (e) => {
+                                            const currentRow = params.row;
+                                            console.log(currentRow);
+                                        };
 
-                                const edit = () => {
-                                    console.log("Edit");
-                                }
+                                        const edit = () => {
+                                            console.log("Edit");
+                                        }
 
-                                return (
-                                    <ButtonGroup direction="row" spacing={2}>
-                                        <Button size="small" onClick={edit}>
-                                            Editar
-                                            <BiEdit className="mx-1 fs-5" />
-                                        </Button>
-                                        <Button variant="danger" size="small" onClick={onClick}>
-                                            Eliminar
-                                            <BiTrash className="mx-1 fs-5" />
-                                        </Button>
-                                    </ButtonGroup>
-                                );
-                            }
-                        },
-                    ]}
-                    initialState={{
-                        pagination: {
-                            paginationModel: { page: 0, pageSize: 5 },
-                        },
-                    }}
-                    pageSizeOptions={[5, 10, 20]}
-                    checkboxSelection
-                    onCellClick={handleCellClick}
-                />
+                                        return (
+                                            <ButtonGroup direction="row" spacing={2}>
+                                                <Button size="small" onClick={edit}>
+                                                    Editar
+                                                    <BiEdit className="mx-1 fs-5" />
+                                                </Button>
+                                                <Button variant="danger" size="small" onClick={onClick}>
+                                                    Eliminar
+                                                    <BiTrash className="mx-1 fs-5" />
+                                                </Button>
+                                            </ButtonGroup>
+                                        );
+                                    }
+                                },
+                            ]}
+                            initialState={{
+                                pagination: {
+                                    paginationModel: { page: 0, pageSize: 5 },
+                                },
+                            }}
+                            pageSizeOptions={[5, 10, 20]}
+                            checkboxSelection
+                            onCellClick={handleCellClick}
+                        />
+                    </>}
             </Container >
+
         </Layout >
     )
 }
