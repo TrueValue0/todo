@@ -18,4 +18,3 @@ Conectar a la BD para lectura de clientes.
 Objetivos del mes (solo lo pueden editar/crear los admins) opcion de seleccion de agentes o a todos.
 
 Estilar con colores corporativos
-

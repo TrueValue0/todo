@@ -4,7 +4,7 @@ import { tareas } from "@/config/firebaseapp";
 import { useAuth } from "@/context/AuthProvider";
 
 export function useTareaDoc({ idParam } = {}) {
-    const { credentials: { user, loading } } = useAuth();
+    const { user } = useAuth();
     const id = idParam ?? user ? user.uid : null;
     const [datos, setDatos] = useState([]);
 

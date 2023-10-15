@@ -1,4 +1,3 @@
-"use client"
 import { useAlert } from "@/hooks/useAlert";
 import { useEffect, useState } from "react";
 import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
@@ -11,9 +10,7 @@ export default function Login() {
     const redirect = /* pathname?.location?.pathname ?? */ '/';
     const [validated, setValidated] = useState(false);
     const { alert, confirmacion, error } = useAlert();
-    const { login, credentials: { isAuthenticated } } = useAuth();
-
-    console.log(redirect);
+    const { login, user } = useAuth();
 
     const handleSubmit = async (event) => {
         try {
@@ -30,8 +27,8 @@ export default function Login() {
     };
 
     useEffect(() => {
-        if (isAuthenticated) navigate(redirect)
-    }, [isAuthenticated])
+        if (user) navigate(redirect)
+    }, [user])
 
 
     return (

@@ -5,12 +5,12 @@ import { useAuth } from '@/context/AuthProvider'
 
 export default function Todos() {
 
-    const { credentials: { loading } } = useAuth();
+    const { user } = useAuth();
     const { datos, deleteEvent, completeEvent, updateEvent } = useTareaDoc();
 
     return (
         <>
-            {!loading ?
+            {user ?
                 <ListGroup className='rounded-0'>
                     {datos.map((evento, indice) => (
                         <Todo

@@ -1,6 +1,3 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import Home from '@/pages/Home'
 import Error from '@/pages/Error'
 import AuthProvider from '@/context/AuthProvider'
@@ -25,11 +22,11 @@ function App() {
     },
     {
       path: '/calendario',
-      element: <Calendario />
+      element: (<ProtectedRouteAuth><Calendario /></ProtectedRouteAuth>)
     },
     {
       path: '/tareas',
-      element: <Tareas />
+      element: (<ProtectedRouteAuth><Tareas /></ProtectedRouteAuth>)
     },
     {
       path: '/login',
@@ -37,15 +34,15 @@ function App() {
     },
     {
       path: '/user',
-      element: <User />
+      element: (<ProtectedRouteAuth><User /></ProtectedRouteAuth>)
     },
     {
       path: '/usuarios',
-      element: <Usuarios />
+      element: (<ProtectedRouteAuth><Usuarios /></ProtectedRouteAuth>)
     },
     {
       path: '/informes',
-      element: <Informes />,
+      element: (<ProtectedRouteAuth><Informes /></ProtectedRouteAuth>),
     }
   ])
 

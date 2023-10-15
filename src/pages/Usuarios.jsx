@@ -2,9 +2,8 @@ import Layout from "@/components/layouts/Layout";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import { DataGrid } from '@mui/x-data-grid';
-import { ButtonGroup, Stack } from "react-bootstrap";
+import { ButtonGroup } from "react-bootstrap";
 import { BiEdit, BiTrash, BiPlus } from "react-icons/bi";
-import { useUsers } from "@/hooks/useUsers";
 /* import { useUsers } from "@/hooks/useUsers"; */
 
 export default function Usuarios() {
@@ -44,8 +43,6 @@ export default function Usuarios() {
     const handleCellClick = (param, event) => {
         param.field === "action" && event.stopPropagation();
     };
-
-    const { pruebas } = useUsers();
 
     return (
         <Layout>
