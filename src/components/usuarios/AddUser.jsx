@@ -110,7 +110,7 @@ export default function AddUser({ volver }) {
                         </Form.Select>
                     </Form.Group>
                     <Form.Group as={Col} className='my-2 my-sm-0'>
-                        <h6 className='my-1 '>Password autogenerada :</h6>
+                        <h6 className='my-1 '>Contraseña autogenerada :</h6>
                         <Snippet content={user.password} />
                         <Form.Check
                             type="switch"

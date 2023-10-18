@@ -3,7 +3,6 @@ import { Card, Button } from 'react-bootstrap';
 import { BiCopy, BiCheck } from "react-icons/bi";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
-//import copy from 'copy-to-clipboard';
 
 export default function Snippet({ content }) {
 
@@ -14,7 +13,7 @@ export default function Snippet({ content }) {
         setCopiado(true)
         setTimeout(() => {
             setCopiado(false)
-        }, 2000)
+        }, 1000)
     };
 
     return (
@@ -24,12 +23,12 @@ export default function Snippet({ content }) {
                     {content}
                     {
                         copiado ?
-                            <BiCheck className='text-end' /> :
+                            <BiCheck style={{ fontSize: 20 }} color='#029d00' className='text-end' /> :
                             <OverlayTrigger
                                 placement="top"
                                 delay={{ show: 250, hide: 400 }}
                                 overlay={<Tooltip id='tooltip-top'>¡Copiar!</Tooltip>}
-                            ><div><BiCopy onClick={handleCopyClick} cursor='pointer' className='text-end' /></div></OverlayTrigger>
+                            ><div><BiCopy style={{ fontSize: 17 }} onClick={handleCopyClick} cursor='pointer' className='text-end' /></div></OverlayTrigger>
                     }</Card.Text>
             </Card.Body>
         </Card>
