@@ -13,3 +13,29 @@ export function formatearFecha(fecha) {
     var fechaFormateada = partes[2] + "/" + partes[1] + "/" + partes[0];
     return fechaFormateada;
 }
+
+const letraRandom = (cadena) => cadena[Math.floor(Math.random() * cadena.length)];
+
+export function generarPassword(options) {
+    const { longitud, numeros, especiales } = options;
+    let password = '';
+    const caracteres = {
+        minusculas: 'abcdefghijklmnopqrstuvwxyz',
+        mayusculas: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        numeros: '0123456789',
+        especiales: '!@#$%&()_+{}[]<>?'
+    };
+
+    let tiposDisponibles = ['minusculas', 'mayusculas'];
+
+    if (numeros) tiposDisponibles.push('numeros');
+    if (especiales) tiposDisponibles.push('especiales');
+
+    for (let i = 0; i < longitud; i++) {
+        const tipoAleatorio = letraRandom(tiposDisponibles);
+        const conjuntoCaracteres = caracteres[tipoAleatorio];
+        password += letraRandom(conjuntoCaracteres);
+    }
+
+    return password;
+}

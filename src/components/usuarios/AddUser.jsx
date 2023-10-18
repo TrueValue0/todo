@@ -1,14 +1,28 @@
 import { useTareaDoc } from '@/hooks/useTareaDoc';
-import { generateUUID } from '@/services/generarUUID';
-import { useState } from 'react';
+import { generateUUID, generarPassword } from '@/services/generarUUID';
+import { useEffect, useState } from 'react';
 import { Col, Image, Row } from 'react-bootstrap';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Snippet from '@/components/Snippet';
 
 export default function AddUser({ volver }) {
 
-    const [imagen, setImagen] = useState('https://cdn-icons-png.flaticon.com/512/6386/6386976.png')
+    const [user, setUser] = useState({
+        nombre: '',
+        apellidos: '',
+        email: '',
+        password: '',
+        rol: '',
+        avatar: 'https://cdn-icons-png.flaticon.com/512/6386/6386976.png'
+    })
+
+    const [passwordOptions, setPasswordOptions] = useState({
+        longitud: 16,
+        numeros: false,
+        especiales: false,
+    })
 
     const handleFileChange = (e) => {
         console.log(e.target.files)
@@ -18,80 +32,104 @@ export default function AddUser({ volver }) {
             const reader = new FileReader();
 
             reader.onload = (event) => {
-                setImagen(event.target.result);
+                setUser(prev => ({ ...prev, avatar: event.target.result }));
             }
 
             reader.readAsDataURL(file);
         }
     };
 
+    const actulizarPassword = () => {
+
+    }
+
+    const guardar = () => {
+
+    }
+
+    useEffect(() => {
+        setUser(prev => ({ ...prev, password: generarPassword(passwordOptions) }))
+    }, [passwordOptions])
+
     return (
         <>
-            <Form className='w-100'>
-                <h2 className='text-center mb-2'>Añadir Usuario</h2>
+            <Form /* className='w-100' */>
+                <Row>
+                    <Button className='w-auto d-inline-block mx-4 mx-sm-0' onClick={volver}>Volver</Button>
+                    <h2 className='text-center mb-2 w-auto m-auto'>Añadir Usuario</h2>
+                </Row>
+
                 <Row>
                     <Col>
                         <div className='d-flex justify-content-center align-items-center my-2'>
-                            <Image rounded width={200} src={imagen} className='mx-auto' />
+                            <Image rounded width={100} src={user.avatar} className='mx-auto' />
                         </div>
-                        <Form.Group>
-                            <Form.Label>Avatar: </Form.Label>
-                            <Form.Control className='w-auto d-inline-block ms-2' onChange={handleFileChange} accept='image/*' type='file' />
-                        </Form.Group>
                     </Col>
+                    <Form.Group as={Col} className='d-flex align-items-center'>
+                        <Form.Label>Avatar: </Form.Label>
+                        <Form.Control size='sm' className='w-auto d-inline-block ms-2' onChange={handleFileChange} accept='image/*' type='file' />
+                    </Form.Group>
                 </Row>
                 <Row>
-                    <Col className='mt-3'>
+                    <Form.Group as={Col} className='mt-3'>
                         <FloatingLabel style={{ minWidth: 245 }} label='Nombre'>
                             <Form.Control
                                 placeholder=' '
-                            //value={newEvento.title}
-                            //onChange={handleChangeTitulo}
+                                value={user.nombre}
+                                onChange={(e) => setUser(prev => ({ ...prev, nombre: e.target.value }))}
                             />
                         </FloatingLabel>
+                    </Form.Group>
 
-                    </Col>
-                    <Col className='mt-3'>
+                    <Form.Group as={Col} className='mt-3'>
                         <FloatingLabel style={{ minWidth: 245 }} label='Apellidos'>
                             <Form.Control
                                 placeholder=' '
-                            //value={newEvento.title}
-                            //onChange={handleChangeTitulo}
+                                value={user.apellidos}
+                                onChange={(e) => setUser(prev => ({ ...prev, apellidos: e.target.value }))}
                             />
                         </FloatingLabel>
-                    </Col>
+                    </Form.Group>
                 </Row>
 
-                <Row>
-                    <Col className='mt-3'>
+                <Row className='justify-content-between align-items-center p-2'>
+                    <Form.Group as={Col} className='mt-3'>
                         <FloatingLabel style={{ minWidth: 245 }} label='Email'>
                             <Form.Control
                                 placeholder=' '
-                            //value={newEvento.title}
-                            //onChange={handleChangeTitulo}
+                                value={user.email}
+                                onChange={(e) => setUser(prev => ({ ...prev, email: e.target.value }))}
                             />
                         </FloatingLabel>
-
-                    </Col>
-                    <Col className='mt-3'>
-                        <Row>
-                            <Col>
-                                <Form.Label className='w-auto m-0 me-2 p-0'>Rol:</Form.Label>
-                                <Form.Select style={{ minWidth: 250 }} className='d-inline w-auto'>
-                                    <option>Usuario</option>
-                                    <option value='admin'>Administrador</option>
-                                </Form.Select>
-                            </Col>
-                        </Row>
-                    </Col>
+                    </Form.Group>
+                    <Form.Group as={Col} className='mt-3'>
+                        <Form.Label className='w-auto m-0 me-2 p-0'>Rol:</Form.Label>
+                        <Form.Select onChange={(e) => setUser(prev => ({ ...prev, rol: e.target.value }))} style={{ minWidth: 250 }} className='d-inline w-auto'>
+                            <option value='user'>Usuario</option>
+                            <option value='admin'>Administrador</option>
+                        </Form.Select>
+                    </Form.Group>
+                    <Form.Group as={Col} className='my-2 my-sm-0'>
+                        <h6 className='my-1 '>Password autogenerada :</h6>
+                        <Snippet content={user.password} />
+                        <Form.Check
+                            type="switch"
+                            id="custom-switch"
+                            label="numeros"
+                            value={passwordOptions.numeros}
+                            onChange={(e) => setPasswordOptions(prev => ({ ...prev, numeros: e.target.checked }))}
+                        />
+                        <Form.Check
+                            type="switch"
+                            id="custom-switch"
+                            label="Caracteres especiales"
+                            value={passwordOptions.especiales}
+                            onChange={(e) => setPasswordOptions(prev => ({ ...prev, especiales: e.target.checked }))}
+                        />
+                    </Form.Group>
                 </Row>
                 <Row>
-                    <Col>
-                        <Button onClick={volver}>Volver</Button>
-                    </Col>
-                    <Col>
-                        <Button>Guardar</Button>
-                    </Col>
+                    <Button className='w-auto m-auto' onClick={guardar}>Guardar</Button>
                 </Row>
             </Form >
         </>
