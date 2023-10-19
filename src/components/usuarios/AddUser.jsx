@@ -1,22 +1,31 @@
-import { useTareaDoc } from '@/hooks/useTareaDoc';
-import { generateUUID, generarPassword } from '@/services/generarUUID';
+import { generarPassword } from '@/services/generarUUID';
 import { useEffect, useState } from 'react';
 import { Col, Image, Row } from 'react-bootstrap';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 import Snippet from '@/components/Snippet';
+import { useAuth } from '@/context/AuthProvider';
+import { setDoc, doc } from 'firebase/firestore'
+import { db } from '@/config/firebaseapp'
+import { useAlert } from '@/hooks/useAlert';
 
 export default function AddUser({ volver }) {
 
-    const [user, setUser] = useState({
+    const { signup, setCreatingUser } = useAuth();
+    const { alert, confirmacion, error } = useAlert();
+
+    const userInitial = {
         nombre: '',
         apellidos: '',
         email: '',
         password: '',
-        rol: '',
+        rol: 'user',
         avatar: 'https://cdn-icons-png.flaticon.com/512/6386/6386976.png'
-    })
+    }
+
+    const [user, setUser] = useState(userInitial)
 
     const [passwordOptions, setPasswordOptions] = useState({
         longitud: 16,
@@ -39,12 +48,18 @@ export default function AddUser({ volver }) {
         }
     };
 
-    const actulizarPassword = () => {
-
-    }
-
-    const guardar = () => {
-
+    const guardar = async () => {
+        const emailValidator = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailValidator.test(user.email)) {
+            const registrado = await signup(user.email, user.password);
+            delete user.password;
+            await setDoc(doc(db, 'usuarios', registrado.user.uid), user);
+            await setDoc(doc(db, 'tareas', registrado.user.uid), { usuario: user.nombre, tareas: [] });
+            confirmacion('¡Usuario creado correctamente!');
+            setUser(userInitial);
+        } else {
+            error('Correo invalido.');
+        }
     }
 
     useEffect(() => {
@@ -104,7 +119,7 @@ export default function AddUser({ volver }) {
                     </Form.Group>
                     <Form.Group as={Col} className='mt-3'>
                         <Form.Label className='w-auto m-0 me-2 p-0'>Rol:</Form.Label>
-                        <Form.Select onChange={(e) => setUser(prev => ({ ...prev, rol: e.target.value }))} style={{ minWidth: 250 }} className='d-inline w-auto'>
+                        <Form.Select value={user.rol} onChange={e => setUser(prev => ({ ...prev, rol: e.target.value }))} style={{ minWidth: 250 }} className='d-inline w-auto'>
                             <option value='user'>Usuario</option>
                             <option value='admin'>Administrador</option>
                         </Form.Select>
@@ -129,9 +144,10 @@ export default function AddUser({ volver }) {
                     </Form.Group>
                 </Row>
                 <Row>
-                    <Button className='w-auto m-auto' onClick={guardar}>Guardar</Button>
+                    <Button className='w-auto m-auto' onClick={guardar}>Añadir</Button>
                 </Row>
-            </Form >
+                {alert.show && <Alert className="position-absolute bottom-0 start-50 translate-middle-x" variant={alert.variant} dismissible>{alert.message}</Alert>}
+            </Form>
         </>
     )
 }

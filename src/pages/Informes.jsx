@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import Layout from '@/components/layouts/Layout'
 import PDFDocument from '@/components/PDFDocument'
 import { Paper } from '@mui/material';
@@ -5,35 +6,56 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Row, Col, Container } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { tareas } from '@/config/firebaseapp'
+import { getDocs } from 'firebase/firestore';
 //  Filtrado de los informes con las horas, agentes, fechas, descripcion, nombre de empresa (BD).
 export default function Informes() {
+
+    const [informes, setInformes] = useState([]);
+
     const columns = [
         { field: 'id', headerName: 'ID', width: 90 },
         {
-            field: 'firstName',
-            headerName: 'First name',
+            field: 'nombre',
+            headerName: 'Nombre',
+            editable: true,
+            width: 80
+        },
+        {
+            field: 'tarea',
+            headerName: 'Tarea',
             editable: true,
         },
         {
-            field: 'lastName',
-            headerName: 'Last name',
+            field: 'descripcion',
+            headerName: 'Descripcion',
             editable: true,
         },
         {
-            field: 'age',
-            headerName: 'Age',
+            field: 'tipo',
+            headerName: 'Tipo',
+            editable: true,
+        },
+        {
+            field: 'fecha',
+            headerName: 'Fecha',
             type: 'number',
             editable: true,
         },
-        {
-            field: 'fullName',
-            headerName: 'Full name',
-            description: 'This column has a value getter and is not sortable.',
-            sortable: false,
-            valueGetter: (params) =>
-                `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-        },
     ];
+
+    const cargarTareas = async () => {
+        const querySnapshot = await getDocs(tareas);
+
+        let tareasData = [];
+        let idCustom = 1;
+        querySnapshot.forEach((doc) => {
+            tareasData.push({ id: idCustom, ...doc.data(), uid: doc.id });
+            idCustom += 1
+        });
+
+        setInformes(tareasData);
+    };
 
     const rows = [
         { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
@@ -46,6 +68,10 @@ export default function Informes() {
         { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
         { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
     ];
+    console.log(informes);
+    useEffect(() => {
+        cargarTareas();
+    }, [])
 
     return (
         <Layout>

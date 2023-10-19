@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
-import { getDoc, doc, setDoc, onSnapshot } from "firebase/firestore";
+import { getDoc, doc, setDoc } from "firebase/firestore";
 import { tareas } from "@/config/firebaseapp";
 import { useAuth } from "@/context/AuthProvider";
 
-export function useTareaDoc({ idParam } = {}) {
+export function useTareaDoc() {
     const { user } = useAuth();
-    const id = idParam ?? user ? user.uid : null;
+    const id = user.uid;
     const [datos, setDatos] = useState([]);
 
     const cargarDoc = async () => {
         if (user) {
-            const id = user.uid;
             try {
                 const documentoSF = doc(tareas, id);
                 const documento = await getDoc(documentoSF);

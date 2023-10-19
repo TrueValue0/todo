@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Card, Button } from 'react-bootstrap';
+import { useState } from 'react';
+import { Card } from 'react-bootstrap';
+import Tooltip from 'react-bootstrap/Tooltip';
 import { BiCopy, BiCheck } from "react-icons/bi";
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
 
 export default function Snippet({ content }) {
 
@@ -26,8 +26,8 @@ export default function Snippet({ content }) {
                             <BiCheck style={{ fontSize: 20 }} color='#029d00' className='text-end' /> :
                             <OverlayTrigger
                                 placement="top"
-                                delay={{ show: 250, hide: 400 }}
-                                overlay={<Tooltip id='tooltip-top'>¡Copiar!</Tooltip>}
+                                delay={{ show: 150, hide: 200 }}
+                                overlay={<Tooltip>¡Copiar!</Tooltip>}
                             ><div><BiCopy style={{ fontSize: 17 }} onClick={handleCopyClick} cursor='pointer' className='text-end' /></div></OverlayTrigger>
                     }</Card.Text>
             </Card.Body>

@@ -23,6 +23,7 @@ export const useAuth = () => {
 export default function AuthProvider({ children }) {
 
     const [user, setUser] = useState(undefined);
+    const [creatingUser, setCreatingUser] = useState(false);
 
     const signup = (email, password) => createUserWithEmailAndPassword(auth, email, password);
 
@@ -35,7 +36,7 @@ export default function AuthProvider({ children }) {
     const authState = (observer) => onAuthStateChanged(auth, observer)
 
     return (
-        <authContext.Provider value={{ signup, login, logout, resetPassword, authState, user, setUser }}>
+        <authContext.Provider value={{ signup, login, logout, resetPassword, authState, user, setUser, creatingUser, setCreatingUser }}>
             {children}
         </authContext.Provider>
     )

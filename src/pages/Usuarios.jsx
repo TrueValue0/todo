@@ -1,51 +1,50 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "@/components/layouts/Layout";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import { DataGrid } from '@mui/x-data-grid';
 import { ButtonGroup } from "react-bootstrap";
+import { getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { db, usuarios } from "@/config/firebaseapp";
 import { BiEdit, BiTrash, BiPlus } from "react-icons/bi";
+import { esText } from '@/config/constantes'
 import AddUser from "@/components/usuarios/AddUser";
+import { useAuth } from "@/context/AuthProvider";
+import EditUsuario from "@/components/usuarios/EditUsuario";
 
 export default function Usuarios() {
 
-    const [add, setAdd] = useState(false)
+    const { user } = useAuth();
+    const [add, setAdd] = useState(false);
+    const [edit, setEdit] = useState({
+        ver: false,
+        nombre: '',
+        apellidos: '',
+        email: '',
+        rol: '',
+        uid: '',
+        avatar: '',
+    })
+    const [usuariosTable, setUsuariosTable] = useState([]);
 
-    const rows = [
-        { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-        { id: 2, lastName: 'jfkdlas', firstName: 'Cersei', age: 42 },
-        { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-        { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-        { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-        { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-        { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-        { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-        { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 }
-    ];
+    const handleCellClick = (param, event) => param.field === "action" && event.stopPropagation();
 
-    const esText = {
-        columnMenuSortAsc: 'Ordenar Ascendente',
-        columnMenuSortDesc: 'Ordenar Descendente',
-        columnMenuFilter: 'Filtro',
-        columnMenuHideColumn: 'Ocultar Columna',
-        columnMenuManageColumns: 'Administrar Columnas',
-        filterOperatorContains: 'Contiene',
-        filterOperatorEquals: 'Igual A',
-        filterOperatorStartsWith: 'Empieza con',
-        filterOperatorEndsWith: 'Termina con',
-        filterOperatorIsEmpty: 'Esta vacio',
-        filterOperatorIsNotEmpty: 'No esta vacio',
-        filterOperatorIsAnyOf: 'Es cualquiera de',
-        columnsPanelHideAllButton: 'Ocultarlos',
-        columnsPanelShowAllButton: 'Mostralos',
-        checkboxSelectionHeaderName: 'Casillas de seleccion',
-        toolbarColumnsLabel: 'Buscar Columna',
-        columnMenuUnsort: 'Deshacer',
-    }
+    const cargarUsuarios = async () => {
+        const querySnapshot = await getDocs(usuarios);
 
-    const handleCellClick = (param, event) => {
-        param.field === "action" && event.stopPropagation();
+        let usuariosData = [];
+        let idCustom = 1;
+        querySnapshot.forEach((doc) => {
+            usuariosData.push({ id: idCustom, ...doc.data(), uid: doc.id });
+            idCustom += 1
+        });
+        usuariosData = usuariosData.filter(value => value.uid !== user.id);
+        setUsuariosTable(usuariosData);
     };
+
+    useEffect(() => {
+        cargarUsuarios();
+    }, [add, edit]);
 
     return (
         <Layout>
@@ -61,28 +60,28 @@ export default function Usuarios() {
                         >Añadir Usuario <BiPlus rotate={45} className="fs-5" /> </Button>
                         <DataGrid
                             localeText={esText}
-                            rows={rows}
+                            rows={usuariosTable}
                             columns={[
                                 {
                                     field: 'id',
                                     headerName: 'ID',
-                                    width: 90
+                                    width: 80
                                 },
                                 {
-                                    field: 'firstName',
-                                    headerName: 'First name',
+                                    field: 'nombre',
+                                    headerName: 'Nombre',
                                     width: 150,
                                     editable: true,
                                 },
                                 {
-                                    field: 'lastName',
+                                    field: 'apellidos',
                                     headerName: 'Apellidos',
-                                    width: 150,
+                                    width: 190,
                                     editable: true,
                                 },
                                 {
-                                    field: 'age',
-                                    headerName: 'Age',
+                                    field: 'rol',
+                                    headerName: 'Rol',
                                     type: 'number',
                                     width: 110,
                                     editable: true,
@@ -93,13 +92,15 @@ export default function Usuarios() {
                                     sortable: false,
                                     width: 260,
                                     renderCell: (params) => {
-                                        const onClick = (e) => {
+                                        const onClick = async (e) => {
                                             const currentRow = params.row;
-                                            console.log(currentRow);
+                                            await deleteDoc(doc(db, 'usuarios', currentRow.uid));
+                                            await deleteDoc(doc(db, 'tareas', currentRow.uid));
                                         };
 
                                         const edit = () => {
-                                            console.log("Edit");
+                                            const currentRow = params.row;
+                                            setEdit({ ...currentRow, ver: true })
                                         }
 
                                         return (
@@ -127,6 +128,11 @@ export default function Usuarios() {
                             onCellClick={handleCellClick}
                         />
                     </>}
+                <EditUsuario
+                    content={edit}
+                    handleClose={() => setEdit(prev => ({ ...prev, ver: false }))}
+                    seter={setEdit}
+                />
             </Container >
 
         </Layout >
