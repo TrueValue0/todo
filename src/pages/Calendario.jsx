@@ -27,6 +27,8 @@ export default function Calendario() {
 
     const { datos, deleteEvent, completeEvent, updateEvent, addEvent } = useTareaDoc();
 
+    const tablet = useMediaQuery('1024')
+
     const [state, setState] = useState({
         currentEvents: []
     });
@@ -88,18 +90,18 @@ export default function Calendario() {
         setState(prev => ({ ...prev, currentEvents: events }))
     }
 
-    console.log('aiua', datos);
+    const ocultarFindes = () => tablet ? [0, 6] : [];
 
     return (
         <Layout>
-            <div className='d-flex justify-content-center align-items-center w-100' style={{ marginTop: 70 }}>
+            <div className='d-flex justify-content-center align-items-center w-100' style={{ marginTop: 80 }}>
                 <div className='w-100 p-1 p-md-5'>
                     <FullCalendar
                         events={datos}
                         selectLongPressDelay={1}
                         themeSystem='bootstrap5'
                         expandRows
-                        height='450px'
+                        height='550px'
                         aspectRatio={0.8}
                         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, bootstrap5Plugin]}
                         headerToolbar={{
@@ -108,10 +110,10 @@ export default function Calendario() {
                             right: 'dayGridMonth,timeGridWeek,timeGridDay'
                         }}
                         slotDuration='00:15:00' //Intervalos de cada 15min
-                        initialView={'timeGridWeek'}
+                        initialView={'dayGridMonth'}
                         slotMinTime='08:00:00' // Hora de inicio
                         slotMaxTime='20:00:00' // Hora de fin
-                        hiddenDays={[0, 6]} // Oculta domingo (0) y sábado (6)
+                        hiddenDays={ocultarFindes()} // Oculta domingo (0) y sábado (6)
                         editable
                         selectable
                         selectMirror

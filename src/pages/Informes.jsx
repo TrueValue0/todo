@@ -8,10 +8,16 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { tareas } from '@/config/firebaseapp'
 import { getDocs } from 'firebase/firestore';
+import SelectorMultiple from '@/components/SelectorMultiple';
 //  Filtrado de los informes con las horas, agentes, fechas, descripcion, nombre de empresa (BD).
 export default function Informes() {
 
+    const [dataGridOpts, setDataGridOpts] = useState({
+        loading: true,
+    })
     const [informes, setInformes] = useState([]);
+    const [agentes, setAgentes] = useState([]);
+    const [agentesSelected, setAgentesSelected] = useState([]);
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 90 },
@@ -23,26 +29,22 @@ export default function Informes() {
         },
         {
             field: 'tarea',
-            headerName: 'Tarea',
-            editable: true,
+            headerName: 'Tarea'
         },
         {
             field: 'descripcion',
             headerName: 'Descripcion',
-            editable: true,
         },
         {
             field: 'tipo',
             headerName: 'Tipo',
-            editable: true,
         },
         {
             field: 'fecha',
             headerName: 'Fecha',
-            type: 'number',
-            editable: true,
         },
     ];
+
 
     const cargarTareas = async () => {
         const querySnapshot = await getDocs(tareas);
@@ -55,6 +57,7 @@ export default function Informes() {
         });
 
         setInformes(tareasData);
+        setAgentes(tareasData.map(value => value.usuario))
     };
 
     const rows = [
@@ -69,8 +72,11 @@ export default function Informes() {
         { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
     ];
     console.log(informes);
+    console.log(agentes);
+    console.log(agentesSelected);
     useEffect(() => {
         cargarTareas();
+        setDataGridOpts(prev => ({ ...prev, loading: false }));
     }, [])
 
     return (
@@ -88,12 +94,7 @@ export default function Informes() {
                                 <Form.Control type="month" placeholder="Enter email" />
                             </Col>
                             <Col xs={6} sm={5}>
-                                <Form.Select aria-label="Default select example">
-                                    <option>Agentes (todos)</option>
-                                    <option value="1">Pedro</option>
-                                    <option value="2">Carmen</option>
-                                    <option value="3">Pepe</option>
-                                </Form.Select>
+                                <SelectorMultiple names={agentes} agent={agentesSelected} setAgent={setAgentesSelected} />
                             </Col>
                             <Col className='d-flex justify-content-center' xs={2}>
                                 <Button>Buscar</Button>
@@ -106,6 +107,7 @@ export default function Informes() {
                         columns={columns}
                         rows={rows}
                         disableRowSelectionOnClick
+                        loading={dataGridOpts.loading}
                         autoHeight
                     />
                 </Container>

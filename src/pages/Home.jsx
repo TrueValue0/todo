@@ -5,13 +5,6 @@ import { useAuth } from '@/context/AuthProvider';
 
 export default function Home() {
 
-  const hola = useAuth();
-
-  console.log(hola);
-
-
-
-
   return (
     <Layout>
       <div style={{ marginTop: 70 }}>
