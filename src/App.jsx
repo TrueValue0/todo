@@ -10,8 +10,10 @@ import Tareas from '@/pages/Tareas'
 import Login from '@/pages/Login'
 import User from '@/pages/User'
 import ProtectedRouteAuth from '@/pages/ProtectedRouteAuth'
+import ProtectedAdmin from '@/pages/ProtectedAdmin'
 import Usuarios from '@/pages/Usuarios'
 import Informes from '@/pages/Informes'
+import NoAuthorized from '@/pages/NoAuthorized';
 
 function App() {
   const router = createBrowserRouter([
@@ -38,11 +40,15 @@ function App() {
     },
     {
       path: '/usuarios',
-      element: (<ProtectedRouteAuth><Usuarios /></ProtectedRouteAuth>)
+      element: (<ProtectedAdmin><Usuarios /></ProtectedAdmin>)
     },
     {
       path: '/informes',
-      element: (<ProtectedRouteAuth><Informes /></ProtectedRouteAuth>),
+      element: (<ProtectedAdmin><Informes /></ProtectedAdmin>),
+    },
+    {
+      path: '/noAuthorized',
+      element: <NoAuthorized />
     }
   ])
 

@@ -13,19 +13,21 @@ import { useAlert } from '@/hooks/useAlert';
 
 export default function AddUser({ volver }) {
 
-    const { signup, setCreatingUser } = useAuth();
+    const { signup } = useAuth();
     const { alert, confirmacion, error } = useAlert();
 
     const userInitial = {
         nombre: '',
+        numero: '',
         apellidos: '',
+        fechaNac: '',
         email: '',
         password: '',
-        rol: 'user',
+        rol: 'comercial',
         avatar: 'https://cdn-icons-png.flaticon.com/512/6386/6386976.png'
     }
 
-    const [user, setUser] = useState(userInitial)
+    const [user, setUser] = useState(userInitial);
 
     const [passwordOptions, setPasswordOptions] = useState({
         longitud: 16,
@@ -39,11 +41,9 @@ export default function AddUser({ volver }) {
 
         if (file) {
             const reader = new FileReader();
-
             reader.onload = (event) => {
                 setUser(prev => ({ ...prev, avatar: event.target.result }));
             }
-
             reader.readAsDataURL(file);
         }
     };
@@ -57,6 +57,7 @@ export default function AddUser({ volver }) {
             await setDoc(doc(db, 'tareas', registrado.user.uid), { usuario: user.nombre, tareas: [] });
             confirmacion('¡Usuario creado correctamente!');
             setUser(userInitial);
+            setUser(prev => ({ ...prev, password: generarPassword(passwordOptions) }))
         } else {
             error('Correo invalido.');
         }
@@ -107,6 +108,30 @@ export default function AddUser({ volver }) {
                     </Form.Group>
                 </Row>
 
+                <Row>
+                    <Form.Group as={Col} className='mt-3'>
+                        <FloatingLabel style={{ minWidth: 245 }} label='Numero'>
+                            <Form.Control
+                                type='number'
+                                placeholder=' '
+                                value={user.numero}
+                                onChange={(e) => setUser(prev => ({ ...prev, numero: e.target.value }))}
+                            />
+                        </FloatingLabel>
+                    </Form.Group>
+
+                    <Form.Group as={Col} className='mt-3'>
+                        <FloatingLabel style={{ minWidth: 245 }} label='Fecha de nacimento'>
+                            <Form.Control
+                                type='date'
+                                placeholder=' '
+                                value={user.fechaNac}
+                                onChange={(e) => setUser(prev => ({ ...prev, fechaNac: e.target.value }))}
+                            />
+                        </FloatingLabel>
+                    </Form.Group>
+                </Row>
+
                 <Row className='justify-content-between align-items-center p-2'>
                     <Form.Group as={Col} className='mt-3'>
                         <FloatingLabel style={{ minWidth: 245 }} label='Email'>
@@ -120,7 +145,7 @@ export default function AddUser({ volver }) {
                     <Form.Group as={Col} className='mt-3'>
                         <Form.Label className='w-auto m-0 me-2 p-0'>Rol:</Form.Label>
                         <Form.Select value={user.rol} onChange={e => setUser(prev => ({ ...prev, rol: e.target.value }))} style={{ minWidth: 250 }} className='d-inline w-auto'>
-                            <option value='user'>Usuario</option>
+                            <option value='comercial'>Comercial</option>
                             <option value='admin'>Administrador</option>
                         </Form.Select>
                     </Form.Group>
@@ -143,6 +168,7 @@ export default function AddUser({ volver }) {
                         />
                     </Form.Group>
                 </Row>
+
                 <Row>
                     <Button className='w-auto m-auto' onClick={guardar}>Añadir</Button>
                 </Row>
