@@ -1,16 +1,18 @@
 import Todo from '@/components/todos/Todo'
 import { ListGroup } from 'react-bootstrap'
 import { useTareaDoc } from '@/hooks/useTareaDoc'
-import { useAuth } from '@/context/AuthProvider'
+import { useEffect } from 'react';
 
 export default function Todos() {
-
-    const { user } = useAuth();
     const { datos, deleteEvent, completeEvent, updateEvent } = useTareaDoc();
+
+    useEffect(() => {
+        console.log(datos);
+    }, [datos])
 
     return (
         <>
-            {user ?
+            {datos &&
                 <ListGroup className='rounded-0'>
                     {datos.map((evento, indice) => (
                         <Todo
@@ -21,9 +23,9 @@ export default function Todos() {
                             completeTodo={completeEvent}
                         />
                     ))}
-                </ListGroup> :
-                <p>Loading....</p>
+                </ListGroup>
             }
+
         </>
     )
 }

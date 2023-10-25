@@ -5,7 +5,6 @@ import { useAuth } from "@/context/AuthProvider";
 
 export function useTareaDoc() {
     const { user } = useAuth();
-    console.log(user);
     const id = user.id;
     const [datos, setDatos] = useState([]);
 
@@ -29,10 +28,11 @@ export function useTareaDoc() {
     const updateDoc = async (eventos) => {
         try {
             const documentoSF = doc(tareas, id);
+            setDatos(eventos);
             await setDoc(documentoSF, {
                 tareas: eventos
             })
-            setDatos(eventos);
+            cargarDoc();
         } catch (e) {
             console.log(e);
         }

@@ -18,9 +18,26 @@ export default function Informes() {
     const [informes, setInformes] = useState([]);
     const [agentes, setAgentes] = useState([]);
     const [agentesSelected, setAgentesSelected] = useState([]);
+    const [informesTabla, setInformesTabla] = useState([])
 
     //const columns = 
 
+    const mapearInformes = (datos) => {
+        const informesMapeados = datos.filter(usuario => usuario.tareas.length > 0) // Filtra los usuarios con tareas no vacías
+            .flatMap((usuario) => {
+                return usuario.tareas.map((tarea, indice) => {
+                    return {
+                        id: indice,
+                        nombre: usuario.usuario,
+                        tarea: tarea.title,
+                        descripcion: tarea.extendedProps.description,
+                        fecha: tarea.start
+                    }
+                })
+            });
+
+        setInformesTabla(informesMapeados);
+    }
 
     const cargarTareas = async () => {
         const querySnapshot = await getDocs(tareas);
@@ -34,6 +51,7 @@ export default function Informes() {
 
         setInformes(tareasData);
         setAgentes(tareasData.map(value => value.usuario))
+        mapearInformes(tareasData);
     };
 
     const rows = [
@@ -47,9 +65,8 @@ export default function Informes() {
         { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
         { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
     ];
-    console.log(informes);
-    console.log(agentes);
-    console.log(agentesSelected);
+
+
     useEffect(() => {
         cargarTareas();
         setDataGridOpts(prev => ({ ...prev, loading: false }));
@@ -110,11 +127,11 @@ export default function Informes() {
                             {
                                 field: 'fecha',
                                 headerName: 'Fecha',
-                                type: 'date',
+                                //type: 'date',
                                 minWidth: 90
                             },
                         ]}
-                        rows={rows}
+                        rows={informesTabla}
                         disableRowSelectionOnClick
                         loading={dataGridOpts.loading}
                         autoHeight
