@@ -13,36 +13,7 @@ export default function Informes() {
 
     const [informes, setInformes] = useState([]);
 
-    const columns = [
-        { field: 'id', headerName: 'ID', width: 90 },
-        {
-            field: 'nombre',
-            headerName: 'Nombre',
-            editable: true,
-            width: 80
-        },
-        {
-            field: 'tarea',
-            headerName: 'Tarea',
-            editable: true,
-        },
-        {
-            field: 'descripcion',
-            headerName: 'Descripcion',
-            editable: true,
-        },
-        {
-            field: 'tipo',
-            headerName: 'Tipo',
-            editable: true,
-        },
-        {
-            field: 'fecha',
-            headerName: 'Fecha',
-            type: 'number',
-            editable: true,
-        },
-    ];
+    //const columns = 
 
     const cargarTareas = async () => {
         const querySnapshot = await getDocs(tareas);
@@ -100,10 +71,43 @@ export default function Informes() {
                             </Col>
                         </Row>
                     </Paper>
-                </Container>
-                <Container className='mt-4'>
                     <DataGrid
-                        columns={columns}
+                        className='w-100 mt-4'
+                        columns={[
+                            {
+                                field: 'id',
+                                headerName: 'ID',
+                                minWidth: 90,
+                                sortable: false,
+                                filterable: false,
+                            },
+                            {
+                                field: 'nombre',
+                                headerName: 'Nombre',
+                                minWidth: 120
+                            },
+                            {
+                                field: 'tarea',
+                                headerName: 'Tarea',
+                                minWidth: 100
+                            },
+                            {
+                                field: 'descripcion',
+                                headerName: 'Descripcion',
+                                width: 180
+                            },
+                            {
+                                field: 'tipo',
+                                headerName: 'Tipo',
+                                minWidth: 90
+                            },
+                            {
+                                field: 'fecha',
+                                headerName: 'Fecha',
+                                type: 'date',
+                                minWidth: 90
+                            },
+                        ]}
                         rows={rows}
                         disableRowSelectionOnClick
                         autoHeight

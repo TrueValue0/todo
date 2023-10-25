@@ -5,24 +5,25 @@ import { useAuth } from "@/context/AuthProvider";
 
 export function useTareaDoc() {
     const { user } = useAuth();
-    const id = user.uid;
+    console.log(user);
+    const id = user.id;
     const [datos, setDatos] = useState([]);
 
     const cargarDoc = async () => {
-        if (user) {
-            try {
-                const documentoSF = doc(tareas, id);
-                const documento = await getDoc(documentoSF);
-                if (documento.exists()) {
-                    const docFinal = documento.data().tareas;
-                    setDatos(docFinal);
-                } else {
-                    console.log("El documento no existe en Firestore");
-                }
-            } catch (e) {
-                console.log(e);
+        //if (user) {
+        try {
+            const documentoSF = doc(tareas, id);
+            const documento = await getDoc(documentoSF);
+            if (documento.exists()) {
+                const docFinal = documento.data().tareas;
+                setDatos(docFinal);
+            } else {
+                console.log("El documento no existe en Firestore");
             }
+        } catch (e) {
+            console.log(e);
         }
+        // }
     }
 
     const updateDoc = async (eventos) => {
