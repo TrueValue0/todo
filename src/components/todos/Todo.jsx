@@ -3,6 +3,7 @@ import { FormCheck, ListGroup, Accordion, Button, Form, Row, Col } from 'react-b
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import { BiTrash } from 'react-icons/bi'
 import { formatearFecha } from '@/services/generarUUID.js'
+import { TAKS_TYPES } from '@/config/constantes';
 
 function CustomToggle({ children, eventKey }) {
     const decoratedOnClick = useAccordionButton(eventKey);
@@ -59,11 +60,8 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                             <Form.Group as={Row} className='mt-1'>
                                 <Form.Label column sm="3" className='text-center'>Tipo</Form.Label>
                                 <Col sm="9">
-                                    <Form.Select onChange={event => setTarea(prev => ({ ...prev, tipo: event.target.value }))}>
-                                        <option>General</option>
-                                        <option value="visita">Visita</option>
-                                        <option value="venta">Venta</option>
-                                        <option value="tour">Tour</option>
+                                    <Form.Select value={tarea.tipo} onChange={event => setTarea(prev => ({ ...prev, tipo: event.target.value }))}>
+                                        {TAKS_TYPES.map(value => <option key={value}>{value}</option>)}
                                     </Form.Select>
                                 </Col>
                             </Form.Group>

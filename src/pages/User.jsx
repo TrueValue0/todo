@@ -4,18 +4,19 @@ import Card from 'react-bootstrap/Card';
 import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button'
 import { useAuth } from '@/context/AuthProvider';
+import { useState } from 'react';
+import SubirImagen from '@/components/SubirImagen';
 
 export default function User() {
 
     const { user } = useAuth();
-
-    console.log(user);
+    const [editar, setEditar] = useState(false);
 
     return (
         <Layout>
             <Container style={{ marginTop: 130 }} >
                 <Card>
-                    <Card.Body className='d-flex justify-content-center flex-column align-items-center'>
+                    {!editar ? <Card.Body className='d-flex justify-content-center flex-column align-items-center'>
                         <Card.Title>
                             <Image width='180px' src={user.avatar} roundedCircle />
                         </Card.Title>
@@ -23,8 +24,16 @@ export default function User() {
                         <Card.Text className='text-center text-muted'>
                             {user.apellidos}
                         </Card.Text>
-                        <Button variant="primary">Editar</Button>
-                    </Card.Body>
+                        <Button onClick={() => setEditar(true)}>Editar</Button>
+                    </Card.Body> :
+                        <Card.Body className='d-flex justify-content-center flex-column align-items-center'>
+                            <SubirImagen imagen={user.avatar} />
+                            <Card.Subtitle className="my-2 text-muted fs-2">{user.nombre}</Card.Subtitle>
+                            <Card.Text className='text-center text-muted'>
+                                {user.apellidos}
+                            </Card.Text>
+                            <Button onClick={() => setEditar(false)}>Guardar</Button>
+                        </Card.Body>}
                 </Card>
             </Container>
         </Layout>

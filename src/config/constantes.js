@@ -17,3 +17,5 @@ export const esText = {
     toolbarColumnsLabel: 'Buscar Columna',
     columnMenuUnsort: 'Deshacer',
 }
+
+export const TAKS_TYPES = ['General', 'Visita', 'Venta', 'Tour']

@@ -1,5 +1,5 @@
 import ModalAddEvent from "@/components/todos/ModalAddEvent";
-import { Card, Container, Form } from "react-bootstrap";
+import { Card, Container } from "react-bootstrap";
 import { BiCalendar, BiPlus } from 'react-icons/bi';
 import Layout from "@/components/layouts/Layout";
 import Todos from "@/components/todos/Todos";
