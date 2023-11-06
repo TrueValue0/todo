@@ -8,13 +8,15 @@ import Image from 'react-bootstrap/Image';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import ProgressBar from 'react-bootstrap/ProgressBar';
+import { useAuth } from '@/context/AuthProvider';
 
 export default function SubirImagen({ imagen = '' } = {}) {
     const [image, setImage] = useState(null);
     //const [progress, setProgress] = useState(0);
     let progress = 0
     const [url, setUrl] = useState(imagen);
-    const { alert, confirmacion, error, alerta } = useAlert()
+    const { alert, confirmacion, error, alerta } = useAlert();
+    const { setUser, updateUser } = useAuth()
 
     const handleChange = (e) => {
         const file = e.target.files[0];
@@ -36,8 +38,6 @@ export default function SubirImagen({ imagen = '' } = {}) {
 
         uploadTask.on('state_changed',
             (snapshot) => {
-                // Observe state change events such as progress, pause, and resume
-                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
                 progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
                 console.log(snapshot.state);
                 switch (snapshot.state) {
@@ -54,9 +54,11 @@ export default function SubirImagen({ imagen = '' } = {}) {
                 error(e.message);
             },
             () => {
-                // Handle successful uploads on complete
-                // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-                getDownloadURL(uploadTask.snapshot.ref).then((url) => setUrl(url));
+                getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                    setUrl(url)
+                    setUser(prev => ({ ...prev, avatar: url }));
+                });
+                updateUser();
             }
         );
     };

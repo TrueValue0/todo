@@ -1,5 +1,6 @@
 import Image from 'react-bootstrap/Image';
 import React from 'react';
+import { useAuth } from '@/context/AuthProvider';
 
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
     <a
@@ -15,7 +16,8 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
 ));
 
 export default function Imagen({ children, onClick }) {
+    const { user } = useAuth()
     return (
-        <CustomToggle onClick={onClick}> <Image width='50px' src="https://www.pngkey.com/png/full/72-729716_user-avatar-png-graphic-free-download-icon.png" roundedCircle /></CustomToggle>
+        <CustomToggle onClick={onClick}> <Image width='50px' src={user.avatar} roundedCircle /></CustomToggle>
     )
 }

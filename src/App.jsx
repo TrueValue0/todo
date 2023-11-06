@@ -11,7 +11,7 @@ import Login from '@/pages/Login'
 import User from '@/pages/User'
 import ProtectedRouteAuth from '@/pages/ProtectedRouteAuth'
 import ProtectedAdmin from '@/pages/ProtectedAdmin'
-import Usuarios from '@/pages/Usuarios'
+//import Usuarios from '@/pages/Usuarios'
 import Informes from '@/pages/Informes'
 import NoAuthorized from '@/pages/NoAuthorized';
 
@@ -38,10 +38,10 @@ function App() {
       path: '/user',
       element: (<ProtectedRouteAuth><User /></ProtectedRouteAuth>)
     },
-    {
-      path: '/usuarios',
-      element: (<ProtectedAdmin><Usuarios /></ProtectedAdmin>)
-    },
+    /*     {
+          path: '/usuarios',
+          element: (<ProtectedAdmin><Usuarios /></ProtectedAdmin>)
+        }, */
     {
       path: '/informes',
       element: (<ProtectedAdmin><Informes /></ProtectedAdmin>),

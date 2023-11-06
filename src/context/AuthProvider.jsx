@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
-import { auth } from '@/config/firebaseapp';
+import { auth, usuarios } from '@/config/firebaseapp';
+import { getDoc, doc, setDoc } from "firebase/firestore";
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
@@ -32,10 +33,13 @@ export default function AuthProvider({ children }) {
 
     const resetPassword = async (email) => await sendPasswordResetEmail(auth, email);
 
-    const authState = (observer) => onAuthStateChanged(auth, observer)
+    const authState = (observer) => onAuthStateChanged(auth, observer);
+
+    const updateUser = async () => user && await setDoc(doc(usuarios, user.id), user);
+
 
     return (
-        <authContext.Provider value={{ signup, login, logout, resetPassword, authState, user, setUser }}>
+        <authContext.Provider value={{ signup, login, logout, resetPassword, authState, user, setUser, updateUser }}>
             {children}
         </authContext.Provider>
     )

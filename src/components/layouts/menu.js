@@ -21,11 +21,11 @@ export const navLista = [
         Icon: BiTask,
         label: 'Tareas'
     },
-    {
-        path: '/usuarios',
-        Icon: HiUserGroup,
-        label: 'Usuarios',
-    }
+    /*     {
+            path: '/usuarios',
+            Icon: HiUserGroup,
+            label: 'Usuarios',
+        } */
 ]
 
 export const navBottom = [

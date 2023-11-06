@@ -18,7 +18,7 @@ export default function Layout({ children }) {
     const [open, setOpen] = useState(false);
     const toogleMenu = () => setOpen(prev => !prev);
     const navigate = useNavigate();
-    const { logout } = useAuth();
+    const { logout, user } = useAuth();
 
     const cerrarSesion = () => {
         logout();
@@ -48,7 +48,7 @@ export default function Layout({ children }) {
                         </div>
                     </div>
                     <div className='d-flex gap-4 p-3 align-items-center'>
-                        <span>Nombre</span>
+                        <span>{user.nombre}</span>
                         <Dropdown align='end'>
                             <DropdownToggle as={Imagen} />
                             <DropdownMenu style={{ right: 0 }} onSelect={selectUser} >
