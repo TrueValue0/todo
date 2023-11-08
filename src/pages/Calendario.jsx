@@ -10,6 +10,7 @@ import ModalAnyadirEvento from '@/components/modal/ModalAnyadirEvento'
 import ModalEditarEvento from '@/components/modal/ModalEditarEvento'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useTareaDoc } from '@/hooks/useTareaDoc'
+import LogoAlargado from '@/assets/logoAlargado.jsx'
 import './calendario.css'
 
 
@@ -27,11 +28,8 @@ export default function Calendario() {
 
     const { datos, deleteEvent, completeEvent, updateEvent, addEvent } = useTareaDoc();
 
-    const tablet = useMediaQuery('1024')
+    const tablet = useMediaQuery('1024');
 
-    const [state, setState] = useState({
-        currentEvents: []
-    });
     const eventInital = {
         ver: false,
         titulo: "",
@@ -42,7 +40,10 @@ export default function Calendario() {
         ver: false,
         titulo: "",
         fecha: "",
+        fechaFin: '',
         descripcion: "",
+        tipo: 'General',
+        allDay: false,
         info: null
     }
     const [evento, setEvento] = useState(eventInital)
@@ -55,18 +56,36 @@ export default function Calendario() {
         let calendarApi = newEvent.info.view.calendar;
 
         calendarApi.unselect() // clear date selection
+        console.log(newEvent.info);
 
         if (newEvent.info && newEvent.titulo !== "") {
-            let evento = {
-                id: crypto.randomUUID(),
-                title: newEvent.titulo,
-                start: newEvent.fecha,
-                end: newEvent.info.endStr,
-                allDay: newEvent.info.allDay,
-                extendedProps: {
-                    description: newEvent.descripcion
+            let evento;
+            if (newEvent.allDay) {
+                evento = {
+                    id: crypto.randomUUID(),
+                    title: newEvent.titulo,
+                    start: newEvent.fecha,
+                    end: newEvent.info.endStr,
+                    allDay: newEvent.allDay,
+                    extendedProps: {
+                        description: newEvent.descripcion,
+                        tipo: newEvent.tipo,
+                    }
+                }
+            } else {
+                evento = {
+                    id: crypto.randomUUID(),
+                    title: newEvent.titulo,
+                    start: newEvent.fecha,
+                    end: newEvent.fechaFin,
+                    allDay: newEvent.allDay,
+                    extendedProps: {
+                        description: newEvent.descripcion
+                    }
                 }
             }
+            console.log(evento);
+
             calendarApi.addEvent(evento)
             addEvent(evento);
             setNewEvent(eventInitalCalendar)
@@ -95,7 +114,8 @@ export default function Calendario() {
     return (
         <Layout>
             <div className='d-flex justify-content-center align-items-center w-100' style={{ marginTop: 80 }}>
-                <div className='w-100 p-1 p-md-5'>
+                <div className='w-100 p-1 px-md-5'>
+                    <LogoAlargado className='m-auto d-block' width='33%' />
                     <FullCalendar
                         events={datos}
                         selectLongPressDelay={1}

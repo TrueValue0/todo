@@ -7,6 +7,13 @@ export function generateUUID() {
     });
     return uuid;
 }
+export function fechaConHora(objetoFecha) {
+    const { fecha, horas } = objetoFecha;
+    const zonaHoraria = new Date().toTimeString().split(' ')[1].replace('GMT', '');
+
+    return `${fecha}T${horas}:00${zonaHoraria}`;
+
+}
 
 export function formatearFecha(fecha) {
     var partes = fecha.split("-");

@@ -9,7 +9,7 @@ import { navLista } from "@/components/layouts/menu";
 import Imagen from '@/components/layouts/Imagen';
 import { useAuth } from '@/context/AuthProvider';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { MenuList } from './MenuList';
 import '@/components/layouts/layout.css'
 
@@ -19,6 +19,7 @@ export default function Layout({ children }) {
     const toogleMenu = () => setOpen(prev => !prev);
     const navigate = useNavigate();
     const { logout, user } = useAuth();
+    const { pathname } = useLocation();
 
     const cerrarSesion = () => {
         logout();
@@ -28,18 +29,19 @@ export default function Layout({ children }) {
     const selectUser = (e) => {
         console.log(e);
     }
+
     return (
         <>
             <div>
                 <nav className={open ? 'open d-flex justify-content-between align-items-center' : 'd-flex justify-content-between align-items-center'}>
                     <div className="logo">
                         <BiMenu className='menu-icon' onClick={toogleMenu} />
-                        <span className="logo-name">Tareas</span>
+                        <span className="logo-name text-capitalize">{navLista.filter(obj => obj.path === pathname)[0].label}</span>
                     </div>
                     <div className="sidebar">
                         <div className="logo">
                             <BiMenu className='menu-icon' onClick={toogleMenu} />
-                            <span className="logo-name">Tareas</span>
+                            <span className="logo-name">{navLista.filter(obj => obj.path === pathname)[0].label}</span>
                         </div>
                         <div className="sidebar-content">
                             <ul className="lists">

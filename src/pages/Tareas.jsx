@@ -14,8 +14,7 @@ export default function Tareas() {
 
     return (
         <Layout>
-            <Container style={{ marginTop: 70 }}>
-                <h1>Tareas</h1>
+            <Container style={{ marginTop: 80 }}>
                 <Card >
                     <Card.Header className="text-center h3">Mis Tareas</Card.Header>
                     <Card.Body>
