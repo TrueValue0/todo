@@ -18,28 +18,23 @@ const MenuProps = {
     },
 };
 
-export default function SelectorMultiple({ names, agent, setAgent }) {
+export default function SelectorMultiple({ label, names, agent, setAgent }) {
     const handleChange = (event) => {
-        const {
-            target: { value },
-        } = event;
-        setAgent(
-            // On autofill we get a stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        );
+        const { target: { value } } = event;
+        setAgent(typeof value === 'string' ? value.split(',') : value);
     };
 
     return (
         <div>
             <FormControl sx={{ m: 1, width: 300 }}>
-                <InputLabel id="demo-multiple-checkbox-label">Comerciales</InputLabel>
+                <InputLabel id="demo-multiple-checkbox-label">{label}</InputLabel>
                 <Select
                     labelId="demo-multiple-checkbox-label"
                     id="demo-multiple-checkbox"
                     multiple
                     value={agent}
-                    onChange={handleChange}
-                    input={<OutlinedInput label="Agente" />}
+                    onChange={setAgent}
+                    input={<OutlinedInput label={label} />}
                     renderValue={(selected) => selected.join(', ')}
                     MenuProps={MenuProps}
                 >

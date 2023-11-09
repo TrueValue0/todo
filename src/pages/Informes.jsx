@@ -9,6 +9,7 @@ import Form from 'react-bootstrap/Form';
 import { tareas } from '@/config/firebaseapp'
 import { getDocs } from 'firebase/firestore';
 import SelectorMultiple from '@/components/SelectorMultiple';
+import { TAKS_TYPES } from '@/config/constantes';
 //  Filtrado de los informes con las horas, agentes, fechas, descripcion, nombre de empresa (BD).
 export default function Informes() {
 
@@ -17,8 +18,14 @@ export default function Informes() {
     })
     const [informes, setInformes] = useState([]);
     const [agentes, setAgentes] = useState([]);
-    const [agentesSelected, setAgentesSelected] = useState([]);
-    const [informesTabla, setInformesTabla] = useState([])
+    const [informesTabla, setInformesTabla] = useState([]);
+
+    const [filtros, setFiltros] = useState({
+        query: '',
+        fecha: '',
+        comerciales: [],
+        tipos: [],
+    })
 
     //const columns = 
 
@@ -28,10 +35,11 @@ export default function Informes() {
                 return usuario.tareas.map((tarea, indice) => {
                     return {
                         id: indice,
-                        nombre: usuario.usuario,
-                        tarea: tarea.title,
-                        descripcion: tarea.extendedProps.description,
-                        fecha: tarea.start
+                        nombre: usuario.usuario ?? '',
+                        tarea: tarea.title ?? '',
+                        descripcion: tarea.extendedProps.description ?? '',
+                        tipo: tarea.extendedProps.tipo ?? '',
+                        fecha: tarea.start ?? ''
                     }
                 })
             });
@@ -54,18 +62,40 @@ export default function Informes() {
         mapearInformes(tareasData);
     };
 
-    const rows = [
-        { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-        { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-        { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-        { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-        { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-        { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-        { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-        { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-        { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-    ];
+    const handleBuscar = event => setFiltros(prev => ({ ...prev, query: event.target.value }));
 
+    const handleFecha = event => setFiltros(prev => ({ ...prev, query: event.target.value }));
+
+    const setComerciales = event => setFiltros(prev => ({ ...prev, comerciales: event.target.value }));
+
+    const setTipos = event => setFiltros(prev => ({ ...prev, tipos: event.target.value }));
+
+
+    const filtrar = () => {
+        if (
+            !filtros.query &&
+            !filtros.fecha &&
+            filtros.comerciales.length === 0 &&
+            filtros.tipos.length === 0
+        ) return;
+
+        setInformesTabla(informesTabla.filter(informe => {
+
+            const cumpleFiltroQuery = !filtros.query ||
+                informe.tarea.includes(filtros.query) ||
+                informe.descripcion.includes(filtros.query) ||
+                informe.nombre.includes(filtros.query);
+
+            const cumpleFiltroFecha = !filtros.fecha || informe.fecha.startsWith(filtros.fecha);
+            const cumpleFiltroComerciales = filtros.comerciales.length === 0 || filtros.comerciales.includes(informe.nombre);
+            const cumpleFiltroTipos = filtros.tipos.length === 0 || filtros.tipos.includes(informe.tipo);
+
+            return cumpleFiltroQuery && cumpleFiltroFecha && cumpleFiltroComerciales && cumpleFiltroTipos;
+        }))
+    };
+
+
+    useEffect(filtrar, [filtros])
 
     useEffect(() => {
         cargarTareas();
@@ -79,18 +109,21 @@ export default function Informes() {
                     <Paper elevation={3} className='p-4' >
                         <Row className='mt-2'>
                             <Col>
-                                <Form.Control type="email" placeholder="Buscar ..." />
+                                <Form.Control type='text' placeholder="Buscar ..." onChange={handleBuscar} />
                             </Col>
                         </Row>
-                        <Row className='mt-2 justify-content-center'>
-                            <Col xs={6} sm={5}>
-                                <Form.Control type="month" placeholder="Enter email" />
+                        <Row className='mt-2 justify-content-center align-items-center'>
+                            <Col>
+                                <Form.Control type="month" onChange={handleFecha} />
                             </Col>
-                            <Col xs={6} sm={5}>
-                                <SelectorMultiple names={agentes} agent={agentesSelected} setAgent={setAgentesSelected} />
+                            <Col>
+                                <SelectorMultiple label='Comerciales' names={agentes} agent={filtros.comerciales} setAgent={setComerciales} />
                             </Col>
-                            <Col className='d-flex justify-content-center' xs={2}>
-                                <Button>Buscar</Button>
+                            <Col>
+                                <SelectorMultiple label='Tipos' names={TAKS_TYPES} agent={filtros.tipos} setAgent={setTipos} />
+                            </Col>
+                            <Col>
+                                <Button onClick={filtrar}>Buscar</Button>
                             </Col>
                         </Row>
                     </Paper>
