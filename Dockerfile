@@ -23,7 +23,7 @@ FROM nginx:latest
 # ENV NOMBRE_VARIABLE="VALOR"
 
 # Copiar los archivos de construcción de React al directorio de contenido de NGINX
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
 
 # Exponer el puerto 80
 EXPOSE 80
