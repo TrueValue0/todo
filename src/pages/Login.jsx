@@ -58,12 +58,12 @@ export default function Login() {
                                 <Form.Control.Feedback type="invalid">Contraseña Requerida</Form.Control.Feedback>
                             </Form.Group>
 
-                            <Row className="my-2">
+                            {/*  <Row className="my-2">
                                 <Col className="d-flex justify-content-end">
-                                    {/* <!-- Simple link --> */}
+                                   
                                     <Button variant="link" className="text-decoration-none"><Link className="text-decoration-none fw-bolder">¿Olvidaste la contraseña?</Link></Button>
                                 </Col>
-                            </Row>
+                            </Row> */}
                             <div className="d-flex justify-content-center">
                                 <Button type="submit">Iniciar Sesión</Button>
                             </div>
