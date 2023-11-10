@@ -8,6 +8,10 @@
     font-family: "Poppins", sans-serif;
 }
 
+:root {
+    --color: #932ac0;
+}
+
 nav {
     position: fixed;
     top: 0;
@@ -79,11 +83,11 @@ nav.open .sidebar {
 }
 
 .lists .nav-link:hover {
-    background-color: #4070f4;
+    background-color: var(--color);
 }
 
 .list .active {
-    background-color: #4070f4;
+    background-color: var(--color);
     color: #fff;
 }
 

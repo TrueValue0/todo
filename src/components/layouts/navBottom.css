@@ -1,6 +1,10 @@
 /* Google Fonts - Poppins */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
+:root {
+    --color: #7c1ea4;
+}
+
 .nav {
     position: fixed;
     bottom: 0;
@@ -51,14 +55,14 @@
 }
 
 .link-item.active .link-icon {
-    color: #4070F4;
+    color: var(--color);
 }
 
 .link-text {
     position: absolute;
     font-size: 12px;
     font-weight: 500;
-    color: #4070F4;
+    color: var(--color);
     opacity: 0;
     transform: translateY(32px);
     transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -75,7 +79,7 @@
     height: 36px;
     width: 36px;
     background-color: #FFF;
-    border: 6px solid #4070F4;
+    border: 6px solid var(--color);
     border-radius: 50%;
     transform: translateX(-50%);
     transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -94,12 +98,12 @@
     left: -22px;
     background-color: #FFF;
     border-top-right-radius: 25px;
-    box-shadow: 1px -13px #4070F4;
+    box-shadow: 1px -13px var(--color);
 }
 
 .indicator::after {
     right: -22px;
     background-color: #FFF;
     border-top-left-radius: 25px;
-    box-shadow: -1px -13px #4070F4;
+    box-shadow: -1px -13px var(--color);
 }

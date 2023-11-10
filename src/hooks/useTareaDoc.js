@@ -3,19 +3,17 @@ import { getDoc, doc, setDoc } from "firebase/firestore";
 import { tareas } from "@/config/firebaseapp";
 import { useAuth } from "@/context/AuthProvider";
 
-export function useTareaDoc() {
+export function useTareaDoc({ uid = '' } = {}) {
     const { user } = useAuth();
-    const id = user.id;
+    const id = uid === '' ? user.id : uid;
     const [datos, setDatos] = useState([]);
 
     const cargarDoc = async () => {
-        //if (user) {
         try {
             const documentoSF = doc(tareas, id);
             const documento = await getDoc(documentoSF);
             if (documento.exists()) {
                 const docFinal = documento.data().tareas;
-                console.log(documento.data());
                 setDatos(docFinal);
             } else {
                 console.log("El documento no existe en Firestore");
@@ -23,10 +21,11 @@ export function useTareaDoc() {
         } catch (e) {
             console.log(e);
         }
-        // }
     }
 
     const updateDoc = async (eventos) => {
+        console.log(id);
+        console.log(eventos);
         try {
             const documentoSF = doc(tareas, id);
             setDatos(eventos);
@@ -59,12 +58,14 @@ export function useTareaDoc() {
             if (event.id === id) {
                 return {
                     id: evento.id,
-                    title: evento.titulo,
+                    title: evento.title,
                     start: evento.start,
+                    end: evento.end,
+                    allDay: evento.allDay,
                     extendedProps: {
-                        completed: evento.completed,
-                        description: evento.descripcion,
-                        tipo: evento.tipo,
+                        completed: evento.extendedProps.completed ?? false,
+                        description: evento.extendedProps.description,
+                        tipo: evento.extendedProps.tipo,
                     }
                 }
             }
@@ -80,7 +81,7 @@ export function useTareaDoc() {
 
     useEffect(() => {
         cargarDoc();
-    }, []);
+    }, [uid]);
 
     return { datos, deleteEvent, completeEvent, updateEvent, addEvent };
 }

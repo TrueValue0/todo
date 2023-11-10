@@ -12,6 +12,10 @@ import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useTareaDoc } from '@/hooks/useTareaDoc'
 import LogoAlargado from '@/assets/logoAlargado.jsx'
 import './calendario.css'
+import { useUsers } from '@/hooks/useUser'
+import { Paper } from '@mui/material'
+import Form from 'react-bootstrap/Form'
+import { useAuth } from '@/context/AuthProvider'
 
 
 function renderEventContent(eventInfo) {
@@ -26,32 +30,55 @@ function renderEventContent(eventInfo) {
 
 export default function Calendario() {
 
-    const { datos } = useTareaDoc();
+    const [idCalendar, setIdCalendar] = useState('');
+    const { users } = useUsers();
+    const { user } = useAuth();
+    const { datos, updateEvent } = useTareaDoc({ uid: idCalendar });
+    const [fechaActual, setFechaActual] = useState('');
 
     const tablet = useMediaQuery('1024');
 
     const eventInital = {
-        ver: false,
-        titulo: "",
-        fecha: "",
-        descripcion: "",
+        id: '',
+        title: '',
+        start: '',
+        end: '',
+        allDay: false,
+        descripcion: '',
+        extendedProps: {
+            completed: false,
+            description: '',
+            tipo: '',
+        }
     }
 
     const [evento, setEvento] = useState(eventInital);
+    const [modalEdit, setModalEdit] = useState(false);
     const [modal, setModal] = useState(false);
-    const cerrarEvento = () => setEvento(eventInital);
-    const cerrarNewEvento = () => setNewEvent(eventInitalCalendar);
 
     const handleEventClick = (clickInfo) => {
+
         let nuevoEvento = {
-            titulo: clickInfo.event.title,
-            descripcion: clickInfo.event.extendedProps.description,
-            fecha: clickInfo.event.startStr,
-            ver: true
+            id: clickInfo.event.id,
+            title: clickInfo.event.title,
+            startStr: clickInfo.event.startStr,
+            endStr: clickInfo.event.endStr,
+            allDay: clickInfo.event.allDay,
+            extendedProps: {
+                completed: clickInfo.event.extendedProps.completed,
+                description: clickInfo.event.extendedProps.description,
+                tipo: clickInfo.event.extendedProps.tipo,
+            }
         }
-        const calendario = clickInfo.view.calendar;
         setEvento(nuevoEvento)
+        setModalEdit(true)
     }
+
+    const actualizar = () => {
+        updateEvent(evento.id, evento);
+    }
+
+    const handleSelect = event => setIdCalendar(event.target.value);
 
     const ocultarFindes = () => tablet ? [0, 6] : [];
 
@@ -60,6 +87,16 @@ export default function Calendario() {
             <div className='d-flex justify-content-center align-items-center w-100' style={{ marginTop: 80 }}>
                 <div className='w-100 p-1 px-md-5'>
                     <LogoAlargado className='m-auto d-block' width='400px' />
+                    {user.rol === 'admin' && <Paper className='d-inline-block p-3 my-3'>
+                        <Form.Select onChange={handleSelect}>
+                            <option value=''>Selecciona un agente</option>
+                            {
+                                users.map(user => (
+                                    <option key={user.id} value={user.id}>{user.nombre}</option>
+                                ))
+                            }
+                        </Form.Select>
+                    </Paper>}
                     <FullCalendar
                         events={datos}
                         selectLongPressDelay={1}
@@ -82,17 +119,26 @@ export default function Calendario() {
                         selectable
                         selectMirror
                         dayMaxEvents={true}
-                        select={() => setModal(true)} //Funcion al crear un envento.
+                        select={(informacion) => {
+                            setFechaActual(informacion.startStr);
+                            setModal(true)
+                        }} //Funcion al crear un envento.
                         eventContent={renderEventContent} // custom render function
                         eventClick={handleEventClick} // Funcion que se ejecuta al editar los eventos
                         //eventsSet={handleEvents} // called after events are initialized/added/changed/removed
                         locale={esLocale} // Traduccion a español
                     />
                 </div>
-                {evento.ver && <ModalEditarEvento evento={evento} cerrar={cerrarEvento} />}
-                <ModalAnyadirEvento ver={modal} cerrar={() => setModal(false)} />
+                <ModalEditarEvento
+                    reset={() => setEvento(eventInital)}
+                    ver={modalEdit}
+                    evento={evento}
+                    cerrar={() => setModalEdit(false)}
+                    seter={setEvento} guardar={actualizar}
+                />
+                <ModalAnyadirEvento ver={modal} cerrar={() => setModal(false)} uid={idCalendar} fechaActual={fechaActual} setFecha={setFechaActual} />
             </div>
-        </Layout>
+        </Layout >
     )
 
 

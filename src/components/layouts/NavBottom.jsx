@@ -1,8 +1,9 @@
 import { BottomList } from '@/components/layouts/MenuList'
-import { navBottom } from '@/components/layouts/menu';
+import { useMenu } from '@/hooks/useMenu';
 import '@/components/layouts/navBottom.css'
 
 export default function NavBottom() {
+    const { navBottom } = useMenu();
     return (
         <>
             <div className="nav">

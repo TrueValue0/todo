@@ -21,15 +21,21 @@ function CustomToggle({ children, eventKey }) {
 
 
 export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
-    const { title = '', id = 0, extendedProps: { completed, description = '', tipo = '' }, start } = evento;
+    const { title = '', id = '', allDay, end, extendedProps: { completed, description = '', tipo = '' }, start } = evento;
+    console.log(end);
     const pointer = { cursor: 'pointer' };
     const [tarea, setTarea] = useState({
         id,
         title,
-        description,
-        completed,
-        tipo,
-        start
+        start,
+        end,
+        allDay,
+        extendedProps: {
+            completed,
+            description,
+            tipo,
+        }
+
     })
     return (
         <>
@@ -45,7 +51,7 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                             <Form.Group as={Row}>
                                 <Form.Label column sm="3" className='text-center'>Fecha</Form.Label>
                                 <Col sm="9">
-                                    <span>{formatearFecha(tarea.start)}</span>
+                                    <span>{tarea.start}</span>
                                 </Col>
                             </Form.Group>
                             <Form.Group as={Row}>
@@ -60,7 +66,7 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                             <Form.Group as={Row} className='mt-1'>
                                 <Form.Label column sm="3" className='text-center'>Tipo</Form.Label>
                                 <Col sm="9">
-                                    <Form.Select value={tarea.tipo} onChange={event => setTarea(prev => ({ ...prev, tipo: event.target.value }))}>
+                                    <Form.Select value={tarea.extendedProps.tipo} onChange={event => setTarea(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, tipo: event.target.value } }))}>
                                         {TAKS_TYPES.map(value => <option key={value}>{value}</option>)}
                                     </Form.Select>
                                 </Col>
@@ -69,8 +75,8 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                                 <Form.Label column sm="3" className='text-center'>Descripcion</Form.Label>
                                 <Col sm="9">
                                     <Form.Control
-                                        onChange={event => setTarea(prev => ({ ...prev, description: event.target.value }))}
-                                        value={tarea.description}
+                                        onChange={event => setTarea(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, description: event.target.value } }))}
+                                        value={tarea.extendedProps.description}
                                     />
                                 </Col>
                             </Form.Group>

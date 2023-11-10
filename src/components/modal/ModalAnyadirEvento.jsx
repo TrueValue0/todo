@@ -9,7 +9,7 @@ import { fechaConHora } from '@/services/generarUUID'
 import { TAKS_TYPES } from '@/config/constantes';
 import { v4 as uuidv4, } from 'uuid';
 
-export default function ModalAnyadirEvento({ ver, cerrar, refresh }) {
+export default function ModalAnyadirEvento({ ver, cerrar, uid = '', fechaActual = '' } = {}) {
 
     const [horas, setHoras] = useState({
         inicio: '00:00',
@@ -18,15 +18,19 @@ export default function ModalAnyadirEvento({ ver, cerrar, refresh }) {
 
     const eventoInicial = {
         titulo: "",
-        fecha: "",
-        fechaFin: '',
+        fecha: fechaActual,
+        fechaFin: fechaActual,
         descripcion: "",
         tipo: 'General',
         allDay: false,
     }
-    const { addEvent } = useTareaDoc();
+    const { addEvent } = useTareaDoc({ uid });
 
     const [evento, setEvento] = useState(eventoInicial);
+
+    useEffect(() => {
+        setEvento(eventoInicial);
+    }, [fechaActual])
 
     const handleChangeTitulo = event => setEvento(prev => ({ ...prev, titulo: event.target.value }));
 
@@ -55,6 +59,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, refresh }) {
                     end: fechaConHora({ fecha: evento.fecha, horas: horas.inicio }),
                     allDay: evento.allDay,
                     extendedProps: {
+                        completed: false,
                         description: evento.descripcion,
                         tipo: evento.tipo,
                     }
@@ -67,6 +72,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, refresh }) {
                     end: fechaConHora({ fecha: evento.fechaFin, horas: horas.fin }),
                     allDay: evento.allDay,
                     extendedProps: {
+                        completed: false,
                         description: evento.descripcion,
                         tipo: evento.tipo,
                     }
@@ -77,15 +83,17 @@ export default function ModalAnyadirEvento({ ver, cerrar, refresh }) {
             setEvento(eventoInicial)
             cerrar();
             //refresh();
-        } else {
-            setEvento(eventoInicial);
-            cerrar();
         }
+    }
+
+    const cerrarBien = () => {
+        setEvento(eventoInicial);
+        cerrar();
     }
 
     return (
         <>
-            <Modal show={ver} onHide={cerrar}>
+            <Modal show={ver} onHide={cerrarBien}>
                 <Modal.Header closeButton>
                     <Modal.Title>Evento</Modal.Title>
                 </Modal.Header>
@@ -175,7 +183,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, refresh }) {
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={cerrar}>
+                    <Button variant="secondary" onClick={cerrarBien}>
                         Cerrar
                     </Button>
                     <Button variant="primary" onClick={guardarEvento}>

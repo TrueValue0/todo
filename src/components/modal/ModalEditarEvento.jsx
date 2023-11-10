@@ -2,9 +2,21 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import { TAKS_TYPES } from '@/config/constantes';
 
-export default function ModalEditarEvento({ evento, cerrar }) {
-    const { ver, titulo, fecha, descripcion, } = evento;
+export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar, reset }) {
+
+    const changeTipo = event => seter(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, tipo: event.target.value } }));
+    const handleDescrpcion = event => seter(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, description: event.target.value } }));
+    const handleTitle = event => seter(prev => ({ ...prev, title: event.target.value }));
+
+    const guardarModal = () => {
+        guardar();
+        reset();
+        cerrar();
+    }
 
     return (
         <>
@@ -14,21 +26,29 @@ export default function ModalEditarEvento({ evento, cerrar }) {
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                            <Form.Label>Nombre</Form.Label>
-                            <Form.Control
-                                type="email"
-                                placeholder="name@example.com"
-                                autoFocus
-                                defaultValue={titulo}
-                            />
-                        </Form.Group>
-                        <Form.Group
-                            className="mb-3"
-                            controlId="exampleForm.ControlTextarea1"
-                        >
+                        <Row>
+                            <Form.Group as={Col} className="mb-3">
+                                <Form.Label>Nombre</Form.Label>
+                                <Form.Control
+                                    onChange={handleTitle}
+                                    value={evento.title}
+                                    type="text"
+                                    autoFocus
+                                />
+                            </Form.Group>
+                            <Form.Group as={Col} className="mb-3">
+                                <Form.Label>Tipos</Form.Label>
+                                <Form.Select value={evento.extendedProps.tipo} onChange={changeTipo}>
+                                    {TAKS_TYPES.map(value => <option key={value}>{value}</option>)}
+                                </Form.Select>
+                            </Form.Group>
+                        </Row>
+                        <Form.Group className="mb-3">
                             <Form.Label>Descripcion</Form.Label>
-                            <Form.Control as="textarea" rows={3} defaultValue={descripcion} />
+                            <Form.Control
+                                value={evento.extendedProps.description}
+                                onChange={handleDescrpcion}
+                                as="textarea" rows={3} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>
@@ -36,7 +56,7 @@ export default function ModalEditarEvento({ evento, cerrar }) {
                     <Button variant="secondary" onClick={cerrar}>
                         Cerrar
                     </Button>
-                    <Button variant="primary" onClick={cerrar}>
+                    <Button variant="primary" onClick={guardarModal}>
                         Guardar
                     </Button>
                 </Modal.Footer>

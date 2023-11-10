@@ -6,9 +6,6 @@ import { useEffect } from 'react';
 export default function Todos() {
     const { datos, deleteEvent, completeEvent, updateEvent } = useTareaDoc();
 
-    useEffect(() => {
-        console.log('cargado');
-    }, [datos])
     return (
         <>
             {datos &&
