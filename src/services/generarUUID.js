@@ -1,11 +1,15 @@
+import { v4 as uuidv4, } from 'uuid';
 export function generateUUID() {
-    var d = new Date().getTime();
-    var uuid = 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-        var r = (d + Math.random() * 16) % 16 | 0;
-        d = Math.floor(d / 16);
-        return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-    });
-    return uuid;
+    const uuid = uuidv4();
+    console.log(uuid);
+    const partes = uuid.split('-');
+
+    // Formatear la salida
+    const salida = `${partes[0]}-${partes[1]}-${partes[2]}-${partes[3]}-${partes[4]}`;
+
+    console.log(salida);
+
+    return salida;
 }
 export function fechaConHora(objetoFecha) {
     const { fecha, horas } = objetoFecha;

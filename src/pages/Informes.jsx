@@ -107,7 +107,7 @@ export default function Informes() {
         <Layout>
             <Form style={{ marginTop: 80 }}>
                 <Container>
-                    <LogoAlargado className='m-auto d-block my-3' width='33%' />
+                    <LogoAlargado className='m-auto d-block my-3' width='400px' />
                     <Paper elevation={3} className='p-4' >
                         <Row className='mt-2'>
                             <Col>

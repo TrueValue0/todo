@@ -7,10 +7,10 @@ import Col from 'react-bootstrap/Col'
 import { useTareaDoc } from '@/hooks/useTareaDoc'
 import { fechaConHora } from '@/services/generarUUID'
 import { TAKS_TYPES } from '@/config/constantes';
+import { v4 as uuidv4, } from 'uuid';
 
 export default function ModalAnyadirEvento({ ver, cerrar, refresh }) {
 
-    /* const { allDay, titulo, fecha, fechaFin, descripcion, tipo } = evento; */
     const [horas, setHoras] = useState({
         inicio: '00:00',
         fin: '00:00'
@@ -28,7 +28,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, refresh }) {
 
     const [evento, setEvento] = useState(eventoInicial);
 
-    const handleChangeTitulo = event => setEvento(prev => ({ ...prev, titulo: event.target.value }))
+    const handleChangeTitulo = event => setEvento(prev => ({ ...prev, titulo: event.target.value }));
 
     const changeDescripcion = event => setEvento(prev => ({ ...prev, descripcion: event.target.value }));
 
@@ -49,7 +49,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, refresh }) {
             let event;
             if (evento.allDay) {
                 event = {
-                    id: crypto.randomUUID(),
+                    id: uuidv4(),
                     title: evento.titulo,
                     start: fechaConHora({ fecha: evento.fecha, horas: horas.inicio }),
                     end: fechaConHora({ fecha: evento.fecha, horas: horas.inicio }),
@@ -61,7 +61,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, refresh }) {
                 }
             } else {
                 event = {
-                    id: crypto.randomUUID(),
+                    id: uuidv4(),
                     title: evento.titulo,
                     start: fechaConHora({ fecha: evento.fecha, horas: horas.inicio }),
                     end: fechaConHora({ fecha: evento.fechaFin, horas: horas.fin }),

@@ -6,11 +6,9 @@ import { useEffect } from 'react';
 export default function Todos() {
     const { datos, deleteEvent, completeEvent, updateEvent } = useTareaDoc();
 
-    console.log(datos);
-
     useEffect(() => {
+        console.log('cargado');
     }, [datos])
-
     return (
         <>
             {datos &&
@@ -26,7 +24,6 @@ export default function Todos() {
                     ))}
                 </ListGroup>
             }
-
         </>
     )
 }

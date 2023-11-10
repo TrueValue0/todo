@@ -12,17 +12,11 @@ export default function Tareas() {
     const [modal, setModal] = useState(false);
     const verModal = () => setModal(true);
     const cerrarModal = () => setModal(false);
-    const navigate = useNavigate()
-
-
-    useEffect(() => {
-
-    }, [modal])
 
     return (
         <Layout>
             <Container style={{ marginTop: 80 }}>
-                <LogoAlargado className='m-auto d-block my-3' width='33%' />
+                <LogoAlargado className='m-auto d-block my-3' width='400px' />
                 <Card >
                     <Card.Header className="text-center h3">Mis Tareas</Card.Header>
                     <Card.Body>

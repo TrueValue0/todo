@@ -59,7 +59,7 @@ export default function Calendario() {
         <Layout>
             <div className='d-flex justify-content-center align-items-center w-100' style={{ marginTop: 80 }}>
                 <div className='w-100 p-1 px-md-5'>
-                    <LogoAlargado className='m-auto d-block' width='33%' />
+                    <LogoAlargado className='m-auto d-block' width='400px' />
                     <FullCalendar
                         events={datos}
                         selectLongPressDelay={1}
