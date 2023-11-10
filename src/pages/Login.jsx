@@ -23,7 +23,6 @@ export default function Login() {
             confirmacion('Login confirmado');
             navigate(redirect);
         } catch (e) {
-            console.log(e);
             error('Correo o Contraseña incorrectos.');
         }
     };

@@ -9,7 +9,7 @@ import { doc, updateDoc } from 'firebase/firestore'
 export default function EditUsuario({ content, seter, handleClose } = { show: false }) {
 
     const handleFileChange = (e) => {
-        console.log(e.target.files)
+
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();

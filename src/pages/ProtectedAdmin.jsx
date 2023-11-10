@@ -9,7 +9,6 @@ export default function ProtectedAdmin({ children }) {
 
     useEffect(() => {
         const unsubscribe = authState(async (user) => {
-            console.log(user);
             if (user === null) setUser(null);
             else {
                 const documento = await getDoc(doc(usuarios, user.uid))

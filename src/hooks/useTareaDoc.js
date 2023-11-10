@@ -24,8 +24,6 @@ export function useTareaDoc({ uid = '' } = {}) {
     }
 
     const updateDoc = async (eventos) => {
-        console.log(id);
-        console.log(eventos);
         try {
             const documentoSF = doc(tareas, id);
             setDatos(eventos);

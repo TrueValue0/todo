@@ -38,8 +38,8 @@ export default function SubirImagen({ imagen = '' } = {}) {
 
         uploadTask.on('state_changed',
             (snapshot) => {
-                progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-                console.log(snapshot.state);
+                progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+
                 switch (snapshot.state) {
                     case 'paused':
                         alerta('Subida pausada');

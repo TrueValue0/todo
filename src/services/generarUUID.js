@@ -1,13 +1,10 @@
 import { v4 as uuidv4, } from 'uuid';
 export function generateUUID() {
     const uuid = uuidv4();
-    console.log(uuid);
     const partes = uuid.split('-');
 
     // Formatear la salida
     const salida = `${partes[0]}-${partes[1]}-${partes[2]}-${partes[3]}-${partes[4]}`;
-
-    console.log(salida);
 
     return salida;
 }
