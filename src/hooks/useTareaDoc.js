@@ -15,6 +15,7 @@ export function useTareaDoc() {
             const documento = await getDoc(documentoSF);
             if (documento.exists()) {
                 const docFinal = documento.data().tareas;
+                console.log(documento.data());
                 setDatos(docFinal);
             } else {
                 console.log("El documento no existe en Firestore");
@@ -30,7 +31,8 @@ export function useTareaDoc() {
             const documentoSF = doc(tareas, id);
             setDatos(eventos);
             await setDoc(documentoSF, {
-                tareas: eventos
+                tareas: eventos,
+                usuario: user.nombre,
             })
             cargarDoc();
         } catch (e) {

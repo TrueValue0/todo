@@ -6,11 +6,11 @@ export const navLista = [
         Icon: BiHomeAlt,
         label: 'Principal',
     },
-    {
+    /* {
         path: '/calendario',
         Icon: BiCalendar,
         label: 'Calendario',
-    },
+    }, */
     {
         path: '/informes',
         Icon: BiSolidBarChartAlt2,
@@ -29,11 +29,11 @@ export const navLista = [
 ]
 
 export const navBottom = [
-    {
+    /* {
         path: '/calendario',
         Icon: BiCalendar,
         label: 'Calendario',
-    },
+    }, */
     {
         path: '/tareas',
         Icon: BiTask,

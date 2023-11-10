@@ -10,6 +10,7 @@ import { tareas } from '@/config/firebaseapp'
 import { getDocs } from 'firebase/firestore';
 import SelectorMultiple from '@/components/SelectorMultiple';
 import { TAKS_TYPES } from '@/config/constantes';
+import LogoAlargado from '@/assets/logoAlargado.jsx'
 //  Filtrado de los informes con las horas, agentes, fechas, descripcion, nombre de empresa (BD).
 export default function Informes() {
 
@@ -106,6 +107,7 @@ export default function Informes() {
         <Layout>
             <Form style={{ marginTop: 80 }}>
                 <Container>
+                    <LogoAlargado className='m-auto d-block my-3' width='33%' />
                     <Paper elevation={3} className='p-4' >
                         <Row className='mt-2'>
                             <Col>

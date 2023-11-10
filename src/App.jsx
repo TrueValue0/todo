@@ -14,18 +14,19 @@ import ProtectedAdmin from '@/pages/ProtectedAdmin'
 //import Usuarios from '@/pages/Usuarios'
 import Informes from '@/pages/Informes'
 import NoAuthorized from '@/pages/NoAuthorized';
+import ResetPassword from '@/pages/ResetPassword';
 
 function App() {
   const router = createBrowserRouter([
     {
       path: '/',
-      element: (<ProtectedRouteAuth><Home /></ProtectedRouteAuth>),
+      element: (<ProtectedRouteAuth><Calendario /></ProtectedRouteAuth>),
       errorElement: <Error />
     },
-    {
+    /* {
       path: '/calendario',
-      element: (<ProtectedRouteAuth><Calendario /></ProtectedRouteAuth>)
-    },
+      element: ()
+    }, */
     {
       path: '/tareas',
       element: (<ProtectedRouteAuth><Tareas /></ProtectedRouteAuth>)
@@ -49,6 +50,10 @@ function App() {
     {
       path: '/noAuthorized',
       element: <NoAuthorized />
+    },
+    {
+      path: '/resetPassword',
+      element: <ResetPassword />
     }
   ])
 

@@ -1,20 +1,28 @@
-import ModalAddEvent from "@/components/todos/ModalAddEvent";
 import { Card, Container } from "react-bootstrap";
 import { BiCalendar, BiPlus } from 'react-icons/bi';
 import Layout from "@/components/layouts/Layout";
 import Todos from "@/components/todos/Todos";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import LogoAlargado from '@/assets/logoAlargado.jsx'
+import ModalAnyadirEvento from '@/components/modal/ModalAnyadirEvento'
+import { useNavigate } from "react-router-dom";
 
 export default function Tareas() {
 
-    const [addEvent, setEvent] = useState(false);
-    const verModal = () => setEvent(true);
-    const cerrarModal = () => setEvent(false);
+    const [modal, setModal] = useState(false);
+    const verModal = () => setModal(true);
+    const cerrarModal = () => setModal(false);
+    const navigate = useNavigate()
 
+
+    useEffect(() => {
+
+    }, [modal])
 
     return (
         <Layout>
             <Container style={{ marginTop: 80 }}>
+                <LogoAlargado className='m-auto d-block my-3' width='33%' />
                 <Card >
                     <Card.Header className="text-center h3">Mis Tareas</Card.Header>
                     <Card.Body>
@@ -26,7 +34,7 @@ export default function Tareas() {
                     </Card.Body>
                 </Card>
             </Container>
-            <ModalAddEvent ver={addEvent} cerrar={cerrarModal} />
+            <ModalAnyadirEvento ver={modal} cerrar={cerrarModal} refresh={() => location.reload()} />
         </Layout>
     )
 }

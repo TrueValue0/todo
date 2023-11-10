@@ -26,7 +26,7 @@ function renderEventContent(eventInfo) {
 
 export default function Calendario() {
 
-    const { datos, deleteEvent, completeEvent, updateEvent, addEvent } = useTareaDoc();
+    const { datos } = useTareaDoc();
 
     const tablet = useMediaQuery('1024');
 
@@ -36,63 +36,11 @@ export default function Calendario() {
         fecha: "",
         descripcion: "",
     }
-    const eventInitalCalendar = {
-        ver: false,
-        titulo: "",
-        fecha: "",
-        fechaFin: '',
-        descripcion: "",
-        tipo: 'General',
-        allDay: false,
-        info: null
-    }
-    const [evento, setEvento] = useState(eventInital)
+
+    const [evento, setEvento] = useState(eventInital);
+    const [modal, setModal] = useState(false);
     const cerrarEvento = () => setEvento(eventInital);
-    const [newEvent, setNewEvent] = useState(eventInitalCalendar);
     const cerrarNewEvento = () => setNewEvent(eventInitalCalendar);
-
-
-    const handleDateSelect = () => {
-        let calendarApi = newEvent.info.view.calendar;
-
-        calendarApi.unselect() // clear date selection
-        console.log(newEvent.info);
-
-        if (newEvent.info && newEvent.titulo !== "") {
-            let evento;
-            if (newEvent.allDay) {
-                evento = {
-                    id: crypto.randomUUID(),
-                    title: newEvent.titulo,
-                    start: newEvent.fecha,
-                    end: newEvent.info.endStr,
-                    allDay: newEvent.allDay,
-                    extendedProps: {
-                        description: newEvent.descripcion,
-                        tipo: newEvent.tipo,
-                    }
-                }
-            } else {
-                evento = {
-                    id: crypto.randomUUID(),
-                    title: newEvent.titulo,
-                    start: newEvent.fecha,
-                    end: newEvent.fechaFin,
-                    allDay: newEvent.allDay,
-                    extendedProps: {
-                        description: newEvent.descripcion
-                    }
-                }
-            }
-            console.log(evento);
-
-            calendarApi.addEvent(evento)
-            addEvent(evento);
-            setNewEvent(eventInitalCalendar)
-        } else {
-            setNewEvent(eventInitalCalendar)
-        }
-    }
 
     const handleEventClick = (clickInfo) => {
         let nuevoEvento = {
@@ -103,10 +51,6 @@ export default function Calendario() {
         }
         const calendario = clickInfo.view.calendar;
         setEvento(nuevoEvento)
-    }
-
-    const handleEvents = (events) => {
-        setState(prev => ({ ...prev, currentEvents: events }))
     }
 
     const ocultarFindes = () => tablet ? [0, 6] : [];
@@ -138,7 +82,7 @@ export default function Calendario() {
                         selectable
                         selectMirror
                         dayMaxEvents={true}
-                        select={(selectInfo) => setNewEvent(prev => ({ ...prev, ver: true, info: selectInfo, fecha: selectInfo.startStr }))} //Funcion al crear un envento.
+                        select={() => setModal(true)} //Funcion al crear un envento.
                         eventContent={renderEventContent} // custom render function
                         eventClick={handleEventClick} // Funcion que se ejecuta al editar los eventos
                         //eventsSet={handleEvents} // called after events are initialized/added/changed/removed
@@ -146,7 +90,7 @@ export default function Calendario() {
                     />
                 </div>
                 {evento.ver && <ModalEditarEvento evento={evento} cerrar={cerrarEvento} />}
-                {newEvent.ver && <ModalAnyadirEvento evento={newEvent} cerrar={cerrarNewEvento} seter={setNewEvent} guardar={handleDateSelect} />}
+                <ModalAnyadirEvento ver={modal} cerrar={() => setModal(false)} />
             </div>
         </Layout>
     )
