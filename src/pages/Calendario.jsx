@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Layout from '@/components/layouts/Layout'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -16,6 +16,7 @@ import { useUsers } from '@/hooks/useUser'
 import { Paper } from '@mui/material'
 import Form from 'react-bootstrap/Form'
 import { useAuth } from '@/context/AuthProvider'
+import { useEventos } from '@/context/EventoProvider'
 
 
 function renderEventContent(eventInfo) {
@@ -35,6 +36,13 @@ export default function Calendario() {
     const { user } = useAuth();
     const { datos, updateEvent } = useTareaDoc({ uid: idCalendar });
     const [fechaActual, setFechaActual] = useState('');
+
+    const { eventos, setEventos } = useEventos();
+
+    useEffect(() => {
+        // Actualiza el estado local cuando cambian los datos
+        setEventos(datos);
+    }, [datos]);
 
     const tablet = useMediaQuery('1024');
 
@@ -98,7 +106,7 @@ export default function Calendario() {
                         </Form.Select>
                     </Paper>}
                     <FullCalendar
-                        events={datos}
+                        events={eventos}
                         selectLongPressDelay={1}
                         themeSystem='bootstrap5'
                         expandRows

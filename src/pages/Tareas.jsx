@@ -7,6 +7,7 @@ import LogoAlargado from '@/assets/logoAlargado.jsx'
 import ModalAnyadirEvento from '@/components/modal/ModalAnyadirEvento'
 import { useNavigate } from "react-router-dom";
 
+
 export default function Tareas() {
 
     const [modal, setModal] = useState(false);

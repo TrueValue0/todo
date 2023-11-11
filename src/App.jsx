@@ -15,6 +15,7 @@ import ProtectedAdmin from '@/pages/ProtectedAdmin'
 import Informes from '@/pages/Informes'
 import NoAuthorized from '@/pages/NoAuthorized';
 import ResetPassword from '@/pages/ResetPassword';
+import { EventosProvider } from '@/context/EventoProvider'
 
 function App() {
   const router = createBrowserRouter([
@@ -60,7 +61,9 @@ function App() {
   return (
     <>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <EventosProvider>
+          <RouterProvider router={router} />
+        </EventosProvider>
       </AuthProvider>
     </>
   )

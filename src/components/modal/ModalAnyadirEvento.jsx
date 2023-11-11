@@ -7,10 +7,12 @@ import Col from 'react-bootstrap/Col'
 import { useTareaDoc } from '@/hooks/useTareaDoc'
 import { fechaConHora } from '@/services/generarUUID'
 import { TAKS_TYPES } from '@/config/constantes';
+import { useEventos } from '@/context/EventoProvider'
 import { v4 as uuidv4, } from 'uuid';
 
 export default function ModalAnyadirEvento({ ver, cerrar, uid = '', fechaActual = '' } = {}) {
 
+    const { agregarEvento } = useEventos();
     const [horas, setHoras] = useState({
         inicio: '00:00',
         fin: '00:00'
@@ -79,10 +81,10 @@ export default function ModalAnyadirEvento({ ver, cerrar, uid = '', fechaActual 
                 }
             }
 
+            agregarEvento(event)
             addEvent(event);
             setEvento(eventoInicial)
             cerrar();
-            //refresh();
         }
     }
 
