@@ -4,15 +4,14 @@ import { Alert, Button, Col, Container, Form, Row, Card } from "react-bootstrap"
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthProvider";
 import { HiEyeOff, HiEye } from "react-icons/hi";
+import { doc, getDoc } from "firebase/firestore";
+import { usuarios } from "@/config/firebaseapp";
 
 export default function Login() {
     const navigate = useNavigate();
-    const { state } = useLocation();
-    const redirect = /* pathname?.location?.pathname ?? */ '/';
     const [eye, setEye] = useState(true);
-    const [validated, setValidated] = useState(false);
     const { alert, confirmacion, error } = useAlert();
-    const { login, user } = useAuth();
+    const { login, user, setUser, authState } = useAuth();
 
     const handleSubmit = async (event) => {
         try {
@@ -21,13 +20,21 @@ export default function Login() {
             await login(email, password);
             confirmacion('Login confirmado');
             navigate('/');
+            authState(async (user) => {
+                if (user === null) setUser(null);
+                else {
+                    const documento = await getDoc(doc(usuarios, user.uid))
+                    if (documento.exists()) setUser({ ...documento.data(), id: user.uid });
+                    else setUser(null);
+                }
+            });
         } catch (e) {
             error('Correo o Contraseña incorrectos.');
         }
     };
 
     useEffect(() => {
-        if (user) navigate(redirect)
+        if (user) navigate('/')
     }, [user])
 
 
@@ -38,7 +45,7 @@ export default function Login() {
                     <Card className="p-5 w-50 m-auto">
                         <h3 className="text-center fw-bold text-primary mt-3">Login</h3>
                         <img src="uriarte.png" width='150px' className="m-auto" alt="" />
-                        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                        <Form noValidate onSubmit={handleSubmit}>
                             <Form.Group className="form-outline mb-4">
                                 <Form.Label>Email</Form.Label >
                                 <Form.Control name="email" type="email" required />
