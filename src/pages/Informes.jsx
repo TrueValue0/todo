@@ -14,6 +14,13 @@ import LogoAlargado from '@/assets/logoAlargado.jsx'
 //  Filtrado de los informes con las horas, agentes, fechas, descripcion, nombre de empresa (BD).
 export default function Informes() {
 
+    const initalFilters = {
+        tarea: '',
+        fecha: '',
+        comerciales: [],
+        tipos: [],
+    }
+
     const [dataGridOpts, setDataGridOpts] = useState({
         loading: true,
     })
@@ -21,28 +28,26 @@ export default function Informes() {
     const [agentes, setAgentes] = useState([]);
     const [informesTabla, setInformesTabla] = useState([]);
 
-    const [filtros, setFiltros] = useState({
-        query: '',
-        fecha: '',
-        comerciales: [],
-        tipos: [],
-    })
+    const [filtros, setFiltros] = useState(initalFilters)
 
     //const columns = 
 
     const mapearInformes = (datos) => {
+        let idCustom = 0;
         const informesMapeados = datos.filter(usuario => usuario.tareas.length > 0) // Filtra los usuarios con tareas no vacías
             .flatMap((usuario) => {
-                return usuario.tareas.map((tarea, indice) => {
+                return usuario.tareas.map((tarea) => {
+                    idCustom = idCustom + 1;
                     return {
-                        id: indice,
+                        id: idCustom,
                         nombre: usuario.usuario ?? '',
                         tarea: tarea.title ?? '',
-                        descripcion: tarea.extendedProps.description ?? '',
+                        descripcion: tarea.extendedProps.description ?? 'Sin descripción',
                         tipo: tarea.extendedProps.tipo ?? '',
                         fecha: tarea.start ?? ''
                     }
                 })
+
             });
 
         setInformesTabla(informesMapeados);
@@ -58,7 +63,8 @@ export default function Informes() {
             idCustom += 1
         });
 
-        setInformes(tareasData);
+        tareasData.sort((a, b) => a.usuario.localeCompare(b.usuario));
+        tareasData = tareasData.map(value => (value.start) ? { ...value, start: value.start.slice(0, 10) } : { ...value });
         setAgentes(tareasData.map(value => value.usuario))
         mapearInformes(tareasData);
     };
@@ -73,30 +79,28 @@ export default function Informes() {
 
 
     const filtrar = () => {
-        if (
-            !filtros.query &&
-            !filtros.fecha &&
-            filtros.comerciales.length === 0 &&
-            filtros.tipos.length === 0
-        ) return;
+        if (filtros === initalFilters) {
+            // Si no hay criterios de filtro, mostrar todos los informes
+            setInformes(informesTabla);
+        } else {
+            // Aplicar los filtros si hay criterios de filtro
+            const informesFiltrados = informesTabla.filter((informe) => {
+                const nombreMatch = informe.nombre.toLowerCase().includes(filtros.tarea.toLowerCase());
+                const fechaMatch = filtros.fecha ? informe.fecha.includes(filtros.fecha) : true;
+                const comercialesMatch = filtros.comerciales.length === 0 || filtros.comerciales.includes(informe.nombre);
+                const tiposMatch = filtros.tipos.length === 0 || filtros.tipos.includes(informe.tipo);
 
-        setInformesTabla(informesTabla.filter(informe => {
+                return nombreMatch && fechaMatch && comercialesMatch && tiposMatch;
+            });
 
-            const cumpleFiltroQuery = !filtros.query ||
-                informe.tarea.includes(filtros.query) ||
-                informe.descripcion.includes(filtros.query) ||
-                informe.nombre.includes(filtros.query);
-
-            const cumpleFiltroFecha = !filtros.fecha || informe.fecha.startsWith(filtros.fecha);
-            const cumpleFiltroComerciales = filtros.comerciales.length === 0 || filtros.comerciales.includes(informe.nombre);
-            const cumpleFiltroTipos = filtros.tipos.length === 0 || filtros.tipos.includes(informe.tipo);
-
-            return cumpleFiltroQuery && cumpleFiltroFecha && cumpleFiltroComerciales && cumpleFiltroTipos;
-        }))
+            setInformes(informesFiltrados);
+        }
     };
 
 
-    useEffect(filtrar, [filtros])
+
+
+    useEffect(filtrar, [filtros, informes])
 
     useEffect(() => {
         cargarTareas();
@@ -147,7 +151,7 @@ export default function Informes() {
                             {
                                 field: 'tarea',
                                 headerName: 'Tarea',
-                                minWidth: 100
+                                minWidth: 120
                             },
                             {
                                 field: 'descripcion',
@@ -166,7 +170,7 @@ export default function Informes() {
                                 minWidth: 90
                             },
                         ]}
-                        rows={informesTabla}
+                        rows={informes}
                         disableRowSelectionOnClick
                         loading={dataGridOpts.loading}
                         autoHeight

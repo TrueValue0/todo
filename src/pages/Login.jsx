@@ -17,11 +17,10 @@ export default function Login() {
     const handleSubmit = async (event) => {
         try {
             event.preventDefault();
-            event.stopPropagation();
             const { email, password } = Object.fromEntries(new FormData(event.target));
             await login(email, password);
             confirmacion('Login confirmado');
-            navigate(redirect);
+            navigate('/');
         } catch (e) {
             error('Correo o Contraseña incorrectos.');
         }

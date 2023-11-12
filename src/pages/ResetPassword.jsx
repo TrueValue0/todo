@@ -35,12 +35,12 @@ export default function ResetPassword() {
             <div className="d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: '#808080' }}>
                 <Container className="my-4">
                     <Card className="p-5 w-50 m-auto">
-                        <h3 className="text-center fw-bold">Reset Password</h3>
+                        <h3 className="text-center fw-bold text-primary mt-3">Reset Password</h3>
                         <img src="uriarte.png" width='150px' className="m-auto" alt="" />
                         <Form noValidate validated={validated} onSubmit={handleSubmit}>
                             <Form.Group className="form-outline mb-4">
                                 <Form.Label>Email</Form.Label >
-                                <Form.Control name="email" type="email" required />
+                                <Form.Control placeholder="" name="email" type="email" required />
                                 <Form.Control.Feedback type="invalid">Correo Requerido</Form.Control.Feedback>
                             </Form.Group>
 
