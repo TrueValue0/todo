@@ -26,7 +26,6 @@ export function useTareaDoc({ uid = '' } = {}) {
     const updateDoc = async (eventos) => {
         try {
             const documentoSF = doc(tareas, id);
-            setDatos(eventos);
             await setDoc(documentoSF, {
                 tareas: eventos,
                 usuario: user.nombre,
@@ -69,6 +68,7 @@ export function useTareaDoc({ uid = '' } = {}) {
             }
             return event;
         })
+        console.log(events);
         updateDoc(events)
     }
 
@@ -81,5 +81,5 @@ export function useTareaDoc({ uid = '' } = {}) {
         cargarDoc();
     }, [uid]);
 
-    return { datos, deleteEvent, completeEvent, updateEvent, addEvent };
+    return { datos, deleteEvent, completeEvent, updateEvent, addEvent, updateDoc };
 }

@@ -12,6 +12,9 @@ export function useUsers() {
         let usuariosData = [];
         querySnapshot.forEach(doc => usuariosData.push({ id: doc.id, ...doc.data(), }));
 
+        //Ordenar nombres de usuarios alfabeticamente.
+        usuariosData.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
         setUsers(usuariosData);
     };
 

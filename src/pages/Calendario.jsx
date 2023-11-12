@@ -34,7 +34,7 @@ export default function Calendario() {
     const [idCalendar, setIdCalendar] = useState('');
     const { users } = useUsers();
     const { user } = useAuth();
-    const { datos, updateEvent } = useTareaDoc({ uid: idCalendar });
+    const { datos, updateDoc } = useTareaDoc({ uid: idCalendar });
     const [fechaActual, setFechaActual] = useState('');
 
     const { eventos, setEventos } = useEventos();
@@ -83,7 +83,25 @@ export default function Calendario() {
     }
 
     const actualizar = () => {
-        updateEvent(evento.id, evento);
+        let events = eventos.map(event => {
+            if (event.id === id) {
+                return {
+                    id: evento.id,
+                    title: evento.title,
+                    start: evento.start,
+                    end: evento.end,
+                    allDay: evento.allDay,
+                    extendedProps: {
+                        completed: evento.extendedProps.completed ?? false,
+                        description: evento.extendedProps.description,
+                        tipo: evento.extendedProps.tipo,
+                    }
+                }
+            }
+            return event;
+        })
+        setEventos(events);
+        updateDoc(events);
     }
 
     const handleSelect = event => setIdCalendar(event.target.value);
@@ -99,9 +117,9 @@ export default function Calendario() {
                         <Form.Select onChange={handleSelect}>
                             <option value=''>Selecciona un agente</option>
                             {
-                                users.map(user => (
-                                    <option key={user.id} value={user.id}>{user.nombre}</option>
-                                ))
+                                users.map(user => {
+                                    if (user.nombre !== 'PRUEBA') return (<option key={user.id} value={user.id}>{user.nombre}</option>)
+                                })
                             }
                         </Form.Select>
                     </Paper>}

@@ -54,7 +54,7 @@ export default function Layout({ children }) {
                             <DropdownMenu style={{ right: 0 }} >
                                 <DropdownItem onClick={() => navigate('/user')} className='text-center' eventKey='1'><BiUser className='fs-5' /> Perfil</DropdownItem>
                                 <DropdownItem onClick={cerrarSesion} className='text-center' eventKey='2'> <BiLogOut className='fs-5' /> Salir</DropdownItem>
-                                <DropdownItem disabled className='text-center' eventKey='1'> ROL</DropdownItem>
+                                <DropdownItem disabled className='text-center' eventKey='1'>{user.rol}</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
                     </div>
