@@ -16,6 +16,7 @@ export const esText = {
     checkboxSelectionHeaderName: 'Casillas de seleccion',
     toolbarColumnsLabel: 'Buscar Columna',
     columnMenuUnsort: 'Deshacer',
+    noRowsLabel: 'Sin resultados'
 }
 
 export const TAKS_TYPES = ['General', 'Visita', 'Venta', 'Tour']

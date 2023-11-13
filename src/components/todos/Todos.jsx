@@ -3,8 +3,8 @@ import { ListGroup } from 'react-bootstrap'
 import { useTareaDoc } from '@/hooks/useTareaDoc'
 import { useEffect } from 'react';
 import { useEventos } from '@/context/EventoProvider'
-export default function Todos() {
-    const { datos, completeEvent, updateDoc } = useTareaDoc();
+export default function Todos({ uid }) {
+    const { datos, completeEvent, updateDoc } = useTareaDoc({ uid });
     const { eventos, setEventos } = useEventos();
 
     useEffect(() => {

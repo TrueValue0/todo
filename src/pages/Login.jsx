@@ -1,7 +1,7 @@
 import { useAlert } from "@/hooks/useAlert";
 import { useEffect, useState } from "react";
 import { Alert, Button, Col, Container, Form, Row, Card } from "react-bootstrap";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthProvider";
 import { HiEyeOff, HiEye } from "react-icons/hi";
 import { doc, getDoc } from "firebase/firestore";

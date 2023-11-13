@@ -22,7 +22,6 @@ function CustomToggle({ children, eventKey }) {
 
 export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
     const { title = '', id = '', allDay, end, extendedProps: { completed, description = '', tipo = '' }, start } = evento;
-    console.log(end);
     const pointer = { cursor: 'pointer' };
     const [tarea, setTarea] = useState({
         id,

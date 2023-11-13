@@ -8,6 +8,7 @@ export function useEventos() {
 
 export function EventosProvider({ children }) {
     const [eventos, setEventos] = useState([]);
+    const [idCustom, setIdCustom] = useState('');
 
     const agregarEvento = (evento) => {
         setEventos((prevEventos) => [...prevEventos, evento]);
@@ -16,7 +17,7 @@ export function EventosProvider({ children }) {
     // Puedes agregar más funciones según tus necesidades
 
     return (
-        <EventosContext.Provider value={{ eventos, setEventos, agregarEvento }}>
+        <EventosContext.Provider value={{ eventos, setEventos, agregarEvento, idCustom, setIdCustom }}>
             {children}
         </EventosContext.Provider>
     );

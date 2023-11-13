@@ -38,8 +38,8 @@ export default function SelectorMultiple({ label, names, agent, setAgent }) {
                     renderValue={(selected) => selected.join(', ')}
                     MenuProps={MenuProps}
                 >
-                    {names.map((name) => (
-                        <MenuItem key={name} value={name}>
+                    {names.map((name, index) => (
+                        <MenuItem key={index} value={name}>
                             <Checkbox checked={agent.indexOf(name) > -1} />
                             <ListItemText primary={name} />
                         </MenuItem>

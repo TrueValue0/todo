@@ -31,13 +31,12 @@ function renderEventContent(eventInfo) {
 
 export default function Calendario() {
 
-    const [idCalendar, setIdCalendar] = useState('');
+    const { eventos, setEventos, idCustom, setIdCustom } = useEventos();
     const { users } = useUsers();
     const { user } = useAuth();
-    const { datos, updateDoc } = useTareaDoc({ uid: idCalendar });
+    const { datos, updateDoc } = useTareaDoc({ uid: idCustom });
     const [fechaActual, setFechaActual] = useState('');
 
-    const { eventos, setEventos } = useEventos();
 
     useEffect(() => {
         // Actualiza el estado local cuando cambian los datos
@@ -104,9 +103,11 @@ export default function Calendario() {
         updateDoc(events);
     }
 
-    const handleSelect = event => setIdCalendar(event.target.value);
+    const handleSelect = event => setIdCustom(event.target.value);
 
     const ocultarFindes = () => tablet ? [0, 6] : [];
+
+    const currentComercial = users.find(user => user.id === idCustom)
 
     return (
         <Layout>
@@ -114,12 +115,11 @@ export default function Calendario() {
                 <div className='w-100 p-1 px-md-5'>
                     <LogoAlargado className='m-auto d-block' width='400px' />
                     {user.rol === 'admin' && <Paper className='d-inline-block p-3 my-3'>
-                        <Form.Select onChange={handleSelect}>
+                        <Form.Select onChange={handleSelect} value={currentComercial ? currentComercial.id : ''}>
                             <option value=''>Selecciona un agente</option>
-                            {
-                                users.map(user => {
-                                    if (user.nombre !== 'PRUEBA') return (<option key={user.id} value={user.id}>{user.nombre}</option>)
-                                })
+                            {users.map(user => {
+                                if (user.nombre !== 'PRUEBA') return (<option key={user.id} value={user.id}>{user.nombre}</option>)
+                            })
                             }
                         </Form.Select>
                     </Paper>}
@@ -162,7 +162,7 @@ export default function Calendario() {
                     cerrar={() => setModalEdit(false)}
                     seter={setEvento} guardar={actualizar}
                 />
-                <ModalAnyadirEvento ver={modal} cerrar={() => setModal(false)} uid={idCalendar} fechaActual={fechaActual} setFecha={setFechaActual} />
+                <ModalAnyadirEvento ver={modal} cerrar={() => setModal(false)} uid={idCustom} fechaActual={fechaActual} setFecha={setFechaActual} />
             </div>
         </Layout >
     )

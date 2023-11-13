@@ -6,7 +6,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Row, Col, Container } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { tareas } from '@/config/firebaseapp'
+import { tareas, usuarios } from '@/config/firebaseapp'
 import { getDocs } from 'firebase/firestore';
 import SelectorMultiple from '@/components/SelectorMultiple';
 import { TAKS_TYPES } from '@/config/constantes';
@@ -51,21 +51,27 @@ export default function Informes() {
             });
 
         setInformesTabla(informesMapeados);
+        setInformes(informesMapeados);
     }
 
     const cargarTareas = async () => {
         const querySnapshot = await getDocs(tareas);
+        const UsersSnapshot = await getDocs(usuarios);
 
         let tareasData = [];
+        let usuariosData = [];
         let idCustom = 1;
         querySnapshot.forEach((doc) => {
             tareasData.push({ id: idCustom, ...doc.data(), uid: doc.id });
             idCustom += 1
         });
-
+        UsersSnapshot.forEach(doc => usuariosData.push({ id: doc.id, ...doc.data(), }));
+        usuariosData.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        usuariosData = usuariosData.map(value => value.nombre)
+        usuariosData = usuariosData.flatMap(value => value === 'PRUEBA' ? [] : value)
         tareasData.sort((a, b) => a.usuario.localeCompare(b.usuario));
         tareasData = tareasData.map(value => (value.start) ? { ...value, start: value.start.slice(0, 10) } : { ...value });
-        setAgentes(tareasData.map(value => value.usuario))
+        setAgentes(usuariosData)
         mapearInformes(tareasData);
     };
 
@@ -92,15 +98,11 @@ export default function Informes() {
 
                 return nombreMatch && fechaMatch && comercialesMatch && tiposMatch;
             });
-
             setInformes(informesFiltrados);
         }
     };
 
-
-
-
-    useEffect(filtrar, [filtros, informes])
+    useEffect(filtrar, [filtros])
 
     useEffect(() => {
         cargarTareas();
