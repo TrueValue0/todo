@@ -50,7 +50,12 @@ export default function Tareas() {
                     </Card.Body>
                 </Card>
             </Container>
-            <ModalAnyadirEvento ver={modal} cerrar={cerrarModal} refresh={() => location.reload()} />
+            <ModalAnyadirEvento
+                ver={modal}
+                cerrar={cerrarModal}
+                uid={idCustom}
+                refresh={() => location.reload()}
+            />
         </Layout>
     )
 }

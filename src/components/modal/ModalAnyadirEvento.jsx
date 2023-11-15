@@ -10,7 +10,7 @@ import { TAKS_TYPES } from '@/config/constantes';
 import { useEventos } from '@/context/EventoProvider'
 import { v4 as uuidv4, } from 'uuid';
 
-export default function ModalAnyadirEvento({ ver, cerrar, uid = '', fechaActual = '' } = {}) {
+export default function ModalAnyadirEvento({ ver, cerrar, uid = '', fechaActual = new Date().toISOString().split('T')[0] } = {}) {
 
     const { agregarEvento } = useEventos();
     const [horas, setHoras] = useState({
@@ -24,7 +24,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, uid = '', fechaActual 
         fechaFin: fechaActual,
         descripcion: "",
         tipo: 'General',
-        allDay: false,
+        allDay: true,
     }
     const { addEvent } = useTareaDoc({ uid });
 
@@ -112,6 +112,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, uid = '', fechaActual 
                             </Form.Group>
                             <Form.Group as={Col} className='col-4' >
                                 <Form.Check // prettier-ignore
+                                    checked={evento.allDay}
                                     type="switch"
                                     label="Todo el dia"
                                     onChange={handleAllDay}
