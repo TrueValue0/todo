@@ -144,7 +144,7 @@ export default function Calendario() {
                         editable
                         selectable
                         selectMirror
-                        dayMaxEvents={true}
+                        dayMaxEvents={false}
                         select={(informacion) => {
                             setFechaActual(informacion.startStr);
                             setModal(true)
@@ -153,6 +153,7 @@ export default function Calendario() {
                         eventClick={handleEventClick} // Funcion que se ejecuta al editar los eventos
                         //eventsSet={handleEvents} // called after events are initialized/added/changed/removed
                         locale={esLocale} // Traduccion a español
+
                     />
                 </div>
                 <ModalEditarEvento
