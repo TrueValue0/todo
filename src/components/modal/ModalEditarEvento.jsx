@@ -4,12 +4,17 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { TAKS_TYPES } from '@/config/constantes';
+import { TAKS_TYPES, empresas } from '@/config/constantes';
+import { useAuth } from '@/context/AuthProvider';
 
 export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar, reset }) {
 
-    const changeTipo = event => seter(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, tipo: event.target.value } }));
-    const handleDescrpcion = event => seter(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, description: event.target.value } }));
+    const { user } = useAuth();
+
+    const changeTipo = event => seter(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, visita: event.target.value } }));
+    const changeEmpresas = event => seter(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, empresa: event.target.value } }));
+    const handleDescrpcion = event => seter(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, objetivo: event.target.value } }));
+    const handleConclusiones = event => seter(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, conclusiones: event.target.value } }));
     const handleTitle = event => seter(prev => ({ ...prev, title: event.target.value }));
 
     const guardarModal = () => {
@@ -28,8 +33,9 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                     <Form>
                         <Row>
                             <Form.Group as={Col} className="mb-3">
-                                <Form.Label>Nombre</Form.Label>
+                                <Form.Label>Asunto</Form.Label>
                                 <Form.Control
+                                    disabled={user.rol !== 'admin'}
                                     onChange={handleTitle}
                                     value={evento.title}
                                     type="text"
@@ -37,18 +43,37 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                                 />
                             </Form.Group>
                             <Form.Group as={Col} className="mb-3">
-                                <Form.Label>Tipos</Form.Label>
-                                <Form.Select value={evento.extendedProps.tipo} onChange={changeTipo}>
+                                <Form.Label>Visitas</Form.Label>
+                                <Form.Select value={evento.extendedProps.visita} onChange={changeTipo} disabled={user.rol !== 'admin'}>
                                     {TAKS_TYPES.map(value => <option key={value}>{value}</option>)}
                                 </Form.Select>
                             </Form.Group>
                         </Row>
+                        <Row>
+                            <Form.Group as={Col} className="mb-3">
+                                <Form.Label>Empresas</Form.Label>
+                                <Form.Select value={evento.extendedProps.visita} onChange={changeEmpresas} disabled={user.rol !== 'admin'}>
+                                    <option value=''>Selecciona una empresa</option>
+                                    {empresas.map(value => <option key={value}>{value}</option>)}
+                                </Form.Select>
+                            </Form.Group>
+                        </Row>
                         <Form.Group className="mb-3">
-                            <Form.Label>Descripcion</Form.Label>
+                            <Form.Label>Objetivo</Form.Label>
                             <Form.Control
-                                value={evento.extendedProps.description}
+                                disabled={user.rol !== 'admin'}
+                                value={evento.extendedProps.objetivo}
                                 onChange={handleDescrpcion}
-                                as="textarea" rows={3} />
+                                as="textarea"
+                                rows={3} />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Conclusiones</Form.Label>
+                            <Form.Control
+                                value={evento.extendedProps.conclusiones}
+                                onChange={handleConclusiones}
+                                as="textarea"
+                                rows={3} />
                         </Form.Group>
                     </Form>
                 </Modal.Body>

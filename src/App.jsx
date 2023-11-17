@@ -16,6 +16,7 @@ import Informes from '@/pages/Informes'
 import NoAuthorized from '@/pages/NoAuthorized';
 import ResetPassword from '@/pages/ResetPassword';
 import { EventosProvider } from '@/context/EventoProvider'
+import Cambios from '@/pages/Cambios';
 
 function App() {
   const router = createBrowserRouter([
@@ -55,6 +56,10 @@ function App() {
     {
       path: '/resetPassword',
       element: <ResetPassword />
+    },
+    {
+      path: '/cambios',
+      element: <Cambios />
     }
   ])
 

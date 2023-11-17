@@ -17,8 +17,9 @@ export function fechaConHora(objetoFecha) {
 }
 
 export function formatearFecha(fecha) {
-    var partes = fecha.split("-");
-    var fechaFormateada = partes[2] + "/" + partes[1] + "/" + partes[0];
+    fecha = fecha.slice(0, 10);
+    let partes = fecha.split("-");
+    let fechaFormateada = partes[2] + "/" + partes[1] + "/" + partes[0];
     return fechaFormateada;
 }
 
@@ -46,4 +47,32 @@ export function generarPassword(options) {
     }
 
     return password;
+}
+
+
+
+
+
+export function cambiarTipoEvento(objeto) {
+    return {
+        usuario: objeto.usuario,
+        tareas: objeto.tareas.map(evento => {
+            return {
+                id: evento.id ?? uuidv4(),
+                title: evento.title ?? 'Sin titulo', // Cambiar el nombre de 'title' a 'asunto'
+                start: evento.start ?? '',
+                end: evento.end = evento.start ? evento.start : '',
+                allDay: evento.allDay ?? true,
+                extendedProps: {
+                    objetivo: evento.extendedProps.description ?? '', // Cambiar el nombre de 'description' a 'objetivo'
+                    completed: evento.extendedProps.completed ?? false,
+                    visita: evento.extendedProps.tipo ?? 'Visita Comercial', // Cambiar el nombre de 'tipo' a 'empresas'
+                    empresa: '',
+                    conclusiones: '', // Agregar un campo 'conclusiones'
+                    planificacion: [],
+                }
+            }
+        })
+    }
+
 }

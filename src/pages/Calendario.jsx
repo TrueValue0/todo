@@ -68,15 +68,18 @@ export default function Calendario() {
         let nuevoEvento = {
             id: clickInfo.event.id,
             title: clickInfo.event.title,
-            startStr: clickInfo.event.startStr,
-            endStr: clickInfo.event.endStr,
+            startStr: clickInfo.event.start,
+            endStr: clickInfo.event.end,
             allDay: clickInfo.event.allDay,
             extendedProps: {
+                objetivo: clickInfo.event.extendedProps.objetivo,
                 completed: clickInfo.event.extendedProps.completed,
-                description: clickInfo.event.extendedProps.description,
-                tipo: clickInfo.event.extendedProps.tipo,
+                empresa: clickInfo.event.extendedProps.empresa,
+                conclusiones: clickInfo.event.extendedProps.conclusiones,
+                planificacion: clickInfo.event.extendedProps.planificacion,
             }
         }
+
         setEvento(nuevoEvento)
         setModalEdit(true)
     }
@@ -147,13 +150,12 @@ export default function Calendario() {
                         dayMaxEvents={false}
                         select={(informacion) => {
                             setFechaActual(informacion.startStr);
-                            setModal(true)
+                            setModal(true);
                         }} //Funcion al crear un envento.
                         eventContent={renderEventContent} // custom render function
                         eventClick={handleEventClick} // Funcion que se ejecuta al editar los eventos
                         //eventsSet={handleEvents} // called after events are initialized/added/changed/removed
                         locale={esLocale} // Traduccion a español
-
                     />
                 </div>
                 <ModalEditarEvento
@@ -163,7 +165,13 @@ export default function Calendario() {
                     cerrar={() => setModalEdit(false)}
                     seter={setEvento} guardar={actualizar}
                 />
-                <ModalAnyadirEvento ver={modal} cerrar={() => setModal(false)} uid={idCustom} fechaActual={fechaActual} setFecha={setFechaActual} />
+                <ModalAnyadirEvento
+                    ver={modal}
+                    cerrar={() => setModal(false)}
+                    uid={idCustom}
+                    fechaActual={fechaActual}
+                    setFecha={setFechaActual}
+                />
             </div>
         </Layout >
     )

@@ -22,9 +22,12 @@ export default function Todos({ uid }) {
                     end: evento.end,
                     allDay: evento.allDay,
                     extendedProps: {
-                        completed: evento.extendedProps.completed ?? false,
-                        description: evento.extendedProps.description,
-                        tipo: evento.extendedProps.tipo,
+                        completed: evento.extendedProps.completed,
+                        objetivo: evento.extendedProps.objetivo,
+                        visita: evento.extendedProps.visita,
+                        conclusiones: evento.extendedProps.conclusiones,
+                        empresa: evento.extendedProps.empresa,
+                        planificacion: evento.extendedProps.planificacion,
                     }
                 }
             }

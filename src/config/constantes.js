@@ -19,4 +19,28 @@ export const esText = {
     noRowsLabel: 'Sin resultados'
 }
 
-export const TAKS_TYPES = ['General', 'Visita', 'Venta', 'Tour']
+export const TAKS_TYPES = ['Comercial', 'Bodega', 'Cata']
+
+export const empresas = [
+    "Amaren",
+    "Cair",
+    "Terras Gauda",
+    "Jose Pariente",
+    "Matarromera",
+    "Viña Pedrosa",
+    "Finca Collado",
+    "Les Freses",
+    "Ostatu",
+    "Felix Lorenzo Cachazo",
+    "Valdesil",
+    "Los Bermejos",
+    "Agustí Torelló Mata",
+    "Bodegas Enguera",
+    "Vermut Lodeiros",
+    "Conservas Ortiz",
+    "Bacalao Giraldo",
+    "Collverd",
+    "Conservas Rosara",
+    "Molino Roca",
+    "Anchoas Lopez"
+];
