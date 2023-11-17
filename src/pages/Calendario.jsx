@@ -41,6 +41,7 @@ export default function Calendario() {
     useEffect(() => {
         // Actualiza el estado local cuando cambian los datos
         setEventos(datos);
+        console.log(datos);
     }, [datos]);
 
     const tablet = useMediaQuery('1024');
@@ -48,14 +49,16 @@ export default function Calendario() {
     const eventInital = {
         id: '',
         title: '',
-        start: '',
+        startStr: '',
         end: '',
-        allDay: false,
-        descripcion: '',
+        allDay: true,
         extendedProps: {
+            objetivo: '',
             completed: false,
-            description: '',
-            tipo: '',
+            empresa: '',
+            conclusiones: '',
+            planificacion: [],
+            visita: '',
         }
     }
 
@@ -64,12 +67,11 @@ export default function Calendario() {
     const [modal, setModal] = useState(false);
 
     const handleEventClick = (clickInfo) => {
-
         let nuevoEvento = {
             id: clickInfo.event.id,
             title: clickInfo.event.title,
-            startStr: clickInfo.event.start,
-            endStr: clickInfo.event.end,
+            start: clickInfo.event.startStr,
+            end: clickInfo.event.end ?? clickInfo.event.startStr,
             allDay: clickInfo.event.allDay,
             extendedProps: {
                 objetivo: clickInfo.event.extendedProps.objetivo,
@@ -77,6 +79,7 @@ export default function Calendario() {
                 empresa: clickInfo.event.extendedProps.empresa,
                 conclusiones: clickInfo.event.extendedProps.conclusiones,
                 planificacion: clickInfo.event.extendedProps.planificacion,
+                visita: clickInfo.event.extendedProps.visita,
             }
         }
 
@@ -86,7 +89,7 @@ export default function Calendario() {
 
     const actualizar = () => {
         let events = eventos.map(event => {
-            if (event.id === id) {
+            if (event.id === evento.id) {
                 return {
                     id: evento.id,
                     title: evento.title,
@@ -94,9 +97,12 @@ export default function Calendario() {
                     end: evento.end,
                     allDay: evento.allDay,
                     extendedProps: {
-                        completed: evento.extendedProps.completed ?? false,
-                        description: evento.extendedProps.description,
-                        tipo: evento.extendedProps.tipo,
+                        objetivo: evento.extendedProps.objetivo,
+                        completed: evento.extendedProps.completed,
+                        empresa: evento.extendedProps.empresa,
+                        conclusiones: evento.extendedProps.conclusiones,
+                        planificacion: evento.extendedProps.planificacion,
+                        visita: evento.extendedProps.visita,
                     }
                 }
             }

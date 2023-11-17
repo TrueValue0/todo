@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Layout from "@/components/layouts/Layout";
+//import Layout from "@/components/layouts/Layout";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import { DataGrid } from '@mui/x-data-grid';
@@ -47,7 +47,8 @@ export default function Usuarios() {
     }, [add, edit]);
 
     return (
-        <Layout>
+        <>
+            {/*  <Layout> */}
             <Container className="d-flex flex-wrap flex-column align-content-center" style={{ marginTop: 80 }}>
                 {add ?
                     <AddUser volver={() => setAdd(false)} />
@@ -135,6 +136,7 @@ export default function Usuarios() {
                 />
             </Container >
 
-        </Layout >
+            {/* </Layout > */}
+        </>
     )
 }

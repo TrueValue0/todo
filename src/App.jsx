@@ -17,6 +17,7 @@ import NoAuthorized from '@/pages/NoAuthorized';
 import ResetPassword from '@/pages/ResetPassword';
 import { EventosProvider } from '@/context/EventoProvider'
 import Cambios from '@/pages/Cambios';
+import Usuarios from '@/pages/Usuarios';
 
 function App() {
   const router = createBrowserRouter([
@@ -41,10 +42,10 @@ function App() {
       path: '/user',
       element: (<ProtectedRouteAuth><User /></ProtectedRouteAuth>)
     },
-    /*     {
-          path: '/usuarios',
-          element: (<ProtectedAdmin><Usuarios /></ProtectedAdmin>)
-        }, */
+    {
+      path: '/usuarios',
+      element: (<ProtectedAdmin><Usuarios /></ProtectedAdmin>)
+    },
     {
       path: '/informes',
       element: (<ProtectedAdmin><Informes /></ProtectedAdmin>),

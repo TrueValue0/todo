@@ -52,7 +52,7 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                         <Row>
                             <Form.Group as={Col} className="mb-3">
                                 <Form.Label>Empresas</Form.Label>
-                                <Form.Select value={evento.extendedProps.visita} onChange={changeEmpresas} disabled={user.rol !== 'admin'}>
+                                <Form.Select value={evento.extendedProps.empresa} onChange={changeEmpresas} disabled={user.rol !== 'admin'}>
                                     <option value=''>Selecciona una empresa</option>
                                     {empresas.map(value => <option key={value}>{value}</option>)}
                                 </Form.Select>

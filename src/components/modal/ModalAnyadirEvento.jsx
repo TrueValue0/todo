@@ -49,6 +49,13 @@ export default function ModalAnyadirEvento({ ver, cerrar, uid = '', fechaActual 
 
     const changeConclusiones = event => setEvento(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, conclusiones: event.target.value } }));
 
+    const changePlanificacion = event => {
+
+        const valor = event.target.value;
+
+        setEvento(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, planificacion: event.target.value } }))
+    }
+
     const changeTipo = event => setEvento(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, visita: event.target.value } }));
 
     const changeEmpresa = event => setEvento(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, empresa: event.target.value } }));
@@ -222,8 +229,18 @@ export default function ModalAnyadirEvento({ ver, cerrar, uid = '', fechaActual 
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Conclusiones</Form.Label>
-                            <Form.Control as="textarea" rows={3} value={evento.conclusiones} onChange={changeConclusiones} />
+                            <Form.Control as="textarea" rows={3} value={evento.extendedProps.conclusiones} onChange={changeConclusiones} />
                         </Form.Group>
+                        {/* <Form.Group className="mb-3">
+                            <Form.Label>Planificacion</Form.Label>
+                            <Form.Control rows={3} value={evento.extendedProps.planificacion} onChange={changePlanificacion} />
+                        </Form.Group>
+                        <ol>
+                            {evento.extendedProps.planificacion.map(value => (
+                                <li></li>
+                            ))}
+                        </ol> */}
+
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
