@@ -10,6 +10,8 @@ import { useAuth } from "@/context/AuthProvider";
 import { useUsers } from "@/hooks/useUser";
 import { useEventos } from "@/context/EventoProvider";
 import { Paper } from "@mui/material";
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 
 
 export default function Tareas() {
@@ -28,7 +30,7 @@ export default function Tareas() {
 
     return (
         <Layout>
-            <Container style={{ marginTop: 80 }}>
+            <Container style={{ marginTop: 80, marginBottom: 100 }}>
                 <LogoAlargado className='m-auto d-block my-3' width='400px' />
                 {user.rol === 'admin' && <Paper className='d-inline-block p-3 my-3'>
                     <Form.Select onChange={handleSelect} value={currentComercial ? currentComercial.id : ''} >
@@ -40,10 +42,21 @@ export default function Tareas() {
                     </Form.Select>
                 </Paper>}
                 <Card >
-                    <Card.Header className="text-center h3">Mis Tareas</Card.Header>
+                    <Tabs
+                        style={{ position: 'static' }}
+                        defaultActiveKey="home"
+                        className="mb-3"
+                        justify
+                    >
+                        <Tab eventKey="pendientes" title="Pendientes">
+                            Tab content for Home
+                        </Tab>
+                        <Tab eventKey="finalizadas" title="Finalizadas">
+                            Tab content for Profile
+                        </Tab>
+                    </Tabs>
                     <Card.Body>
                         <div className="d-flex justify-content-between">
-                            <BiCalendar />
                             <BiPlus color="#4070F4" style={{ fontSize: 40, cursor: 'pointer' }} onClick={verModal} />
                         </div>
                         <Todos uid={idCustom} />

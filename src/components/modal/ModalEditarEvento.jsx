@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { TAKS_TYPES, empresas } from '@/config/constantes';
 import { useAuth } from '@/context/AuthProvider';
+import Plaficicacion from '@/components/todos/Planificacion';
 
 export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar, reset }) {
 
@@ -75,6 +76,10 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                                 as="textarea"
                                 rows={3} />
                         </Form.Group>
+                        <Plaficicacion
+                            lista={evento.extendedProps.planificacion}
+                            setLista={array => seter(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, planificacion: array } }))}
+                        />
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>

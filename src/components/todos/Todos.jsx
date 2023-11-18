@@ -4,7 +4,7 @@ import { useTareaDoc } from '@/hooks/useTareaDoc'
 import { useEffect } from 'react';
 import { useEventos } from '@/context/EventoProvider'
 export default function Todos({ uid }) {
-    const { datos, completeEvent, updateDoc } = useTareaDoc({ uid });
+    const { datos, updateDoc } = useTareaDoc({ uid });
     const { eventos, setEventos } = useEventos();
 
     useEffect(() => {
@@ -43,16 +43,15 @@ export default function Todos({ uid }) {
         updateDoc(events);
     }
 
-    const completeBoth = (id, completed) => {
+    const completeBoth = (id, completado) => {
         let events = datos.map(event => {
             if (event.id === id)
-                return { ...event, extendedProps: { ...event.extendedProps, completed } }
+                return { ...event, extendedProps: { ...event.extendedProps, completed: completado } }
             return event;
         })
         setEventos(events);
-        completeEvent(events);
+        updateDoc(events);
     }
-
 
     return (
         <>

@@ -10,6 +10,7 @@ import { TAKS_TYPES, empresas } from '@/config/constantes';
 import { useEventos } from '@/context/EventoProvider'
 import { v4 as uuidv4, } from 'uuid';
 import { useAuth } from '@/context/AuthProvider';
+import Plaficicacion from '@/components/todos/Planificacion';
 
 export default function ModalAnyadirEvento({ ver, cerrar, uid = '', fechaActual = new Date().toISOString().split('T')[0] } = {}) {
 
@@ -118,6 +119,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, uid = '', fechaActual 
         setEvento(eventoInicial);
         cerrar();
     }
+
 
     return (
         <>
@@ -231,15 +233,11 @@ export default function ModalAnyadirEvento({ ver, cerrar, uid = '', fechaActual 
                             <Form.Label>Conclusiones</Form.Label>
                             <Form.Control as="textarea" rows={3} value={evento.extendedProps.conclusiones} onChange={changeConclusiones} />
                         </Form.Group>
-                        {/* <Form.Group className="mb-3">
-                            <Form.Label>Planificacion</Form.Label>
-                            <Form.Control rows={3} value={evento.extendedProps.planificacion} onChange={changePlanificacion} />
-                        </Form.Group>
-                        <ol>
-                            {evento.extendedProps.planificacion.map(value => (
-                                <li></li>
-                            ))}
-                        </ol> */}
+
+                        <Plaficicacion
+                            lista={evento.extendedProps.planificacion}
+                            setLista={array => setEvento(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, planificacion: array } }))}
+                        />
 
                     </Form>
                 </Modal.Body>

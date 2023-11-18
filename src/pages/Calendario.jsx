@@ -41,7 +41,6 @@ export default function Calendario() {
     useEffect(() => {
         // Actualiza el estado local cuando cambian los datos
         setEventos(datos);
-        console.log(datos);
     }, [datos]);
 
     const tablet = useMediaQuery('1024');

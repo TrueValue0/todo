@@ -6,6 +6,7 @@ import { formatearFecha } from '@/services/generarUUID.js'
 import { TAKS_TYPES, empresas } from '@/config/constantes';
 import { useAuth } from '@/context/AuthProvider';
 import { useAlert } from '@/hooks/useAlert';
+import Plaficicacion from './Planificacion';
 
 function CustomToggle({ children, eventKey }) {
     const decoratedOnClick = useAccordionButton(eventKey);
@@ -113,6 +114,15 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                                     />
                                 </Col>
                             </Form.Group>
+                            <Row className='my-3'>
+                                <Col>
+                                    <Plaficicacion
+                                        lista={tarea.extendedProps.planificacion}
+                                        setLista={array => setTarea(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, planificacion: array } }))}
+                                    />
+                                </Col>
+                            </Row>
+
                             <Form.Group as={Row} className='justify-content-center my-2'>
                                 <Button className='w-75' onClick={() => actualizar(id, tarea)}>Actualizar</Button>
                             </Form.Group>
