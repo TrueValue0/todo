@@ -48,12 +48,13 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
         if (user.rol === 'admin') removeTodo(id);
         else return;
     }
+
     return (
         <>
             <ListGroup.Item className='border-0'>
                 <Accordion className='border-bottom'>
                     <div className='d-flex justify-content-between align-items-center '>
-                        <FormCheck value={completed} onChange={(event) => completeTodo(id, event.target.checked)} />
+                        <FormCheck checked={completed} onChange={(event) => completeTodo(id, event.target.checked)} />
                         <CustomToggle eventKey='1'>
                             <h4 style={pointer} className={completed ? 'text-decoration-line-through m-0 my-2' : 'm-0 my-2'}>{tarea.title}</h4>
                             <span>{formatearFecha(tarea.start)}</span>

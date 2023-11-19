@@ -1,5 +1,5 @@
 import { Card, Container, Form } from "react-bootstrap";
-import { BiCalendar, BiPlus } from 'react-icons/bi';
+import { GoPlus } from "react-icons/go";
 import Layout from "@/components/layouts/Layout";
 import Todos from "@/components/todos/Todos";
 import { useEffect, useState } from "react";
@@ -12,6 +12,7 @@ import { useEventos } from "@/context/EventoProvider";
 import { Paper } from "@mui/material";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 
 export default function Tareas() {
@@ -19,56 +20,58 @@ export default function Tareas() {
 
     const { user } = useAuth();
     const { users } = useUsers();
-    const { idCustom, setIdCustom } = useEventos();
+    const { idCustom, setIdCustom, pendientes, finalizadas } = useEventos();
     const [modal, setModal] = useState(false);
     const verModal = () => setModal(true);
     const cerrarModal = () => setModal(false);
 
     const handleSelect = event => setIdCustom(event.target.value);
 
-    const currentComercial = users.find(user => user.id === idCustom)
+    const currentComercial = users.find(user => user.id === idCustom);
+    const movil = useMediaQuery('550');
+
+    const styleIcon = movil ? { fontSize: 55, cursor: 'pointer', position: 'fixed', bottom: '120', right: '40' } :
+        { fontSize: 50, cursor: 'pointer' };
 
     return (
         <Layout>
-            <Container style={{ marginTop: 80, marginBottom: 100 }}>
+            <Container fluid='md' style={{ marginTop: 80, marginBottom: 100 }}>
                 <LogoAlargado className='m-auto d-block my-3' width='400px' />
-                {user.rol === 'admin' && <Paper className='d-inline-block p-3 my-3'>
-                    <Form.Select onChange={handleSelect} value={currentComercial ? currentComercial.id : ''} >
-                        <option value=''>Selecciona un agente</option>
-                        {users.map(user => {
-                            if (user.nombre !== 'PRUEBA') return (<option key={user.id} value={user.id}>{user.nombre}</option>)
-                        })
-                        }
-                    </Form.Select>
-                </Paper>}
+
+                <div className="d-flex justify-content-between align-items-center">
+                    {user.rol === 'admin' && <Paper className='d-inline-block p-3 my-3'>
+                        <Form.Select onChange={handleSelect} value={currentComercial ? currentComercial.id : ''} >
+                            <option value=''>Selecciona un agente</option>
+                            {users.map(user => {
+                                if (user.nombre !== 'PRUEBA') return (<option key={user.id} value={user.id}>{user.nombre}</option>)
+                            })
+                            }
+                        </Form.Select>
+                    </Paper>}
+                    <GoPlus
+                        className="text-white bg-primary rounded-5 d-block"
+                        style={styleIcon}
+                        onClick={verModal}
+                    />
+                </div>
                 <Card >
                     <Tabs
                         style={{ position: 'static' }}
-                        defaultActiveKey="home"
-                        className="mb-3"
+                        defaultActiveKey="pendientes"
+                        className="mb-3 "
                         justify
+                        variant="pills"
                     >
                         <Tab eventKey="pendientes" title="Pendientes">
-                            Tab content for Home
+                            <Todos uid={idCustom} lista={pendientes} />
                         </Tab>
                         <Tab eventKey="finalizadas" title="Finalizadas">
-                            Tab content for Profile
+                            <Todos uid={idCustom} lista={finalizadas} />
                         </Tab>
                     </Tabs>
-                    <Card.Body>
-                        <div className="d-flex justify-content-between">
-                            <BiPlus color="#4070F4" style={{ fontSize: 40, cursor: 'pointer' }} onClick={verModal} />
-                        </div>
-                        <Todos uid={idCustom} />
-                    </Card.Body>
                 </Card>
             </Container>
-            <ModalAnyadirEvento
-                ver={modal}
-                cerrar={cerrarModal}
-                uid={idCustom}
-                refresh={() => location.reload()}
-            />
+            <ModalAnyadirEvento ver={modal} cerrar={cerrarModal} />
         </Layout>
     )
 }

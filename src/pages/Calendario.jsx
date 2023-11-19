@@ -173,7 +173,6 @@ export default function Calendario() {
                 <ModalAnyadirEvento
                     ver={modal}
                     cerrar={() => setModal(false)}
-                    uid={idCustom}
                     fechaActual={fechaActual}
                     setFecha={setFechaActual}
                 />

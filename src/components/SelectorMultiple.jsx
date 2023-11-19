@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -19,10 +18,7 @@ const MenuProps = {
 };
 
 export default function SelectorMultiple({ label, names, agent, setAgent }) {
-    const handleChange = (event) => {
-        const { target: { value } } = event;
-        setAgent(typeof value === 'string' ? value.split(',') : value);
-    };
+
 
     return (
         <div>

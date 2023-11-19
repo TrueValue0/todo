@@ -11,12 +11,16 @@ import { useEventos } from '@/context/EventoProvider'
 import { v4 as uuidv4, } from 'uuid';
 import { useAuth } from '@/context/AuthProvider';
 import Plaficicacion from '@/components/todos/Planificacion';
+import SelectorIds from '@/components/modal/SelectorIds';
+import { useMultipleTareas } from '@/hooks/useMultipleTareas';
 
-export default function ModalAnyadirEvento({ ver, cerrar, uid = '', fechaActual = new Date().toISOString().split('T')[0] } = {}) {
+export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date().toISOString().split('T')[0] } = {}) {
 
     const { user } = useAuth();
 
-    const { agregarEvento } = useEventos();
+    const { agregarEvento, idCustom } = useEventos();
+    const { addEventsMultiple } = useMultipleTareas();
+
     const [horas, setHoras] = useState({
         inicio: '00:00',
         fin: '00:00'
@@ -36,26 +40,20 @@ export default function ModalAnyadirEvento({ ver, cerrar, uid = '', fechaActual 
             planificacion: [],
         }
     }
-    const { addEvent } = useTareaDoc({ uid });
+    const { addEvent } = useTareaDoc({ uid: idCustom });
 
     const [evento, setEvento] = useState(eventoInicial);
 
     useEffect(() => {
         setEvento(eventoInicial);
-    }, [fechaActual])
+    }, [fechaActual]);
+
 
     const handleChangeTitle = event => setEvento(prev => ({ ...prev, title: event.target.value }));
 
     const changeObjetivo = event => setEvento(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, objetivo: event.target.value } }));
 
     const changeConclusiones = event => setEvento(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, conclusiones: event.target.value } }));
-
-    const changePlanificacion = event => {
-
-        const valor = event.target.value;
-
-        setEvento(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, planificacion: event.target.value } }))
-    }
 
     const changeTipo = event => setEvento(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, visita: event.target.value } }));
 
@@ -71,48 +69,61 @@ export default function ModalAnyadirEvento({ ver, cerrar, uid = '', fechaActual 
 
     const handleHoraFin = event => setHoras(prev => ({ ...prev, fin: event.target.value }));
 
-    const guardarEvento = () => {
-        if (evento.titulo !== "") {
-            let event;
-            if (evento.allDay) {
-                event = {
-                    id: uuidv4(),
-                    title: evento.title, // Cambiar el nombre de 'title' a 'asunto'
-                    start: fechaConHora({ fecha: evento.start, horas: horas.inicio }),
-                    end: fechaConHora({ fecha: evento.start, horas: horas.inicio }),
-                    allDay: evento.allDay,
-                    extendedProps: {
-                        objetivo: evento.extendedProps.objetivo, // Cambiar el nombre de 'description' a 'objetivo'
-                        completed: evento.extendedProps.completed,
-                        visita: evento.extendedProps.visita, // Cambiar el nombre de 'tipo' a 'empresas'
-                        empresa: evento.extendedProps.empresa,
-                        conclusiones: evento.extendedProps.conclusiones, // Agregar un campo 'conclusiones'
-                        planificacion: evento.extendedProps.planificacion,
-                    }
-                }
-            } else {
-                event = {
-                    id: uuidv4(),
-                    title: evento.title, // Cambiar el nombre de 'title' a 'asunto'
-                    start: fechaConHora({ fecha: evento.start, horas: horas.inicio }),
-                    end: fechaConHora({ fecha: evento.end, horas: horas.fin }),
-                    allDay: evento.allDay,
-                    extendedProps: {
-                        objetivo: evento.extendedProps.objetivo, // Cambiar el nombre de 'description' a 'objetivo'
-                        completed: evento.extendedProps.completed,
-                        visita: evento.extendedProps.visita, // Cambiar el nombre de 'tipo' a 'empresas'
-                        empresa: evento.extendedProps.empresa,
-                        conclusiones: evento.extendedProps.conclusiones, // Agregar un campo 'conclusiones'
-                        planificacion: evento.extendedProps.planificacion,
-                    }
+    const crearEvento = () => {
+        let event;
+        if (evento.titulo === "") return
+
+        if (evento.allDay) {
+            event = {
+                id: uuidv4(),
+                title: evento.title, // Cambiar el nombre de 'title' a 'asunto'
+                start: fechaConHora({ fecha: evento.start, horas: horas.inicio }),
+                end: fechaConHora({ fecha: evento.start, horas: horas.inicio }),
+                allDay: evento.allDay,
+                extendedProps: {
+                    objetivo: evento.extendedProps.objetivo,
+                    completed: evento.extendedProps.completed,
+                    visita: evento.extendedProps.visita,
+                    empresa: evento.extendedProps.empresa,
+                    conclusiones: evento.extendedProps.conclusiones,
+                    planificacion: evento.extendedProps.planificacion,
                 }
             }
-
-            agregarEvento(event)
-            addEvent(event);
-            setEvento(eventoInicial)
-            cerrar();
+        } else {
+            event = {
+                id: uuidv4(),
+                title: evento.title, // Cambiar el nombre de 'title' a 'asunto'
+                start: fechaConHora({ fecha: evento.start, horas: horas.inicio }),
+                end: fechaConHora({ fecha: evento.end, horas: horas.fin }),
+                allDay: evento.allDay,
+                extendedProps: {
+                    objetivo: evento.extendedProps.objetivo,
+                    completed: evento.extendedProps.completed,
+                    visita: evento.extendedProps.visita,
+                    empresa: evento.extendedProps.empresa,
+                    conclusiones: evento.extendedProps.conclusiones,
+                    planificacion: evento.extendedProps.planificacion,
+                }
+            }
         }
+
+        return event;
+    }
+
+
+    const guardarVarios = () => {
+        const event = crearEvento();
+        addEventsMultiple(event)
+        setEvento(eventoInicial)
+        cerrar();
+    }
+
+    const guardarEvento = () => {
+        const event = crearEvento();
+        agregarEvento(event);
+        addEvent(event);
+        setEvento(eventoInicial)
+        cerrar();
     }
 
     const cerrarBien = () => {
@@ -129,6 +140,13 @@ export default function ModalAnyadirEvento({ ver, cerrar, uid = '', fechaActual 
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
+                        <Row>
+                            {user.rol === 'admin' &&
+                                <Col>
+                                    <SelectorIds ver={ver} />
+                                </Col>
+                            }
+                        </Row>
                         <Row className="mb-3">
                             <Form.Group as={Col} className='col-8' controlId="exampleForm.ControlInput1">
                                 <Form.Label>Asunto</Form.Label>
@@ -242,12 +260,19 @@ export default function ModalAnyadirEvento({ ver, cerrar, uid = '', fechaActual 
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
+                    {
+                        user.rol === 'admin' &&
+                        <Button variant="primary" onClick={guardarVarios}>
+                            Guardar al Tiempo
+                        </Button>
+                    }
                     <Button variant="secondary" onClick={cerrarBien}>
                         Cerrar
                     </Button>
                     <Button variant="primary" onClick={guardarEvento}>
                         Guardar
                     </Button>
+
                 </Modal.Footer>
             </Modal >
         </>
