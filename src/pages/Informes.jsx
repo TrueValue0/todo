@@ -171,7 +171,7 @@ export default function Informes() {
                                         <Paper className='p-3 my-2' elevation={1}>
                                             {evento.objetivo}
                                         </Paper>
-                                        <h5>Planificacion:</h5>
+                                        <h5>Planificación:</h5>
                                         <Paper className='p-3 my-2' elevation={1}>
                                             <ol>
                                                 {evento.planificacion.map((valor, index) => (
