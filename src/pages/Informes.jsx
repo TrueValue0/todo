@@ -196,10 +196,10 @@ export default function Informes() {
                                             <h5>Conclusiones: </h5>
                                             {evento.objetivo}
                                         </Paper>
-                                        <h5>Conclusiones:</h5>
+                                        {evento.planificacion.length > 0 && <h5>Planificacion:</h5>}
                                         <ListGroup>
-                                            {evento.planificacion.map(valor => (
-                                                <ListGroup.Item variant="primary">{valor}</ListGroup.Item>
+                                            {evento.planificacion.map((valor, index) => (
+                                                <ListGroup.Item key={index} variant="primary">{valor}</ListGroup.Item>
                                             ))}
                                         </ListGroup>
 
