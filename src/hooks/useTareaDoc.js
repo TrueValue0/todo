@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getDoc, doc, setDoc } from "firebase/firestore";
+import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { tareas } from "@/config/firebaseapp";
 import { useAuth } from "@/context/AuthProvider";
 import { useEventos } from "@/context/EventoProvider";
@@ -29,12 +29,11 @@ export function useTareaDoc({ uid = '' } = {}) {
         }
     }
 
-    const updateDoc = async (eventos) => {
+    const actualizarDoc = async (eventos) => {
         try {
             const documentoSF = doc(tareas, id);
-            await setDoc(documentoSF, {
+            await updateDoc(documentoSF, {
                 tareas: eventos,
-                usuario: user.nombre,
             })
         } catch (e) {
             console.log(e);
@@ -44,7 +43,7 @@ export function useTareaDoc({ uid = '' } = {}) {
     const deleteEvent = (id) => {
         const events = eventos.filter(event => event.id !== id);
         setEventos(events);
-        updateDoc(events);
+        actualizarDoc(events);
     }
 
     const completeEvent = (id, completado) => {
@@ -54,7 +53,7 @@ export function useTareaDoc({ uid = '' } = {}) {
             return event;
         })
         setEventos(events);
-        updateDoc(events)
+        actualizarDoc(events)
     }
 
     const updateEvent = (id, evento) => {
@@ -79,18 +78,18 @@ export function useTareaDoc({ uid = '' } = {}) {
             return event;
         })
         setEventos(events);
-        updateDoc(events)
+        actualizarDoc(events)
     }
 
     const addEvent = (evento) => {
         const nuevosEventos = [...datos, evento];
         setEventos(nuevosEventos);
-        updateDoc(nuevosEventos);
+        actualizarDoc(nuevosEventos);
     }
 
     useEffect(() => {
         cargarDoc();
     }, [uid]);
 
-    return { datos, deleteEvent, completeEvent, updateEvent, addEvent, updateDoc };
+    return { datos, deleteEvent, completeEvent, updateEvent, addEvent, actualizarDoc };
 }

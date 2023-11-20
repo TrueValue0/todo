@@ -2,111 +2,114 @@ import { useEffect, useState } from 'react';
 import Layout from '@/components/layouts/Layout'
 import PDFDocument from '@/components/PDFDocument'
 import { Paper } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
 import { Row, Col, Container } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { tareas, usuarios } from '@/config/firebaseapp'
+import { tareas } from '@/config/firebaseapp'
 import { getDocs } from 'firebase/firestore';
 import SelectorMultiple from '@/components/SelectorMultiple';
-import { TAKS_TYPES } from '@/config/constantes';
-import LogoAlargado from '@/assets/logoAlargado.jsx'
+import { TAKS_TYPES, empresas } from '@/config/constantes';
+import LogoAlargado from '@/assets/logoAlargado.jsx';
+import { useUsers } from '@/hooks/useUser';
+import Accordion from 'react-bootstrap/Accordion';
+import { ImCheckboxChecked } from "react-icons/im";
+import { ImCross } from "react-icons/im";
 //  Filtrado de los informes con las horas, agentes, fechas, descripcion, nombre de empresa (BD).
 export default function Informes() {
 
+    const { users } = useUsers();
+
+
     const initalFilters = {
-        tarea: '',
+        nombre: '',
         fecha: '',
+        empresa: [],
+        visita: [],
         comerciales: [],
-        tipos: [],
+        completed: false,
     }
 
-    const [dataGridOpts, setDataGridOpts] = useState({
-        loading: true,
-    })
+    const evento = {
+        id: '',
+        title: '',
+        start: '', //Start es una fecha
+        end: '', //Fecha es una fecha
+        allDay: true,
+        extendedProps: {
+            completed: false,
+            objetivo: '',
+            visita: '',
+            conclusiones: '',
+            empresa: '',
+            planificacion: [],
+        }
+    }
+
+    const [backup, setBackup] = useState([])
     const [informes, setInformes] = useState([]);
-    const [agentes, setAgentes] = useState([]);
-    const [informesTabla, setInformesTabla] = useState([]);
 
-    const [filtros, setFiltros] = useState(initalFilters)
+    const [filtros, setFiltros] = useState(initalFilters);
 
-    //const columns = 
 
-    const mapearInformes = (datos) => {
-        let idCustom = 0;
-        const informesMapeados = datos.filter(usuario => usuario.tareas.length > 0) // Filtra los usuarios con tareas no vacías
+
+
+    const cargarTareas = async () => {
+        const querySnapshot = await getDocs(tareas);
+
+        let tareasData = [];
+
+        querySnapshot.forEach((doc) => tareasData.push({ ...doc.data() }));
+
+        tareasData.sort((a, b) => a.usuario.localeCompare(b.usuario));
+        tareasData = tareasData.map(value => (value.start) ? { ...value, start: value.start.slice(0, 10) } : { ...value });
+        tareasData = tareasData.filter(usuario => usuario.tareas.length > 0 && usuario.usuario !== 'PRUEBA') // Filtra los usuarios con tareas no vacías
             .flatMap((usuario) => {
                 return usuario.tareas.map((tarea) => {
-                    idCustom = idCustom + 1;
                     return {
-                        id: idCustom,
+                        id: tarea.id,
                         nombre: usuario.usuario ?? '',
-                        tarea: tarea.title ?? '',
-                        descripcion: tarea.extendedProps.description ?? 'Sin descripción',
-                        tipo: tarea.extendedProps.tipo ?? '',
-                        fecha: tarea.start ?? ''
+                        title: tarea.title ?? '',
+                        objetivo: tarea.extendedProps.objetivo ?? 'Sin descripción',
+                        empresa: tarea.extendedProps.empresa ?? '',
+                        fecha: tarea.start ?? '',
+                        completed: tarea.extendedProps.completed,
+                        visita: tarea.extendedProps.visita
                     }
                 })
 
             });
-
-        setInformesTabla(informesMapeados);
-        setInformes(informesMapeados);
-    }
-
-    const cargarTareas = async () => {
-        const querySnapshot = await getDocs(tareas);
-        const UsersSnapshot = await getDocs(usuarios);
-
-        let tareasData = [];
-        let usuariosData = [];
-        let idCustom = 1;
-        querySnapshot.forEach((doc) => {
-            tareasData.push({ id: idCustom, ...doc.data(), uid: doc.id });
-            idCustom += 1
-        });
-        UsersSnapshot.forEach(doc => usuariosData.push({ id: doc.id, ...doc.data(), }));
-        usuariosData.sort((a, b) => a.nombre.localeCompare(b.nombre));
-        usuariosData = usuariosData.map(value => value.nombre)
-        usuariosData = usuariosData.flatMap(value => value === 'PRUEBA' ? [] : value)
-        tareasData.sort((a, b) => a.usuario.localeCompare(b.usuario));
-        tareasData = tareasData.map(value => (value.start) ? { ...value, start: value.start.slice(0, 10) } : { ...value });
-        setAgentes(usuariosData)
-        mapearInformes(tareasData);
+        setBackup(tareasData);
+        setInformes(tareasData);
     };
 
-    const handleBuscar = event => setFiltros(prev => ({ ...prev, query: event.target.value }));
+    const handleBuscar = event => setFiltros(prev => ({ ...prev, nombre: event.target.value }));
 
-    const handleFecha = event => setFiltros(prev => ({ ...prev, query: event.target.value }));
+    const handleFecha = event => setFiltros(prev => ({ ...prev, fecha: event.target.value }));
 
     const setComerciales = event => setFiltros(prev => ({ ...prev, comerciales: event.target.value }));
 
-    const setTipos = event => setFiltros(prev => ({ ...prev, tipos: event.target.value }));
+    const setTipos = event => setFiltros(prev => ({ ...prev, visita: event.target.value }));
 
+    const setEmpresas = event => setFiltros(prev => ({ ...prev, empresa: event.target.value }));
 
     const filtrar = () => {
-        if (filtros === initalFilters) {
-            // Si no hay criterios de filtro, mostrar todos los informes
-            setInformes(informesTabla);
-        } else {
-            // Aplicar los filtros si hay criterios de filtro
-            const informesFiltrados = informesTabla.filter((informe) => {
-                const nombreMatch = informe.nombre.toLowerCase().includes(filtros.tarea.toLowerCase());
-                const fechaMatch = filtros.fecha ? informe.fecha.includes(filtros.fecha) : true;
-                const comercialesMatch = filtros.comerciales.length === 0 || filtros.comerciales.includes(informe.nombre);
-                const tiposMatch = filtros.tipos.length === 0 || filtros.tipos.includes(informe.tipo);
+        const informesFiltrados = backup.filter((informe) => {
+            const nombreMatch = filtros.nombre ? informe.title.toLowerCase().includes(filtros.nombre.toLowerCase()) : true;
+            const fechaMatch = filtros.fecha ? informe.fecha.includes(filtros.fecha) : true;
+            const empresasMatch = filtros.empresa.length === 0 || filtros.empresa.includes(informe.empresa);
+            const comercialesMatch = filtros.comerciales.length === 0 || filtros.comerciales.includes(informe.nombre);
+            const visitaMatch = filtros.visita.length === 0 || filtros.visita.includes(informe.visita);
+            const completedMatch = informe.completed === filtros.completed;
 
-                return nombreMatch && fechaMatch && comercialesMatch && tiposMatch;
-            });
-            setInformes(informesFiltrados);
-        }
+            return nombreMatch && fechaMatch && comercialesMatch && empresasMatch && visitaMatch && completedMatch;
+        });
+        setInformes(informesFiltrados);
     };
 
     useEffect(filtrar, [filtros])
 
     useEffect(() => {
         cargarTareas();
-        setDataGridOpts(prev => ({ ...prev, loading: false }));
     }, [])
 
     return (
@@ -125,58 +128,44 @@ export default function Informes() {
                                 <Form.Control type="month" onChange={handleFecha} />
                             </Col>
                             <Col>
-                                <SelectorMultiple label='Comerciales' names={agentes} agent={filtros.comerciales} setAgent={setComerciales} />
+                                <SelectorMultiple label='Comerciales' names={users.map(value => value.nombre)} agent={filtros.comerciales} setAgent={setComerciales} />
                             </Col>
                             <Col>
-                                <SelectorMultiple label='Tipos' names={TAKS_TYPES} agent={filtros.tipos} setAgent={setTipos} />
+                                <SelectorMultiple label='Visitas' names={TAKS_TYPES} agent={filtros.visita} setAgent={setTipos} />
+                            </Col>
+                            <Col>
+                                <SelectorMultiple label='Empresas' names={empresas} agent={filtros.empresa} setAgent={setEmpresas} />
+                            </Col>
+                            <Col>
+                                <Form.Check label="Completado" type="switch" checked={filtros.completed} onChange={e => setFiltros(prev => ({ ...prev, completed: e.target.checked }))} />
                             </Col>
                             <Col>
                                 <Button onClick={filtrar}>Buscar</Button>
                             </Col>
                         </Row>
                     </Paper>
-                    <DataGrid
-                        className='w-100 mt-4'
-                        columns={[
-                            {
-                                field: 'id',
-                                headerName: 'ID',
-                                minWidth: 90,
-                                sortable: false,
-                                filterable: false,
-                            },
-                            {
-                                field: 'nombre',
-                                headerName: 'Nombre',
-                                minWidth: 120
-                            },
-                            {
-                                field: 'tarea',
-                                headerName: 'Tarea',
-                                minWidth: 120
-                            },
-                            {
-                                field: 'descripcion',
-                                headerName: 'Descripcion',
-                                width: 180
-                            },
-                            {
-                                field: 'tipo',
-                                headerName: 'Tipo',
-                                minWidth: 90
-                            },
-                            {
-                                field: 'fecha',
-                                headerName: 'Fecha',
-                                //type: 'date',
-                                minWidth: 90
-                            },
-                        ]}
-                        rows={informes}
-                        disableRowSelectionOnClick
-                        loading={dataGridOpts.loading}
-                        autoHeight
-                    />
+
+                    <Paper>
+                        <Accordion>
+                            {informes.length > 0 && informes?.map((evento) => (
+                                <Accordion.Item key={evento.id} eventKey={evento.id}>
+                                    <Accordion.Header>
+                                        <p className='mx-2'>Nombre: {evento.nombre}</p>
+                                        <p className='mx-2'>Fecha: {evento.fecha}</p>
+                                        <p className='mx-2'>Asunto: {evento.title}</p>
+                                        <p className='mx-2'>{evento.completed ? <>Hecho < ImCheckboxChecked color='#008f39' /> </> :
+                                            <>Por Hacer <ImCross color='#cb3234' /> </>
+                                        }</p>
+                                    </Accordion.Header>
+                                    <Accordion.Body>
+                                        <p>Visita :{evento.visita}</p>
+                                        {evento.objetivo}
+                                    </Accordion.Body>
+                                </Accordion.Item>
+                            ))}
+                        </Accordion>
+                    </Paper>
+
                 </Container>
             </Form>
             {/* <PDFDocument /> */}

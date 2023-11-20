@@ -34,7 +34,7 @@ export default function Calendario() {
     const { eventos, setEventos, idCustom, setIdCustom } = useEventos();
     const { users } = useUsers();
     const { user } = useAuth();
-    const { datos, updateDoc } = useTareaDoc({ uid: idCustom });
+    const { datos, actualizarDoc } = useTareaDoc({ uid: idCustom });
     const [fechaActual, setFechaActual] = useState('');
 
 
@@ -108,7 +108,7 @@ export default function Calendario() {
             return event;
         })
         setEventos(events);
-        updateDoc(events);
+        actualizarDoc(events);
     }
 
     const handleSelect = event => setIdCustom(event.target.value);

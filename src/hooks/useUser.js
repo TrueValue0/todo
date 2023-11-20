@@ -14,6 +14,7 @@ export function useUsers() {
 
         //Ordenar nombres de usuarios alfabeticamente.
         usuariosData.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        usuariosData = usuariosData.filter(value => value.nombre !== 'PRUEBA');
 
         setUsers(usuariosData);
     };

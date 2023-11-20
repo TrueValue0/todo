@@ -24,8 +24,6 @@ export default function SelectorIds({ ver }) {
     const { users } = useUsers();
     const { ids, setIds } = useEventos();
 
-    const filtrados = users.sort((a, b) => a.nombre.localeCompare(b.nombre)).filter(value => value.nombre !== 'PRUEBA');
-
     const handleChange = (event) => {
         const selectedIds = event.target.value;
         setIds(selectedIds);
@@ -47,14 +45,14 @@ export default function SelectorIds({ ver }) {
                     renderValue={(selected) =>
                         selected
                             .map((id) => {
-                                const selectedUser = filtrados.find((user) => user.id === id);
+                                const selectedUser = users.find((user) => user.id === id);
                                 return selectedUser ? selectedUser.nombre : '';
                             })
                             .join(', ')
                     }
                     MenuProps={MenuProps}
                 >
-                    {filtrados.map((user) => (
+                    {users.map((user) => (
                         <MenuItem key={user.id} value={user.id}>
                             <Checkbox checked={ids.indexOf(user.id) > -1} />
                             <ListItemText primary={user.nombre} />
