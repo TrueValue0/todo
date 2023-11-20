@@ -19,8 +19,15 @@ export function useTareaDoc({ uid = '' } = {}) {
             const documentoSF = doc(tareas, id);
             const documento = await getDoc(documentoSF);
             if (documento.exists()) {
-                const docFinal = documento.data().tareas;
-                setDatos(docFinal);
+                let docFinal = documento.data().tareas;
+                const events = docFinal.map(value => {
+                    let color;
+                    if (value.extendedProps.visita === 'Comercial') color = '#008f39'
+                    else if (value.extendedProps.visita === 'Bodega') color = '#0000ff'
+                    else if (value.extendedProps.visita === 'Cata') color = '#cb3234'
+                    return { ...value, backgroundColor: color }
+                })
+                setDatos(events)
             } else {
                 console.log("El documento no existe en Firestore");
             }

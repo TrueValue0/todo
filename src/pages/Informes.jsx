@@ -126,83 +126,59 @@ export default function Informes() {
                                 <Form.Control type='text' placeholder="Buscar ..." onChange={handleBuscar} />
                             </Col>
                         </Row>
-                        <Row className='mt-2 justify-content-center align-items-center'>
-                            <Col>
-                                <Form.Control type="month" onChange={handleFecha} />
-                            </Col>
-                            <Col>
-                                <SelectorMultiple label='Comerciales' names={users.map(value => value.nombre)} agent={filtros.comerciales} setAgent={setComerciales} />
-                            </Col>
-                            <Col>
-                                <SelectorMultiple label='Visitas' names={TAKS_TYPES} agent={filtros.visita} setAgent={setTipos} />
-                            </Col>
-                            <Col>
-                                <SelectorMultiple label='Empresas' names={empresas} agent={filtros.empresa} setAgent={setEmpresas} />
-                            </Col>
-                            <Col>
-                                <Form.Check label="Completado" type="switch" checked={filtros.completed} onChange={e => setFiltros(prev => ({ ...prev, completed: e.target.checked }))} />
-                            </Col>
-                            <Col>
-                                <Button onClick={filtrar}>Buscar</Button>
-                            </Col>
-                        </Row>
+
+                        <div className=' d-flex flex-wrap gap-3 align-items-center mt-2'>
+                            <Form.Control style={{ minWidth: 180 }} className='d-inline-block' type="month" onChange={handleFecha} />
+                            <SelectorMultiple label='Comerciales' names={users.map(value => value.nombre)} agent={filtros.comerciales} setAgent={setComerciales} />
+                            <SelectorMultiple label='Visitas' names={TAKS_TYPES} agent={filtros.visita} setAgent={setTipos} />
+                            <SelectorMultiple label='Empresas' names={empresas} agent={filtros.empresa} setAgent={setEmpresas} />
+                            <Form.Check label="Completado" type="switch" checked={filtros.completed} onChange={e => setFiltros(prev => ({ ...prev, completed: e.target.checked }))} />
+                            <Button className='h-50 d-inline-block' onClick={filtrar}>Buscar</Button>
+                        </div>
                     </Paper>
 
                     <Paper className='mt-2'>
-                        <Row className='p-4' /* style={{ minHeight: 40 }} */>
+                        <Row className='p-4' style={{ marginRight: 18 }}>
                             <Col className='fw-semibold text-center'>Comercial</Col>
                             <Col className='fw-semibold text-center'>Asunto</Col>
                             <Col className='fw-semibold text-center'>Fecha</Col>
                             <Col className='fw-semibold text-center'>Visita</Col>
                             <Col className='fw-semibold text-center'>Empresa</Col>
-                            <Col className='fw-semibold text-center'>Objetivo</Col>
-                            <Col className='fw-semibold text-center'>Conclusiones</Col>
                             <Col className='fw-semibold text-center'>Completado</Col>
                         </Row>
                         <Accordion>
                             {informes.length > 0 && informes?.map((evento) => (
                                 <Accordion.Item key={evento.id} eventKey={evento.id}>
-                                    <Row className='p-4' /* style={{ minHeight: 40 }} */>
-                                        <Col className='text-truncate text-center'>{evento.nombre}</Col>
-                                        <Col className='text-truncate text-center'>{evento.title}</Col>
-                                        <Col className='text-truncate text-center'>{formatearFecha(evento.fecha)}</Col>
-                                        <Col className='text-truncate text-center'>{evento.visita === '' ? 'Sin visita' : evento.visita}</Col>
-                                        <Col className='text-truncate text-center'>{evento.empresa === '' ? 'Sin empresa' : evento.empresa}</Col>
-                                        <Col className='text-truncate text-center'>{evento.objetivo === '' ? 'Sin Objetivo' : evento.objetivo}</Col>
-                                        <Col className='text-truncate text-center'>{evento.conclusiones === '' ? 'Sin Conclusiones' : evento.conclusiones}</Col>
-                                        <Col className='text-truncate text-center'>{evento.completed ?
-                                            < ImCheckboxChecked color='#008f39' /> :
-                                            <ImCross color='#cb3234' />
-                                        }</Col>
-                                    </Row>
-                                    <Accordion.Header flush className='border-1 border-bg-black'>
-                                        <p className='fs-6 fst-italic'>Mas Detalles</p>
+                                    <Accordion.Header>
+                                        <Row className='p-4 w-100' /* style={{ minHeight: 40 }} */>
+                                            <Col className='text-truncate text-center'>{evento.nombre}</Col>
+                                            <Col className='text-truncate text-center'>{evento.title}</Col>
+                                            <Col className='text-truncate text-center'>{formatearFecha(evento.fecha)}</Col>
+                                            <Col className='text-truncate text-center'>{evento.visita === '' ? 'Sin visita' : evento.visita}</Col>
+                                            <Col className='text-truncate text-center'>{evento.empresa === '' ? 'Sin empresa' : evento.empresa}</Col>
+                                            <Col className='text-truncate text-center'>{evento.completed ?
+                                                < ImCheckboxChecked color='#008f39' /> :
+                                                <ImCross color='#cb3234' />
+                                            }</Col>
+                                        </Row>
                                     </Accordion.Header>
                                     <Accordion.Body>
-                                        <Row>
-                                            <Col className='text-center'><p className='fw-semibold'>Nomnbre: <span className='text-capitalize fw-normal'>{evento.nombre}</span></p></Col>
-                                            <Col className='text-center'> <p className='fw-semibold'>Asunto: <span className='text-capitalize fw-normal'>{evento.title}</span></p></Col>
-                                            <Col className='text-center'> <p className='fw-semibold'>Fecha: <span className='text-capitalize fw-normal'>{evento.fecha}</span></p></Col>
-                                        </Row>
-                                        <Row className='mt-2'>
-                                            <Col className='text-center'><p className='fw-semibold'>Visita: <span className='text-capitalize fw-normal'>{evento.visita}</span></p></Col>
-                                            <Col className='text-center'><p className='fw-semibold'>Empresa: <span className='text-capitalize fw-normal'>{evento.visita}</span></p></Col>
-                                        </Row>
+                                        <h5>Objetivo: </h5>
                                         <Paper className='p-3 my-2' elevation={1}>
-                                            <h5>Objetivo: </h5>
                                             {evento.objetivo}
                                         </Paper>
+                                        <h5>Conclusiones: </h5>
                                         <Paper className='p-3 my-2' elevation={1}>
-                                            <h5>Conclusiones: </h5>
                                             {evento.objetivo}
                                         </Paper>
-                                        {evento.planificacion.length > 0 && <h5>Planificacion:</h5>}
-                                        <ListGroup>
-                                            {evento.planificacion.map((valor, index) => (
-                                                <ListGroup.Item key={index} variant="primary">{valor}</ListGroup.Item>
-                                            ))}
-                                        </ListGroup>
-
+                                        <h5>Planificacion:</h5>
+                                        <Paper className='p-3 my-2' elevation={1}>
+                                            <ol>
+                                                {evento.planificacion.map((valor, index) => (
+                                                    <li className='fw-bold' key={index} variant="primary">  <span className='fw-normal'>{valor}</span></li>
+                                                ))}
+                                            </ol>
+                                        </Paper>
                                     </Accordion.Body>
                                 </Accordion.Item>
                             ))}
