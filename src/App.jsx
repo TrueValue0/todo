@@ -43,10 +43,6 @@ function App() {
       element: (<ProtectedRouteAuth><User /></ProtectedRouteAuth>)
     },
     {
-      path: '/usuarios',
-      element: (<ProtectedAdmin><Usuarios /></ProtectedAdmin>)
-    },
-    {
       path: '/informes',
       element: (<ProtectedAdmin><Informes /></ProtectedAdmin>),
     },
@@ -58,10 +54,6 @@ function App() {
       path: '/resetPassword',
       element: <ResetPassword />
     },
-    {
-      path: '/cambios',
-      element: <Cambios />
-    }
   ])
 
   return (

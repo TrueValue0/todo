@@ -34,7 +34,7 @@ export default function Calendario() {
     const { eventos, setEventos, idCustom, setIdCustom } = useEventos();
     const { users } = useUsers();
     const { user } = useAuth();
-    const { datos, actualizarDoc } = useTareaDoc({ uid: idCustom });
+    const { datos, actualizarDoc, deleteEvent } = useTareaDoc({ uid: idCustom });
     const [fechaActual, setFechaActual] = useState('');
 
 
@@ -58,6 +58,7 @@ export default function Calendario() {
             conclusiones: '',
             planificacion: [],
             visita: '',
+            isAdmin: user.rol === 'admin',
         }
     }
 
@@ -79,6 +80,7 @@ export default function Calendario() {
                 conclusiones: clickInfo.event.extendedProps.conclusiones,
                 planificacion: clickInfo.event.extendedProps.planificacion,
                 visita: clickInfo.event.extendedProps.visita,
+                isAdmin: clickInfo.event.extendedProps.isAdmin,
             }
         }
 
@@ -102,6 +104,7 @@ export default function Calendario() {
                         conclusiones: evento.extendedProps.conclusiones,
                         planificacion: evento.extendedProps.planificacion,
                         visita: evento.extendedProps.visita,
+                        isAdmin: evento.extendedProps.isAdmin,
                     }
                 }
             }
@@ -167,6 +170,7 @@ export default function Calendario() {
                     reset={() => setEvento(eventInital)}
                     ver={modalEdit}
                     evento={evento}
+                    removeTodo={deleteEvent}
                     cerrar={() => setModalEdit(false)}
                     seter={setEvento} guardar={actualizar}
                 />

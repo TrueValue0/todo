@@ -59,17 +59,18 @@ export function cambiarTipoEvento(objeto) {
         tareas: objeto.tareas.map(evento => {
             return {
                 id: evento.id ?? uuidv4(),
-                title: evento.title ?? 'Sin titulo', // Cambiar el nombre de 'title' a 'asunto'
-                start: evento.start ?? '',
+                title: evento.title, // Cambiar el nombre de 'title' a 'asunto'
+                start: evento.start,
                 end: evento.end = evento.start ? evento.start : '',
-                allDay: evento.allDay ?? true,
+                allDay: evento.allDay,
                 extendedProps: {
                     objetivo: evento.extendedProps.description ?? '', // Cambiar el nombre de 'description' a 'objetivo'
-                    completed: evento.extendedProps.completed ?? false,
-                    visita: evento.extendedProps.tipo ?? 'Visita Comercial', // Cambiar el nombre de 'tipo' a 'empresas'
-                    empresa: '',
-                    conclusiones: '', // Agregar un campo 'conclusiones'
-                    planificacion: [],
+                    completed: evento.extendedProps.completed,
+                    visita: evento.extendedProps.visita ?? 'Comercial', // Cambiar el nombre de 'tipo' a 'empresas'
+                    empresa: evento.extendedProps.empresa ?? '',
+                    conclusiones: evento.extendedProps.conclusiones ?? '', // Agregar un campo 'conclusiones'
+                    planificacion: evento.extendedProps.planificacion ?? [],
+                    isAdmin: false,
                 }
             }
         })

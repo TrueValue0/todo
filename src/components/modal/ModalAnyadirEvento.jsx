@@ -38,6 +38,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
             empresa: '',
             conclusiones: '', // Agregar un campo 'conclusiones'
             planificacion: [],
+            isAdmin: false,
         }
     }
     const { addEvent } = useTareaDoc({ uid: idCustom });
@@ -87,6 +88,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                     empresa: evento.extendedProps.empresa,
                     conclusiones: evento.extendedProps.conclusiones,
                     planificacion: evento.extendedProps.planificacion,
+                    isAdmin: user.rol === 'admin',
                 }
             }
         } else {
@@ -103,6 +105,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                     empresa: evento.extendedProps.empresa,
                     conclusiones: evento.extendedProps.conclusiones,
                     planificacion: evento.extendedProps.planificacion,
+                    isAdmin: user.rol === 'admin',
                 }
             }
         }
@@ -151,7 +154,6 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                             <Form.Group as={Col} className='col-8' controlId="exampleForm.ControlInput1">
                                 <Form.Label>Asunto</Form.Label>
                                 <Form.Control
-                                    disabled={user.rol !== 'admin'}
                                     autoFocus
                                     value={evento.title}
                                     onChange={handleChangeTitle}
@@ -159,7 +161,6 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                             </Form.Group>
                             <Form.Group as={Col} className='col-4' >
                                 <Form.Check // prettier-ignore
-                                    disabled={user.rol !== 'admin'}
                                     checked={evento.allDay}
                                     type="switch"
                                     label="Todo el dia"
@@ -171,7 +172,6 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                             <Form.Group>
                                 <Form.Label>Fecha</Form.Label>
                                 <Form.Control
-                                    disabled={user.rol !== 'admin'}
                                     value={evento.start}
                                     onChange={handleChangeDate}
                                     type='date'
@@ -182,7 +182,6 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                                     <Form.Group as={Col}>
                                         <Form.Label>Fecha Inicio</Form.Label>
                                         <Form.Control
-                                            disabled={user.rol !== 'admin'}
                                             value={evento.start}
                                             onChange={handleChangeDate}
                                             type='date'
@@ -191,7 +190,6 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                                     <Form.Group as={Col}>
                                         <Form.Label>Hora Inicio</Form.Label>
                                         <Form.Control
-                                            disabled={user.rol !== 'admin'}
                                             required
                                             min='08:00'
                                             max='20:00'
@@ -205,7 +203,6 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                                     <Form.Group as={Col}>
                                         <Form.Label>Fecha Fin</Form.Label>
                                         <Form.Control
-                                            disabled={user.rol !== 'admin'}
                                             value={evento.end}
                                             onChange={handleFechaFin}
                                             type='date'
@@ -214,7 +211,6 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                                     <Form.Group as={Col}>
                                         <Form.Label>Hora Fin</Form.Label>
                                         <Form.Control
-                                            disabled={user.rol !== 'admin'}
                                             required
                                             min='08:00'
                                             max='20:00'
@@ -229,14 +225,14 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                         <Row className='my-2'>
                             <Form.Group as={Col}>
                                 <Form.Label>Visita</Form.Label>
-                                <Form.Select onChange={changeTipo} disabled={user.rol !== 'admin'}>
+                                <Form.Select onChange={changeTipo} disabled={evento.isAdmin}>
                                     <option value=''>Selecciona una visita</option>
                                     {TAKS_TYPES.map(value => <option key={value} value={value}>{value}</option>)}
                                 </Form.Select>
                             </Form.Group>
                             <Form.Group as={Col}>
                                 <Form.Label>Empresa</Form.Label>
-                                <Form.Select onChange={changeEmpresa} disabled={user.rol !== 'admin'}>
+                                <Form.Select onChange={changeEmpresa} disabled={evento.isAdmin}>
                                     <option value=''>Selecciona una empresa</option>
                                     {empresas.map(value => <option key={value}>{value}</option>)}
                                 </Form.Select>
@@ -245,7 +241,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
 
                         <Form.Group className="mb-3">
                             <Form.Label>Objetivo</Form.Label>
-                            <Form.Control disabled={user.rol !== 'admin'} as="textarea" rows={3} value={evento.objetivo} onChange={changeObjetivo} />
+                            <Form.Control as="textarea" rows={3} value={evento.objetivo} onChange={changeObjetivo} />
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Conclusiones</Form.Label>
@@ -260,19 +256,19 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    {
-                        user.rol === 'admin' &&
-                        <Button variant="primary" onClick={guardarVarios}>
-                            Guardar al Tiempo
-                        </Button>
-                    }
+
                     <Button variant="secondary" onClick={cerrarBien}>
                         Cerrar
                     </Button>
-                    <Button variant="primary" onClick={guardarEvento}>
-                        Guardar
-                    </Button>
-
+                    {
+                        user.rol === 'admin' ?
+                            <Button variant="primary" onClick={guardarVarios}>
+                                Guardar
+                            </Button> :
+                            <Button variant="primary" onClick={guardarEvento}>
+                                Guardar
+                            </Button>
+                    }
                 </Modal.Footer>
             </Modal >
         </>

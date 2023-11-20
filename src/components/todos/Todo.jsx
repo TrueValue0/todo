@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { FormCheck, ListGroup, Accordion, Button, Form, Row, Col, Alert } from 'react-bootstrap'
+import { FormCheck, ListGroup, Accordion, Button, Form, Row, Col } from 'react-bootstrap'
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import { BiTrash } from 'react-icons/bi'
 import { formatearFecha } from '@/services/generarUUID.js'
 import { TAKS_TYPES, empresas } from '@/config/constantes';
-import { useAuth } from '@/context/AuthProvider';
-import { useAlert } from '@/hooks/useAlert';
 import Plaficicacion from './Planificacion';
+import { useAuth } from '@/context/AuthProvider';
 
 function CustomToggle({ children, eventKey }) {
     const decoratedOnClick = useAccordionButton(eventKey);
@@ -25,7 +24,7 @@ function CustomToggle({ children, eventKey }) {
 
 export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
     const { user } = useAuth();
-    const { title = '', id = '', allDay, end, extendedProps: { completed, objetivo = '', visita = '', conclusiones = '', empresa = '', planificacion = [] }, start } = evento;
+    const { title = '', id = '', allDay, end, extendedProps: { isAdmin = false, completed, objetivo = '', visita = '', conclusiones = '', empresa = '', planificacion = [] }, start } = evento;
     const pointer = { cursor: 'pointer' };
     const [tarea, setTarea] = useState({
         id,
@@ -40,12 +39,13 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
             conclusiones,
             empresa,
             planificacion,
+            isAdmin
         }
 
     })
 
     const remove = () => {
-        if (user.rol === 'admin') removeTodo(id);
+        if (!(user.rol !== 'admin' && isAdmin)) removeTodo(id);
         else return;
     }
 
@@ -67,7 +67,7 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                                 <Form.Label column sm="3" className='text-center'>Asunto</Form.Label>
                                 <Col sm="9">
                                     <Form.Control
-                                        disabled={user.rol !== 'admin'}
+                                        disabled={!(user.rol === 'admin' && isAdmin)}
                                         onChange={event => setTarea(prev => ({ ...prev, title: event.target.value }))}
                                         value={tarea.title}
                                     />
@@ -77,7 +77,7 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                                 <Form.Label column sm="3" className='text-center'>Visita</Form.Label>
                                 <Col sm="9">
                                     <Form.Select
-                                        disabled={user.rol !== 'admin'}
+                                        disabled={!(user.rol === 'admin' && isAdmin)}
                                         value={tarea.extendedProps.visita}
                                         onChange={event => setTarea(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, visita: event.target.value } }))}>
                                         {TAKS_TYPES.map(value => <option key={value}>{value}</option>)}
@@ -88,7 +88,7 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                                 <Form.Label column sm="3" className='text-center'>Empresa</Form.Label>
                                 <Col sm="9">
                                     <Form.Select
-                                        disabled={user.rol !== 'admin'}
+                                        disabled={!(user.rol === 'admin' && isAdmin)}
                                         value={tarea.extendedProps.empresa}
                                         onChange={event => setTarea(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, empresa: event.target.value } }))}>
                                         {empresas.map(value => <option key={value}>{value}</option>)}
@@ -99,7 +99,7 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                                 <Form.Label column sm="3" className='text-center'>Objetivo</Form.Label>
                                 <Col sm="9">
                                     <Form.Control
-                                        disabled={user.rol !== 'admin'}
+                                        disabled={!(user.rol === 'admin' && isAdmin)}
                                         as='textarea'
                                         onChange={event => setTarea(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, objetivo: event.target.value } }))}
                                         value={tarea.extendedProps.objetivo}
@@ -107,7 +107,7 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                                 </Col>
                             </Form.Group>
                             <Form.Group as={Row} className='mt-1'>
-                                <Form.Label column sm="3" className='text-center'>Conclusiones</Form.Label>
+                                <Form.Label sm="3" className='text-center'>Conclusiones</Form.Label>
                                 <Col sm="9">
                                     <Form.Control
                                         as='textarea'

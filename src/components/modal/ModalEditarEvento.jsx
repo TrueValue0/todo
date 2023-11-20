@@ -1,14 +1,14 @@
-import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { TAKS_TYPES, empresas } from '@/config/constantes';
-import { useAuth } from '@/context/AuthProvider';
 import Plaficicacion from '@/components/todos/Planificacion';
+import { useAuth } from '@/context/AuthProvider';
+import { IoTrashOutline } from "react-icons/io5";
 
-export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar, reset }) {
+export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar, reset, removeTodo }) {
 
     const { user } = useAuth();
 
@@ -24,6 +24,17 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
         cerrar();
     }
 
+    const remove = () => {
+        if (!(user.rol !== 'admin' && evento.extendedProps.isAdmin)) {
+            removeTodo(evento.id)
+            reset();
+            cerrar();
+        } else {
+            reset();
+            cerrar();
+        }
+    }
+
     return (
         <>
             <Modal show={ver} onHide={cerrar}>
@@ -36,7 +47,7 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                             <Form.Group as={Col} className="mb-3">
                                 <Form.Label>Asunto</Form.Label>
                                 <Form.Control
-                                    disabled={user.rol !== 'admin'}
+                                    disabled={!(user.rol === 'admin' && evento.extendedProps.isAdmin)}
                                     onChange={handleTitle}
                                     value={evento.title}
                                     type="text"
@@ -45,7 +56,7 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                             </Form.Group>
                             <Form.Group as={Col} className="mb-3">
                                 <Form.Label>Visitas</Form.Label>
-                                <Form.Select value={evento.extendedProps.visita} onChange={changeTipo} disabled={user.rol !== 'admin'}>
+                                <Form.Select value={evento.extendedProps.visita} onChange={changeTipo} disabled={!(user.rol === 'admin' && evento.extendedProps.isAdmin)}>
                                     {TAKS_TYPES.map(value => <option key={value}>{value}</option>)}
                                 </Form.Select>
                             </Form.Group>
@@ -53,7 +64,7 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                         <Row>
                             <Form.Group as={Col} className="mb-3">
                                 <Form.Label>Empresas</Form.Label>
-                                <Form.Select value={evento.extendedProps.empresa} onChange={changeEmpresas} disabled={user.rol !== 'admin'}>
+                                <Form.Select value={evento.extendedProps.empresa} onChange={changeEmpresas} disabled={!(user.rol === 'admin' && evento.extendedProps.isAdmin)}>
                                     <option value=''>Selecciona una empresa</option>
                                     {empresas.map(value => <option key={value}>{value}</option>)}
                                 </Form.Select>
@@ -62,7 +73,7 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                         <Form.Group className="mb-3">
                             <Form.Label>Objetivo</Form.Label>
                             <Form.Control
-                                disabled={user.rol !== 'admin'}
+                                disabled={!(user.rol === 'admin' && evento.extendedProps.isAdmin)}
                                 value={evento.extendedProps.objetivo}
                                 onChange={handleDescrpcion}
                                 as="textarea"
@@ -83,6 +94,10 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
+                    <Button variant='danger' onClick={remove}>
+                        <IoTrashOutline />
+                        Eliminar
+                    </Button>
                     <Button variant="secondary" onClick={cerrar}>
                         Cerrar
                     </Button>
