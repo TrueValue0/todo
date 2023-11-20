@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -8,6 +8,7 @@ import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import { useEventos } from '@/context/EventoProvider';
 import { useUsers } from '@/hooks/useUser';
+import { useAuth } from '@/context/AuthProvider';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -22,7 +23,10 @@ const MenuProps = {
 
 export default function SelectorIds({ ver }) {
     const { users } = useUsers();
-    const { ids, setIds } = useEventos();
+    const { user } = useAuth();
+    const { ids, setIds, idCustom } = useEventos();
+
+    const idActual = idCustom === '' ? user.id : idCustom;
 
     const handleChange = (event) => {
         const selectedIds = event.target.value;
@@ -30,13 +34,14 @@ export default function SelectorIds({ ver }) {
     };
 
     useEffect(() => {
+        setIds([idActual])
         if (!ver) setIds([])
     }, [ver])
 
     return (
         <div>
             <FormControl sx={{ m: 1, width: 300 }}>
-                <InputLabel id="demo-multiple-checkbox-label">Comerciales</InputLabel>
+                <InputLabel>Comerciales</InputLabel>
                 <Select
                     multiple
                     value={ids}

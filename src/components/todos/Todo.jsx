@@ -110,6 +110,7 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                                 <Form.Label column sm="3" className='text-center'>Conclusiones</Form.Label>
                                 <Col sm="9">
                                     <Form.Control
+                                        as='textarea'
                                         onChange={event => setTarea(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, conclusiones: event.target.value } }))}
                                         value={tarea.extendedProps.conclusiones}
                                     />
