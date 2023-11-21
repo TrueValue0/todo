@@ -54,6 +54,7 @@ export default function Plaficicacion({ lista, setLista }) {
 
     return (
         <>
+            <Form.Label>Planificacion: </Form.Label>
             <Form.Group className='d-flex gap-3'>
                 <Form.Control
                     type="text"
@@ -64,8 +65,6 @@ export default function Plaficicacion({ lista, setLista }) {
                 />
                 <Button onClick={anyadir}>Añadir</Button>
             </Form.Group>
-
-            <Form.Label>Planificacion: </Form.Label>
             <ol>
                 {empresas.map((empresa, index) => (
                     <li key={index} style={{ fontSize: 18 }} className='my-1 d-flex gap-2'>

@@ -7,10 +7,24 @@ import { TAKS_TYPES, empresas } from '@/config/constantes';
 import Plaficicacion from '@/components/todos/Planificacion';
 import { useAuth } from '@/context/AuthProvider';
 import { IoTrashOutline } from "react-icons/io5";
+import { useEffect, useState } from 'react';
 
 export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar, reset, removeTodo }) {
 
     const { user } = useAuth();
+    const [disable, setDisable] = useState(true);
+
+    const comprobarAdmin = () => {
+        if (user.rol === 'admin') {
+            setDisable(false);
+        } else if (user.rol !== 'admin' && isAdmin) {
+            setDisable(true);
+        } else if (user.rol !== 'admin' && isAdmin === false) {
+            setDisable(false)
+        }
+    }
+
+    useEffect(comprobarAdmin, [])
 
     const changeTipo = event => seter(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, visita: event.target.value } }));
     const changeEmpresas = event => seter(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, empresa: event.target.value } }));
@@ -47,7 +61,7 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                             <Form.Group as={Col} className="mb-3">
                                 <Form.Label>Asunto</Form.Label>
                                 <Form.Control
-                                    disabled={!(user.rol === 'admin' && evento.extendedProps.isAdmin)}
+                                    disabled={disable}
                                     onChange={handleTitle}
                                     value={evento.title}
                                     type="text"
@@ -56,7 +70,7 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                             </Form.Group>
                             <Form.Group as={Col} className="mb-3">
                                 <Form.Label>Visitas</Form.Label>
-                                <Form.Select value={evento.extendedProps.visita} onChange={changeTipo} disabled={!(user.rol === 'admin' && evento.extendedProps.isAdmin)}>
+                                <Form.Select value={evento.extendedProps.visita} onChange={changeTipo} disabled={disable}>
                                     {TAKS_TYPES.map(value => <option key={value}>{value}</option>)}
                                 </Form.Select>
                             </Form.Group>
@@ -64,7 +78,7 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                         <Row>
                             <Form.Group as={Col} className="mb-3">
                                 <Form.Label>Empresas</Form.Label>
-                                <Form.Select value={evento.extendedProps.empresa} onChange={changeEmpresas} disabled={!(user.rol === 'admin' && evento.extendedProps.isAdmin)}>
+                                <Form.Select value={evento.extendedProps.empresa} onChange={changeEmpresas} disabled={disable}>
                                     <option value=''>Selecciona una empresa</option>
                                     {empresas.map(value => <option key={value}>{value}</option>)}
                                 </Form.Select>
@@ -73,7 +87,7 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                         <Form.Group className="mb-3">
                             <Form.Label>Objetivo</Form.Label>
                             <Form.Control
-                                disabled={!(user.rol === 'admin' && evento.extendedProps.isAdmin)}
+                                disabled={disable}
                                 value={evento.extendedProps.objetivo}
                                 onChange={handleDescrpcion}
                                 as="textarea"
