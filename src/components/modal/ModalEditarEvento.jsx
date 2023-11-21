@@ -17,9 +17,9 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
     const comprobarAdmin = () => {
         if (user.rol === 'admin') {
             setDisable(false);
-        } else if (user.rol !== 'admin' && isAdmin) {
+        } else if (user.rol !== 'admin' && evento.extendedProps.isAdmin === true) {
             setDisable(true);
-        } else if (user.rol !== 'admin' && isAdmin === false) {
+        } else if (user.rol !== 'admin' && evento.extendedProps.isAdmin === false) {
             setDisable(false)
         }
     }
@@ -39,7 +39,7 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
     }
 
     const remove = () => {
-        if (!(user.rol !== 'admin' && evento.extendedProps.isAdmin)) {
+        if (disable) {
             removeTodo(evento.id)
             reset();
             cerrar();
@@ -108,10 +108,10 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant='danger' onClick={remove}>
+                    {!(disable) && <Button variant='danger' onClick={remove}>
                         <IoTrashOutline />
                         Eliminar
-                    </Button>
+                    </Button>}
                     <Button variant="secondary" onClick={cerrar}>
                         Cerrar
                     </Button>
