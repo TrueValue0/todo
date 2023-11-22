@@ -61,7 +61,7 @@ export default function Plaficicacion({ lista, setLista }) {
                     value={nuevaEmpresa}
                     onChange={(e) => setNuevaEmpresa(e.target.value)}
                     onKeyDown={handleEnter}
-                    placeholder="Escribe y presiona Enter"
+                    placeholder="Escribir cliente y presionar Enter"
                 />
                 <Button onClick={anyadir}>Añadir</Button>
             </Form.Group>
