@@ -40,10 +40,10 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
 
     const remove = () => {
         if (disable) {
-            removeTodo(evento.id)
             reset();
             cerrar();
         } else {
+            removeTodo(evento.id)
             reset();
             cerrar();
         }

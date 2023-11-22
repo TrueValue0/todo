@@ -7,12 +7,14 @@ import { HiEyeOff, HiEye } from "react-icons/hi";
 import { doc, getDoc } from "firebase/firestore";
 import { usuarios } from "@/config/firebaseapp";
 import LogoVertical from "@/assets/logoVertical";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export default function Login() {
     const navigate = useNavigate();
     const [eye, setEye] = useState(true);
     const { alert, confirmacion, error } = useAlert();
     const { login, user, setUser, authState } = useAuth();
+    const movil = useMediaQuery('990');
 
     const handleSubmit = async (event) => {
         try {
@@ -43,10 +45,10 @@ export default function Login() {
         <>
             <div className="d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: '#808080' }}>
                 <Container className="my-4">
-                    <Card className="p-5 w-50 m-auto">
-                        <LogoVertical className='m-auto d-block' width='400px' />
+                    <div className={`px-2 py-5 p-md-4 p m-auto bg-white rounded-4 ${movil ? 'w-100' : 'w-50'}`}>
+                        <LogoVertical className='m-auto d-block' width='100%' />
                         <h3 className="text-center fw-bold text-primary mt-3">Login</h3>
-                        <Form noValidate onSubmit={handleSubmit}>
+                        <Form noValidate onSubmit={handleSubmit} className="w-100">
                             <Form.Group className="form-outline mb-4">
                                 <Form.Label>Email</Form.Label >
                                 <Form.Control name="email" type="email" required />
@@ -74,7 +76,7 @@ export default function Login() {
                                 <Button type="submit">Iniciar Sesión</Button>
                             </div>
                         </Form>
-                    </Card>
+                    </div>
                 </Container>
                 {alert.show && <Alert className="position-absolute bottom-0" variant={alert.variant} dismissible>{alert.message}</Alert>}
             </div>

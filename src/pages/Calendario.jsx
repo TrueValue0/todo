@@ -17,15 +17,20 @@ import { Paper } from '@mui/material'
 import Form from 'react-bootstrap/Form'
 import { useAuth } from '@/context/AuthProvider'
 import { useEventos } from '@/context/EventoProvider'
+import { getAllEvents } from '@/services/data'
+import Leyenda from '@/components/Leyenda'
 
 
 function renderEventContent(eventInfo) {
     return (
         <>
-            <b>{eventInfo.timeText}</b>
-            <i>{eventInfo.event.title}</i>
+            <i>{eventInfo.event.title} - {eventInfo.event.extendedProps.empresa}</i>
         </>
     )
+}
+
+function renderEventAdmin(eventInfo) {
+    return (<i>{eventInfo.event.extendedProps.usuario} - {eventInfo.event.title} - {eventInfo.event.extendedProps.empresa}</i>)
 }
 
 
@@ -35,13 +40,23 @@ export default function Calendario() {
     const { users } = useUsers();
     const { user } = useAuth();
     const { datos, actualizarDoc, deleteEvent } = useTareaDoc({ uid: idCustom });
+    const [allCalendars, setAllCalendars] = useState(false);
     const [fechaActual, setFechaActual] = useState('');
 
 
+    const cargarDatos = async () => {
+        let fusion = await getAllEvents();
+        fusion = fusion.map(value => value.tareas.map(evnt => ({ ...evnt, extendedProps: { ...evnt.extendedProps, usuario: value.usuario, uid: value.uid } }))).flatMap(value => value)
+        if (allCalendars) setEventos(fusion)
+        else setEventos(datos)
+    }
+
     useEffect(() => {
-        // Actualiza el estado local cuando cambian los datos
-        setEventos(datos);
-    }, [datos]);
+        setEventos(datos)
+        cargarDatos();
+    }, [datos, allCalendars]);
+
+
 
     const tablet = useMediaQuery('1024');
 
@@ -83,7 +98,7 @@ export default function Calendario() {
                 isAdmin: clickInfo.event.extendedProps.isAdmin,
             }
         }
-
+        setIdCustom(clickInfo.event.extendedProps.uid)
         setEvento(nuevoEvento)
         setModalEdit(true)
     }
@@ -118,22 +133,34 @@ export default function Calendario() {
 
     const ocultarFindes = () => tablet ? [0, 6] : [];
 
-    const currentComercial = users.find(user => user.id === idCustom)
+    const currentComercial = users.find(user => user.id === idCustom);
 
     return (
         <Layout>
             <div className='d-flex justify-content-center align-items-center w-100' style={{ marginTop: 80 }}>
                 <div className='w-100 p-1 px-md-5'>
                     <LogoAlargado className='m-auto d-block' width='400px' />
-                    {user.rol === 'admin' && <Paper className='d-inline-block p-3 my-3'>
-                        <Form.Select onChange={handleSelect} value={currentComercial ? currentComercial.id : ''}>
-                            <option value=''>Selecciona un agente</option>
-                            {users.map(user => {
-                                if (user.nombre !== 'PRUEBA') return (<option key={user.id} value={user.id}>{user.nombre}</option>)
-                            })
-                            }
-                        </Form.Select>
-                    </Paper>}
+                    <div className='d-flex gap-5 align-items-center'>
+                        {user.rol === 'admin' && <>
+                            <Paper className='d-inline-block p-3 my-3'>
+                                <Form.Select onChange={handleSelect} value={currentComercial ? currentComercial.id : ''}>
+                                    <option value=''>Selecciona un agente</option>
+                                    {users.map(user => {
+                                        if (user.nombre !== 'PRUEBA') return (<option key={user.id} value={user.id}>{user.nombre}</option>)
+                                    })
+                                    }
+                                </Form.Select>
+                            </Paper>
+                            <Form.Check
+                                onChange={e => setAllCalendars(e.target.checked)}
+                                checked={allCalendars}
+                                type="switch"
+                                label="Combinar calendarios"
+                            />
+                        </>
+                        }
+                        <Leyenda />
+                    </div>
                     <FullCalendar
                         events={eventos}
                         selectLongPressDelay={1}
@@ -160,7 +187,7 @@ export default function Calendario() {
                             setFechaActual(informacion.startStr);
                             setModal(true);
                         }} //Funcion al crear un envento.
-                        eventContent={renderEventContent} // custom render function
+                        eventContent={allCalendars ? renderEventAdmin : renderEventContent} // custom render function
                         eventClick={handleEventClick} // Funcion que se ejecuta al editar los eventos
                         //eventsSet={handleEvents} // called after events are initialized/added/changed/removed
                         locale={esLocale} // Traduccion a español

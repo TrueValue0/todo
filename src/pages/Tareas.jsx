@@ -13,6 +13,7 @@ import { Paper } from "@mui/material";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import Leyenda from "@/components/Leyenda";
 
 
 export default function Tareas() {
@@ -38,7 +39,7 @@ export default function Tareas() {
             <Container fluid='md' style={{ marginTop: 80, marginBottom: 100 }}>
                 <LogoAlargado className='m-auto d-block my-3' width='400px' />
 
-                <div className="d-flex justify-content-between align-items-center">
+                <div className="d-flex justify-content-between align-items-center my-2">
                     {user.rol === 'admin' && <Paper className='d-inline-block p-3 my-3'>
                         <Form.Select onChange={handleSelect} value={currentComercial ? currentComercial.id : ''} >
                             <option value=''>Selecciona un agente</option>
@@ -48,6 +49,7 @@ export default function Tareas() {
                             }
                         </Form.Select>
                     </Paper>}
+                    <Leyenda />
                     <GoPlus
                         className="text-white bg-primary rounded-5 d-block"
                         style={styleIcon}

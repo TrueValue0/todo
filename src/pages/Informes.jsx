@@ -15,6 +15,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import { ImCheckboxChecked } from "react-icons/im";
 import { ImCross } from "react-icons/im";
 import { formatearFecha } from '@/services/generarUUID';
+import { getAllEvents } from '@/services/data';
 //  Filtrado de los informes con las horas, agentes, fechas, descripcion, nombre de empresa (BD).
 export default function Informes() {
 
@@ -48,22 +49,15 @@ export default function Informes() {
 
     const [backup, setBackup] = useState([])
     const [informes, setInformes] = useState([]);
-
     const [filtros, setFiltros] = useState(initalFilters);
 
 
 
 
     const cargarTareas = async () => {
-        const querySnapshot = await getDocs(tareas);
-
-        let tareasData = [];
-
-        querySnapshot.forEach((doc) => tareasData.push({ ...doc.data() }));
-
+        let tareasData = await getAllEvents();
         tareasData.sort((a, b) => a.usuario.localeCompare(b.usuario));
-        tareasData = tareasData.map(value => (value.start) ? { ...value, start: value.start.slice(0, 10) } : { ...value });
-        tareasData = tareasData.filter(usuario => usuario.tareas.length > 0 && usuario.usuario !== 'PRUEBA') // Filtra los usuarios con tareas no vacías
+        tareasData = tareasData.map(value => (value.start) ? { ...value, start: value.start.slice(0, 10) } : { ...value })
             .flatMap((usuario) => {
                 return usuario.tareas.map((tarea) => {
                     return {
@@ -79,7 +73,6 @@ export default function Informes() {
                         planificacion: tarea.extendedProps.planificacion,
                     }
                 })
-
             });
         setBackup(tareasData);
         setInformes(tareasData);
