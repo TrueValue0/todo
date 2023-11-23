@@ -18,6 +18,6 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
 export default function Imagen({ children, onClick }) {
     const { user } = useAuth()
     return (
-        <CustomToggle onClick={onClick}> <Image width='50px' src={user.avatar} roundedCircle /></CustomToggle>
+        <CustomToggle onClick={onClick}> <Image width='50px' height='50px' src={user.avatar} roundedCircle className='object-fit-cover' /></CustomToggle>
     )
 }

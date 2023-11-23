@@ -25,7 +25,7 @@ export default function User() {
                 <Card>
                     {!editar ? <Card.Body className='d-flex justify-content-center flex-column align-items-center'>
                         <Card.Title>
-                            <Image width='180px' src={user.avatar} roundedCircle />
+                            <Image width='200px' height='200px' src={user.avatar} roundedCircle className='object-fit-cover' />
                         </Card.Title>
                         <Card.Subtitle className="my-2 text-muted fs-2">{user.nombre}</Card.Subtitle>
                         <Card.Text className='text-center text-muted'>

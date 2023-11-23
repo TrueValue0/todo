@@ -47,7 +47,9 @@ export default function Calendario() {
     const cargarDatos = async () => {
         let fusion = await getAllEvents();
         fusion = fusion.map(value => value.tareas.map(evnt => ({ ...evnt, extendedProps: { ...evnt.extendedProps, usuario: value.usuario, uid: value.uid } }))).flatMap(value => value)
-        if (allCalendars) setEventos(fusion)
+        if (allCalendars) {
+            setEventos(fusion)
+        }
         else setEventos(datos)
     }
 
