@@ -93,6 +93,10 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                                 as="textarea"
                                 rows={3} />
                         </Form.Group>
+                        <Plaficicacion
+                            lista={evento.extendedProps.planificacion}
+                            setLista={array => seter(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, planificacion: array } }))}
+                        />
                         <Form.Group className="mb-3">
                             <Form.Label>Conclusiones</Form.Label>
                             <Form.Control
@@ -101,10 +105,7 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                                 as="textarea"
                                 rows={3} />
                         </Form.Group>
-                        <Plaficicacion
-                            lista={evento.extendedProps.planificacion}
-                            setLista={array => seter(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, planificacion: array } }))}
-                        />
+
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>

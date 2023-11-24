@@ -243,15 +243,16 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                             <Form.Label>Objetivo</Form.Label>
                             <Form.Control as="textarea" rows={3} value={evento.objetivo} onChange={changeObjetivo} />
                         </Form.Group>
+                        <Plaficicacion
+                            lista={evento.extendedProps.planificacion}
+                            setLista={array => setEvento(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, planificacion: array } }))}
+                        />
                         <Form.Group className="mb-3">
                             <Form.Label>Conclusiones</Form.Label>
                             <Form.Control as="textarea" rows={3} value={evento.extendedProps.conclusiones} onChange={changeConclusiones} />
                         </Form.Group>
 
-                        <Plaficicacion
-                            lista={evento.extendedProps.planificacion}
-                            setLista={array => setEvento(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, planificacion: array } }))}
-                        />
+
 
                     </Form>
                 </Modal.Body>

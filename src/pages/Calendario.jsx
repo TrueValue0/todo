@@ -40,25 +40,30 @@ export default function Calendario() {
     const { users } = useUsers();
     const { user } = useAuth();
     const { datos, actualizarDoc, deleteEvent } = useTareaDoc({ uid: idCustom });
-    const [allCalendars, setAllCalendars] = useState(false);
+    //const [allCalendars, setAllCalendars] = useState(false);
     const [fechaActual, setFechaActual] = useState('');
 
 
-    const cargarDatos = async () => {
-        let fusion = await getAllEvents();
-        fusion = fusion.map(value => value.tareas.map(evnt => ({ ...evnt, extendedProps: { ...evnt.extendedProps, usuario: value.usuario, uid: value.uid } }))).flatMap(value => value)
-        if (allCalendars) {
-            setEventos(fusion)
+    /*     const cargarDatos = async () => {
+            let fusion = await getAllEvents();
+            fusion = fusion.map(value => value.tareas.map(evnt => ({ ...evnt, extendedProps: { ...evnt.extendedProps, usuario: value.usuario, uid: value.uid } }))).flatMap(value => value);
+            if (allCalendars) {
+                setEventos(prev => fusion)
+            }
+            else setEventos(datos)
         }
-        else setEventos(datos)
-    }
+    
+        useEffect(() => {
+            cargarDatos();
+        }, [allCalendars]) */
 
     useEffect(() => {
         setEventos(datos)
-        cargarDatos();
-    }, [datos, allCalendars]);
+    }, [datos]);
 
 
+
+    console.log(eventos);
 
     const tablet = useMediaQuery('1024');
 
@@ -100,7 +105,7 @@ export default function Calendario() {
                 isAdmin: clickInfo.event.extendedProps.isAdmin,
             }
         }
-        setIdCustom(clickInfo.event.extendedProps.uid)
+        /* setIdCustom(clickInfo.event.extendedProps.uid) */ //TODO: arreglar la fusion de los calendarios
         setEvento(nuevoEvento)
         setModalEdit(true)
     }
@@ -145,7 +150,7 @@ export default function Calendario() {
                     <div className='d-flex gap-5 align-items-center'>
                         {user.rol === 'admin' && <>
                             <Paper className='d-inline-block p-3 my-3'>
-                                <Form.Select onChange={handleSelect} value={currentComercial ? currentComercial.id : ''}>
+                                <Form.Select onChange={handleSelect} value={currentComercial ? currentComercial.id : user.id}>
                                     <option value=''>Selecciona un agente</option>
                                     {users.map(user => {
                                         if (user.nombre !== 'PRUEBA') return (<option key={user.id} value={user.id}>{user.nombre}</option>)
@@ -153,12 +158,12 @@ export default function Calendario() {
                                     }
                                 </Form.Select>
                             </Paper>
-                            <Form.Check
+                            {/*  <Form.Check
                                 onChange={e => setAllCalendars(e.target.checked)}
                                 checked={allCalendars}
                                 type="switch"
                                 label="Combinar calendarios"
-                            />
+                            /> */}
                         </>
                         }
                         <Leyenda />
@@ -189,7 +194,7 @@ export default function Calendario() {
                             setFechaActual(informacion.startStr);
                             setModal(true);
                         }} //Funcion al crear un envento.
-                        eventContent={allCalendars ? renderEventAdmin : renderEventContent} // custom render function
+                        eventContent={renderEventContent} // custom render function
                         eventClick={handleEventClick} // Funcion que se ejecuta al editar los eventos
                         //eventsSet={handleEvents} // called after events are initialized/added/changed/removed
                         locale={esLocale} // Traduccion a español

@@ -120,8 +120,15 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                                     />
                                 </Col>
                             </Form.Group>
-
-                            <Form.Group as={Row} className='mt-1'>
+                            <Row className='mt-1'>
+                                <Col>
+                                    <Plaficicacion
+                                        lista={tarea.extendedProps.planificacion}
+                                        setLista={array => setTarea(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, planificacion: array } }))}
+                                    />
+                                </Col>
+                            </Row>
+                            <Form.Group as={Row} className='my-3'>
                                 <Form.Label column sm="3" className='text-center'>Conclusiones</Form.Label>
                                 <Col sm="9">
                                     <Form.Control
@@ -131,14 +138,6 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                                     />
                                 </Col>
                             </Form.Group>
-                            <Row className='my-3'>
-                                <Col>
-                                    <Plaficicacion
-                                        lista={tarea.extendedProps.planificacion}
-                                        setLista={array => setTarea(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, planificacion: array } }))}
-                                    />
-                                </Col>
-                            </Row>
 
                             <Form.Group as={Row} className='justify-content-center my-2'>
                                 <Button className='w-75' onClick={() => actualizar(id, tarea)}>Actualizar</Button>
