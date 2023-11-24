@@ -109,7 +109,7 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    {!(disable) && <Button variant='danger' onClick={remove}>
+                    {user.rol === 'admin' && <Button variant='danger' onClick={remove}>
                         <IoTrashOutline />
                         Eliminar
                     </Button>}
