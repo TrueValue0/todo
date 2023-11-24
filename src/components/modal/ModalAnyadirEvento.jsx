@@ -90,6 +90,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                     conclusiones: evento.extendedProps.conclusiones,
                     planificacion: evento.extendedProps.planificacion,
                     isAdmin: Boolean(user.rol === 'admin'),
+                    idDoc: user.id,
                 }
             }
         } else {
@@ -107,6 +108,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                     conclusiones: evento.extendedProps.conclusiones,
                     planificacion: evento.extendedProps.planificacion,
                     isAdmin: Boolean(user.rol === 'admin'),
+                    idDoc: user.id,
                 }
             }
         }

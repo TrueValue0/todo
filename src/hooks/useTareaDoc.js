@@ -10,10 +10,6 @@ export function useTareaDoc({ uid = '' } = {}) {
     const [datos, setDatos] = useState([]);
     const { eventos, setEventos } = useEventos();
 
-    useEffect(() => {
-        setEventos(datos)
-    }, [datos])
-
     const cargarDoc = async () => {
         try {
             const documentoSF = doc(tareas, id);
@@ -26,8 +22,54 @@ export function useTareaDoc({ uid = '' } = {}) {
                     else if (value.extendedProps.visita === 'Bodega') color = '#0000ff'
                     else if (value.extendedProps.visita === 'Cata') color = '#cb3234'
                     return { ...value, backgroundColor: color }
-                })
+                });
                 setDatos(events)
+            } else {
+                console.log("El documento no existe en Firestore");
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    const actualizarAdmin = async (idDoc, evento, id) => {
+        try {
+            const documentoSF = doc(tareas, idDoc);
+            const documento = await getDoc(documentoSF);
+            if (documento.exists()) {
+                let docFinal = documento.data().tareas;
+                const events = docFinal.map(value => {
+                    let color = '#008f39';
+                    if (value.extendedProps.visita === 'Comercial') color = '#008f39'
+                    else if (value.extendedProps.visita === 'Bodega') color = '#0000ff'
+                    else if (value.extendedProps.visita === 'Cata') color = '#cb3234'
+                    return { ...value, backgroundColor: color }
+                });
+                const adminEvents = events.map(event => {
+                    if (event.id === id) {
+                        return {
+                            id: evento.id,
+                            title: evento.title,
+                            start: evento.start,
+                            end: evento.end,
+                            allDay: evento.allDay,
+                            extendedProps: {
+                                completed: evento.extendedProps.completed,
+                                objetivo: evento.extendedProps.objetivo,
+                                visita: evento.extendedProps.visita,
+                                conclusiones: evento.extendedProps.conclusiones,
+                                empresa: evento.extendedProps.empresa,
+                                planificacion: evento.extendedProps.planificacion,
+                                isAdmin: evento.extendedProps.isAdmin,
+                                idDoc: evento.extendedProps.idDoc,
+                            }
+                        }
+                    }
+                    return event;
+                })
+                updateDoc(documentoSF, {
+                    tareas: adminEvents,
+                })
             } else {
                 console.log("El documento no existe en Firestore");
             }
@@ -82,6 +124,7 @@ export function useTareaDoc({ uid = '' } = {}) {
                         empresa: evento.extendedProps.empresa,
                         planificacion: evento.extendedProps.planificacion,
                         isAdmin: evento.extendedProps.isAdmin,
+                        idDoc: evento.extendedProps.idDoc,
                     }
                 }
             }
@@ -98,8 +141,12 @@ export function useTareaDoc({ uid = '' } = {}) {
     }
 
     useEffect(() => {
+        setEventos(datos)
+    }, [datos])
+
+    useEffect(() => {
         cargarDoc();
     }, [uid]);
 
-    return { datos, deleteEvent, completeEvent, updateEvent, addEvent, actualizarDoc, cargarDoc };
+    return { datos, deleteEvent, completeEvent, updateEvent, addEvent, actualizarDoc, cargarDoc, actualizarAdmin };
 }

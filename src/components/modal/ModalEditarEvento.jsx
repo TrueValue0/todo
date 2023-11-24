@@ -45,7 +45,6 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
             reset();
             cerrar();
         } else {
-            console.log('aaaa');
             removeTodo(evento.id)
             reset();
             cerrar();

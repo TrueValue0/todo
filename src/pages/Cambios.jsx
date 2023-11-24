@@ -18,7 +18,7 @@ export default function Cambios() {
             idCustom += 1
         });
 
-        setEventos(tareasData);
+        //setEventos(tareasData);
     }
 
     const handleCambiar = async () => {

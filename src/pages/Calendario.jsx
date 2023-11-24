@@ -39,7 +39,7 @@ export default function Calendario() {
     const { eventos, setEventos, idCustom, setIdCustom } = useEventos();
     const { users } = useUsers();
     const { user } = useAuth();
-    const { datos, actualizarDoc, deleteEvent } = useTareaDoc({ uid: idCustom });
+    const { actualizarDoc, deleteEvent, actualizarAdmin, cargarDoc } = useTareaDoc({ uid: idCustom });
     const [allCalendars, setAllCalendars] = useState(false);
     const [allEvents, setAllEvents] = useState([]);
     const [fechaActual, setFechaActual] = useState('');
@@ -47,7 +47,7 @@ export default function Calendario() {
 
     const cargarDatos = async () => {
         let fusion = await getAllEvents();
-        fusion = fusion.map(value => value.tareas.map(evnt => ({ ...evnt, extendedProps: { ...evnt.extendedProps, usuario: value.usuario, uid: value.uid } }))).flatMap(value => value);
+        fusion = fusion.map(value => value.tareas.map(evnt => ({ ...evnt, extendedProps: { ...evnt.extendedProps, usuario: value.usuario, idDoc: value.uid } }))).flatMap(value => value);
         if (allCalendars) {
             setAllEvents(fusion);
         }
@@ -62,10 +62,10 @@ export default function Calendario() {
         cargarDatos();
     }, [allCalendars])
 
-    useEffect(() => {
-        setEventos(datos)
-    }, [datos]);
-
+    /*  useEffect(() => {
+         setEventos(datos)
+     }, [datos]);
+  */
     const tablet = useMediaQuery('1024');
 
     const eventInital = {
@@ -82,13 +82,13 @@ export default function Calendario() {
             planificacion: [],
             visita: '',
             isAdmin: Boolean(user.rol === 'admin'),
+            idDoc: '',
         }
     }
 
     const [evento, setEvento] = useState(eventInital);
     const [modalEdit, setModalEdit] = useState(false);
     const [modal, setModal] = useState(false);
-
 
     const handleEventClick = (clickInfo) => {
         let nuevoEvento = {
@@ -105,43 +105,53 @@ export default function Calendario() {
                 planificacion: clickInfo.event.extendedProps.planificacion,
                 visita: clickInfo.event.extendedProps.visita,
                 isAdmin: clickInfo.event.extendedProps.isAdmin,
+                idDoc: clickInfo.event.extendedProps.idDoc,
             }
         }
-        if (allCalendars) { setIdCustom(clickInfo.event.extendedProps.uid) };
-        setAllCalendars(false);
+        //clickInfo.event.extendedProps.uid  <-- Aqui esta el id del documento.
         setEvento(nuevoEvento);
         setModalEdit(true);
     }
 
-    const actualizar = () => {
-        let events = eventos.map(event => {
-            if (event.id === evento.id) {
-                return {
-                    id: evento.id,
-                    title: evento.title,
-                    start: evento.start,
-                    end: evento.end,
-                    allDay: evento.allDay,
-                    extendedProps: {
-                        objetivo: evento.extendedProps.objetivo,
-                        completed: evento.extendedProps.completed,
-                        empresa: evento.extendedProps.empresa,
-                        conclusiones: evento.extendedProps.conclusiones,
-                        planificacion: evento.extendedProps.planificacion,
-                        visita: evento.extendedProps.visita,
-                        isAdmin: evento.extendedProps.isAdmin,
+    const actualizar = async () => {
+        if (user.id === idCustom && user.rol === 'admin') {
+            await actualizarAdmin(evento.extendedProps.idDoc, evento, evento.id);
+            await cargarDatos();
+        } else {
+            let events = eventos.map(event => {
+                if (event.id === evento.id) {
+                    return {
+                        id: evento.id,
+                        title: evento.title,
+                        start: evento.start,
+                        end: evento.end,
+                        allDay: evento.allDay,
+                        extendedProps: {
+                            objetivo: evento.extendedProps.objetivo,
+                            completed: evento.extendedProps.completed,
+                            empresa: evento.extendedProps.empresa,
+                            conclusiones: evento.extendedProps.conclusiones,
+                            planificacion: evento.extendedProps.planificacion,
+                            visita: evento.extendedProps.visita,
+                            isAdmin: evento.extendedProps.isAdmin,
+                            idDoc: evento.extendedProps.idDoc,
+                        }
+
                     }
                 }
-            }
-            return event;
-        })
-        setEventos(events);
-        actualizarDoc(events);
+                return event;
+            })
+            setEventos(events);
+            actualizarDoc(events);
+        }
     }
 
     const handleSelect = event => {
         setAllCalendars(false);
         setIdCustom(event.target.value)
+        if (user.id === event.target.value && user.rol === 'admin') {
+            setAllCalendars(true);
+        }
     }
 
     const ocultarFindes = () => tablet ? [0, 6] : [];
