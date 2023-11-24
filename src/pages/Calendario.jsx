@@ -55,6 +55,7 @@ export default function Calendario() {
 
     useEffect(() => {
         setIdCustom(user.id)
+        if (user.rol === 'admin') setAllCalendars(true);
     }, [])
 
     useEffect(() => {
@@ -138,7 +139,10 @@ export default function Calendario() {
         actualizarDoc(events);
     }
 
-    const handleSelect = event => setIdCustom(event.target.value);
+    const handleSelect = event => {
+        setAllCalendars(false);
+        setIdCustom(event.target.value)
+    }
 
     const ocultarFindes = () => tablet ? [0, 6] : [];
 
