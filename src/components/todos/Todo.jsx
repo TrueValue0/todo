@@ -59,7 +59,10 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
     })
 
     const remove = () => {
-        if (!disable) removeTodo(id);
+        if (!disable) {
+            console.log('borrado');
+            removeTodo(id)
+        }
         else return;
     }
 
@@ -128,7 +131,7 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                                     />
                                 </Col>
                             </Row>
-                            <Form.Group as={Row} className='my-3'>
+                            <Form.Group as={Row} className='my-3 '>
                                 <Form.Label column sm="3" className='text-center'>Conclusiones</Form.Label>
                                 <Col sm="9">
                                     <Form.Control

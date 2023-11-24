@@ -21,7 +21,7 @@ export function useTareaDoc({ uid = '' } = {}) {
             if (documento.exists()) {
                 let docFinal = documento.data().tareas;
                 const events = docFinal.map(value => {
-                    let color;
+                    let color = '#008f39';
                     if (value.extendedProps.visita === 'Comercial') color = '#008f39'
                     else if (value.extendedProps.visita === 'Bodega') color = '#0000ff'
                     else if (value.extendedProps.visita === 'Cata') color = '#cb3234'
@@ -48,7 +48,9 @@ export function useTareaDoc({ uid = '' } = {}) {
     }
 
     const deleteEvent = (id) => {
+        console.log('pero q pasa');
         const events = eventos.filter(event => event.id !== id);
+        console.log(events);
         setEventos(events);
         actualizarDoc(events);
     }
@@ -79,6 +81,7 @@ export function useTareaDoc({ uid = '' } = {}) {
                         conclusiones: evento.extendedProps.conclusiones,
                         empresa: evento.extendedProps.empresa,
                         planificacion: evento.extendedProps.planificacion,
+                        isAdmin: evento.extendedProps.isAdmin,
                     }
                 }
             }
@@ -98,5 +101,5 @@ export function useTareaDoc({ uid = '' } = {}) {
         cargarDoc();
     }, [uid]);
 
-    return { datos, deleteEvent, completeEvent, updateEvent, addEvent, actualizarDoc };
+    return { datos, deleteEvent, completeEvent, updateEvent, addEvent, actualizarDoc, cargarDoc };
 }

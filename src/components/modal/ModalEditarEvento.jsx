@@ -15,16 +15,18 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
     const [disable, setDisable] = useState(true);
 
     const comprobarAdmin = () => {
-        if (user.rol === 'admin') {
-            setDisable(false);
-        } else if (user.rol !== 'admin' && evento.extendedProps.isAdmin === true) {
-            setDisable(true);
-        } else if (user.rol !== 'admin' && evento.extendedProps.isAdmin === false) {
-            setDisable(false)
+        if (ver) {
+            if (user.rol === 'admin') {
+                setDisable(false);
+            } else if (user.rol !== 'admin' && evento.extendedProps.isAdmin === true) {
+                setDisable(true);
+            } else if (user.rol !== 'admin' && evento.extendedProps.isAdmin === false) {
+                setDisable(false)
+            }
         }
     }
 
-    useEffect(comprobarAdmin, [])
+    useEffect(comprobarAdmin, [ver])
 
     const changeTipo = event => seter(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, visita: event.target.value } }));
     const changeEmpresas = event => seter(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, empresa: event.target.value } }));
@@ -43,6 +45,7 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
             reset();
             cerrar();
         } else {
+            console.log('aaaa');
             removeTodo(evento.id)
             reset();
             cerrar();
@@ -109,7 +112,7 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    {user.rol === 'admin' && <Button variant='danger' onClick={remove}>
+                    {!(disable) && <Button variant='danger' onClick={remove}>
                         <IoTrashOutline />
                         Eliminar
                     </Button>}

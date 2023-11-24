@@ -10,15 +10,17 @@ export default function Todos({ lista, uid }) {
         <>
             {datos &&
                 <ListGroup className='rounded-0'>
-                    {lista.map((evento) => (
-                        <Todo
-                            key={evento.id}
-                            evento={evento}
-                            actualizar={updateEvent}
-                            removeTodo={deleteEvent}
-                            completeTodo={completeEvent}
-                        />
-                    ))}
+                    {lista.map((evento) => {
+                        return (
+                            <Todo
+                                key={evento.id}
+                                evento={evento}
+                                actualizar={updateEvent}
+                                removeTodo={deleteEvent}
+                                completeTodo={completeEvent}
+                            />
+                        )
+                    })}
                 </ListGroup>
             }
         </>

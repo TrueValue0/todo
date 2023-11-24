@@ -40,30 +40,30 @@ export default function Calendario() {
     const { users } = useUsers();
     const { user } = useAuth();
     const { datos, actualizarDoc, deleteEvent } = useTareaDoc({ uid: idCustom });
-    //const [allCalendars, setAllCalendars] = useState(false);
+    const [allCalendars, setAllCalendars] = useState(false);
+    const [allEvents, setAllEvents] = useState([]);
     const [fechaActual, setFechaActual] = useState('');
 
 
-    /*     const cargarDatos = async () => {
-            let fusion = await getAllEvents();
-            fusion = fusion.map(value => value.tareas.map(evnt => ({ ...evnt, extendedProps: { ...evnt.extendedProps, usuario: value.usuario, uid: value.uid } }))).flatMap(value => value);
-            if (allCalendars) {
-                setEventos(prev => fusion)
-            }
-            else setEventos(datos)
+    const cargarDatos = async () => {
+        let fusion = await getAllEvents();
+        fusion = fusion.map(value => value.tareas.map(evnt => ({ ...evnt, extendedProps: { ...evnt.extendedProps, usuario: value.usuario, uid: value.uid } }))).flatMap(value => value);
+        if (allCalendars) {
+            setAllEvents(fusion);
         }
-    
-        useEffect(() => {
-            cargarDatos();
-        }, [allCalendars]) */
+    }
+
+    useEffect(() => {
+        setIdCustom(user.id)
+    }, [])
+
+    useEffect(() => {
+        cargarDatos();
+    }, [allCalendars])
 
     useEffect(() => {
         setEventos(datos)
     }, [datos]);
-
-
-
-    console.log(eventos);
 
     const tablet = useMediaQuery('1024');
 
@@ -80,13 +80,14 @@ export default function Calendario() {
             conclusiones: '',
             planificacion: [],
             visita: '',
-            isAdmin: user.rol === 'admin',
+            isAdmin: Boolean(user.rol === 'admin'),
         }
     }
 
     const [evento, setEvento] = useState(eventInital);
     const [modalEdit, setModalEdit] = useState(false);
     const [modal, setModal] = useState(false);
+
 
     const handleEventClick = (clickInfo) => {
         let nuevoEvento = {
@@ -105,9 +106,10 @@ export default function Calendario() {
                 isAdmin: clickInfo.event.extendedProps.isAdmin,
             }
         }
-        /* setIdCustom(clickInfo.event.extendedProps.uid) */ //TODO: arreglar la fusion de los calendarios
-        setEvento(nuevoEvento)
-        setModalEdit(true)
+        if (allCalendars) { setIdCustom(clickInfo.event.extendedProps.uid) };
+        setAllCalendars(false);
+        setEvento(nuevoEvento);
+        setModalEdit(true);
     }
 
     const actualizar = () => {
@@ -151,25 +153,24 @@ export default function Calendario() {
                         {user.rol === 'admin' && <>
                             <Paper className='d-inline-block p-3 my-3'>
                                 <Form.Select onChange={handleSelect} value={currentComercial ? currentComercial.id : user.id}>
-                                    <option value=''>Selecciona un agente</option>
                                     {users.map(user => {
                                         if (user.nombre !== 'PRUEBA') return (<option key={user.id} value={user.id}>{user.nombre}</option>)
-                                    })
-                                    }
+                                    })}
                                 </Form.Select>
                             </Paper>
-                            {/*  <Form.Check
+                            <Form.Check
+                                disabled={idCustom !== user.id}
                                 onChange={e => setAllCalendars(e.target.checked)}
                                 checked={allCalendars}
                                 type="switch"
                                 label="Combinar calendarios"
-                            /> */}
+                            />
                         </>
                         }
                         <Leyenda />
                     </div>
                     <FullCalendar
-                        events={eventos}
+                        events={allCalendars ? allEvents : eventos}
                         selectLongPressDelay={1}
                         themeSystem='bootstrap5'
                         expandRows
@@ -194,7 +195,7 @@ export default function Calendario() {
                             setFechaActual(informacion.startStr);
                             setModal(true);
                         }} //Funcion al crear un envento.
-                        eventContent={renderEventContent} // custom render function
+                        eventContent={allCalendars ? renderEventAdmin : renderEventContent} // custom render function
                         eventClick={handleEventClick} // Funcion que se ejecuta al editar los eventos
                         //eventsSet={handleEvents} // called after events are initialized/added/changed/removed
                         locale={esLocale} // Traduccion a español

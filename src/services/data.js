@@ -5,7 +5,6 @@ export async function getAllEvents() {
     const querySnapshot = await getDocs(tareas);
     let tareasData = [];
     querySnapshot.forEach((doc) => tareasData.push({ ...doc.data(), uid: doc.id }));
-    console.log(tareasData);
     tareasData = tareasData.filter(usuario => usuario.tareas.length > 0 && usuario.usuario !== 'PRUEBA');
     return tareasData;
 }

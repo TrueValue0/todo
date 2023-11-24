@@ -34,14 +34,15 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
         extendedProps: {
             objetivo: '', // Cambiar el nombre de 'description' a 'objetivo'
             completed: false,
-            visita: '', // Cambiar el nombre de 'tipo' a 'empresas'
+            visita: 'Comercial', // Cambiar el nombre de 'tipo' a 'empresas'
             empresa: '',
             conclusiones: '', // Agregar un campo 'conclusiones'
             planificacion: [],
             isAdmin: false,
         }
     }
-    const { addEvent } = useTareaDoc({ uid: idCustom });
+
+    const { addEvent, cargarDoc } = useTareaDoc({ uid: idCustom });
 
     const [evento, setEvento] = useState(eventoInicial);
 
@@ -88,7 +89,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                     empresa: evento.extendedProps.empresa,
                     conclusiones: evento.extendedProps.conclusiones,
                     planificacion: evento.extendedProps.planificacion,
-                    isAdmin: user.rol === 'admin',
+                    isAdmin: Boolean(user.rol === 'admin'),
                 }
             }
         } else {
@@ -105,7 +106,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                     empresa: evento.extendedProps.empresa,
                     conclusiones: evento.extendedProps.conclusiones,
                     planificacion: evento.extendedProps.planificacion,
-                    isAdmin: user.rol === 'admin',
+                    isAdmin: Boolean(user.rol === 'admin'),
                 }
             }
         }
@@ -114,10 +115,11 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
     }
 
 
-    const guardarVarios = () => {
+    const guardarVarios = async () => {
         const event = crearEvento();
         addEventsMultiple(event)
         setEvento(eventoInicial)
+        await cargarDoc();
         cerrar();
     }
 
@@ -251,9 +253,6 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                             <Form.Label>Conclusiones</Form.Label>
                             <Form.Control as="textarea" rows={3} value={evento.extendedProps.conclusiones} onChange={changeConclusiones} />
                         </Form.Group>
-
-
-
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
