@@ -78,6 +78,32 @@ export function useTareaDoc({ uid = '' } = {}) {
         }
     }
 
+    const eliminarAdmin = async (idDoc, id) => {
+        try {
+            const documentoSF = doc(tareas, idDoc);
+            const documento = await getDoc(documentoSF);
+            if (documento.exists()) {
+                let docFinal = documento.data().tareas;
+                const events = docFinal.map(value => {
+                    let color = '#008f39';
+                    if (value.extendedProps.visita === 'Comercial') color = '#008f39'
+                    else if (value.extendedProps.visita === 'Bodega') color = '#0000ff'
+                    else if (value.extendedProps.visita === 'Cata') color = '#cb3234'
+                    return { ...value, backgroundColor: color }
+                });
+                const adminEvents = events.filter(event => event.id !== id);
+
+                updateDoc(documentoSF, {
+                    tareas: adminEvents,
+                })
+            } else {
+                console.log("El documento no existe en Firestore");
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     const actualizarDoc = async (eventos) => {
         try {
             const documentoSF = doc(tareas, id);
@@ -148,5 +174,5 @@ export function useTareaDoc({ uid = '' } = {}) {
         cargarDoc();
     }, [uid]);
 
-    return { datos, deleteEvent, completeEvent, updateEvent, addEvent, actualizarDoc, cargarDoc, actualizarAdmin };
+    return { datos, deleteEvent, completeEvent, updateEvent, addEvent, actualizarDoc, cargarDoc, actualizarAdmin, eliminarAdmin };
 }

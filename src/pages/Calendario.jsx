@@ -39,7 +39,7 @@ export default function Calendario() {
     const { eventos, setEventos, idCustom, setIdCustom } = useEventos();
     const { users } = useUsers();
     const { user } = useAuth();
-    const { actualizarDoc, deleteEvent, actualizarAdmin, cargarDoc } = useTareaDoc({ uid: idCustom });
+    const { actualizarDoc, deleteEvent, actualizarAdmin, eliminarAdmin } = useTareaDoc({ uid: idCustom });
     const [allCalendars, setAllCalendars] = useState(false);
     const [allEvents, setAllEvents] = useState([]);
     const [fechaActual, setFechaActual] = useState('');
@@ -113,6 +113,15 @@ export default function Calendario() {
         setModalEdit(true);
     }
 
+    const eliminarTarea = async (id) => {
+        if (user.id === idCustom && user.rol === 'admin') {
+            await eliminarAdmin(evento.extendedProps.idDoc, id)
+            await cargarDatos();
+        } else {
+            deleteEvent(id)
+        }
+    }
+
     const actualizar = async () => {
         if (user.id === idCustom && user.rol === 'admin') {
             await actualizarAdmin(evento.extendedProps.idDoc, evento, evento.id);
@@ -136,7 +145,6 @@ export default function Calendario() {
                             isAdmin: evento.extendedProps.isAdmin,
                             idDoc: evento.extendedProps.idDoc,
                         }
-
                     }
                 }
                 return event;
@@ -219,7 +227,7 @@ export default function Calendario() {
                     reset={() => setEvento(eventInital)}
                     ver={modalEdit}
                     evento={evento}
-                    removeTodo={deleteEvent}
+                    removeTodo={eliminarTarea}
                     cerrar={() => setModalEdit(false)}
                     seter={setEvento} guardar={actualizar}
                 />
