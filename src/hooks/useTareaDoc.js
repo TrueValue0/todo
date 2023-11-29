@@ -41,10 +41,11 @@ export function useTareaDoc({ uid = '' } = {}) {
                 const events = docFinal.map(value => {
                     let color = '#008f39';
                     if (value.extendedProps.visita === 'Comercial') color = '#008f39'
-                    else if (value.extendedProps.visita === 'Bodega') color = '#0000ff'
                     else if (value.extendedProps.visita === 'Cata') color = '#cb3234'
+                    else if (value.extendedProps.visita === 'Bodega') color = '#0000ff'
                     return { ...value, backgroundColor: color }
                 });
+
                 const adminEvents = events.map(event => {
                     if (event.id === id) {
                         return {

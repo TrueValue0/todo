@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import Layout from '@/components/layouts/Layout'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
 import esLocale from '@fullcalendar/core/locales/es'
+import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import bootstrap5Plugin from '@fullcalendar/bootstrap5'
 import ModalAnyadirEvento from '@/components/modal/ModalAnyadirEvento'
@@ -19,6 +19,7 @@ import { useAuth } from '@/context/AuthProvider'
 import { useEventos } from '@/context/EventoProvider'
 import { getAllEvents } from '@/services/data'
 import Leyenda from '@/components/Leyenda'
+import { formatearFecha } from '@/services/generarUUID'
 
 
 function renderEventContent(eventInfo) {
@@ -47,7 +48,11 @@ export default function Calendario() {
 
     const cargarDatos = async () => {
         let fusion = await getAllEvents();
-        fusion = fusion.map(value => value.tareas.map(evnt => ({ ...evnt, extendedProps: { ...evnt.extendedProps, usuario: value.usuario, idDoc: value.uid } }))).flatMap(value => value);
+        fusion = fusion.map(value => value.tareas.map(evnt => ({
+            ...evnt,
+            extendedProps: { ...evnt.extendedProps, usuario: value.usuario, idDoc: value.uid },
+            backgroundColor: (evnt.extendedProps.visita === 'Comercial') ? '#008f39' : (evnt.extendedProps.visita === 'Bodega') ? '#0000ff' : (evnt.extendedProps.visita === 'Cata') ? '#cb3234' : '#008f39',
+        }))).flatMap(value => value);
         if (allCalendars) {
             setAllEvents(fusion);
         }
@@ -209,14 +214,24 @@ export default function Calendario() {
                         slotMinTime='08:00:00' // Hora de inicio
                         slotMaxTime='20:00:00' // Hora de fin
                         hiddenDays={ocultarFindes()} // Oculta domingo (0) y sábado (6)
-                        editable
+                        //editable
                         selectable
                         selectMirror
                         dayMaxEvents={false}
                         select={(informacion) => {
-                            setFechaActual(informacion.startStr);
-                            setModal(true);
+                            if (informacion.view.type === 'dayGridMonth') informacion.view.calendar.changeView('timeGridWeek', informacion.startStr);
+                            if (informacion.view.type === 'timeGridWeek') informacion.view.calendar.changeView('timeGridDay', informacion.startStr);
+                            /* setFechaActual(informacion.startStr);
+                            setModal(true); */
                         }} //Funcion al crear un envento.
+                        views={{
+                            day: {
+                                select: (daySelect) => {
+                                    setFechaActual(daySelect.start.toISOString().split('T')[0]);
+                                    setModal(true);
+                                },
+                            }
+                        }}
                         eventContent={allCalendars ? renderEventAdmin : renderEventContent} // custom render function
                         eventClick={handleEventClick} // Funcion que se ejecuta al editar los eventos
                         //eventsSet={handleEvents} // called after events are initialized/added/changed/removed

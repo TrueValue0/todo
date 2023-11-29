@@ -73,6 +73,7 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                     <div className='d-flex justify-content-between align-items-center '>
                         <FormCheck checked={completed} onChange={(event) => completeTodo(id, event.target.checked)} />
                         <CustomToggle eventKey='1'>
+                            {evento.extendedProps.usuario && <><h4 className='m-0 my-2'>{evento.extendedProps.usuario}</h4> <span> - </span></>}
                             <h4 style={pointer} className={completed ? 'text-decoration-line-through m-0 my-2' : 'm-0 my-2'}>{tarea.title}</h4>
                             <span>{formatearFecha(tarea.start)}</span>
                         </CustomToggle>
