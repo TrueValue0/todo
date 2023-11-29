@@ -36,21 +36,19 @@ function renderEventAdmin(eventInfo) {
 
 export default function Calendario() {
 
-    const { eventos, setEventos, idCustom, setIdCustom } = useEventos();
+    const { eventos, setEventos, idCustom, setIdCustom, allCalendars, setAllCalendars } = useEventos();
     const { users } = useUsers();
     const { user } = useAuth();
-    const { actualizarDoc, deleteEvent, actualizarAdmin, eliminarAdmin } = useTareaDoc({ uid: idCustom });
-    const [allCalendars, setAllCalendars] = useState(false);
+    const { actualizarDoc, deleteEvent, actualizarAdmin, eliminarAdmin, cargarDoc } = useTareaDoc({ uid: idCustom });
     const [allEvents, setAllEvents] = useState([]);
     const [fechaActual, setFechaActual] = useState('');
-
 
     const cargarDatos = async () => {
         let fusion = await getAllEvents();
         fusion = fusion.map(value => value.tareas.map(evnt => ({
             ...evnt,
             extendedProps: { ...evnt.extendedProps, usuario: value.usuario, idDoc: value.uid },
-            backgroundColor: (evnt.extendedProps.visita === 'Comercial') ? '#008f39' : (evnt.extendedProps.visita === 'Bodega') ? '#0000ff' : (evnt.extendedProps.visita === 'Cata') ? '#cb3234' : '#008f39',
+            backgroundColor: (evnt.extendedProps.visita === 'Comercial') ? '#008f39' : (evnt.extendedProps.visita === 'Bodega') ? '#3788d8d9' : (evnt.extendedProps.visita === 'Cata') ? '#cb3234' : '#008f39',
         }))).flatMap(value => value);
         if (allCalendars) {
             setAllEvents(fusion);
@@ -58,14 +56,8 @@ export default function Calendario() {
     }
 
     useEffect(() => {
-        setIdCustom(user.id)
-        if (user.rol === 'admin') setAllCalendars(true);
-    }, [])
-
-    useEffect(() => {
         cargarDatos();
     }, [allCalendars])
-
 
     const tablet = useMediaQuery('1024');
 
@@ -167,6 +159,12 @@ export default function Calendario() {
 
     const currentComercial = users.find(user => user.id === idCustom);
 
+
+    const handleEvents = async () => {
+        await cargarDoc();
+        await cargarDatos();
+    }
+
     return (
         <Layout>
             <div className='d-flex justify-content-center align-items-center w-100' style={{ marginTop: 80 }}>
@@ -175,7 +173,9 @@ export default function Calendario() {
                     <div className='d-flex gap-5 align-items-center'>
                         {user.rol === 'admin' && <>
                             <Paper className='d-inline-block p-3 my-3'>
-                                <Form.Select onChange={handleSelect} value={currentComercial ? currentComercial.id : user.id}>
+                                <Form.Select onChange={handleSelect}
+                                    value={idCustom}
+                                >
                                     {users.map(user => {
                                         if (user.nombre !== 'PRUEBA') return (<option key={user.id} value={user.id}>{user.nombre}</option>)
                                     })}
@@ -214,21 +214,21 @@ export default function Calendario() {
                         selectMirror
                         dayMaxEvents={false}
                         select={(informacion) => {
-                            if (informacion.view.type === 'dayGridMonth') informacion.view.calendar.changeView('timeGridDay', informacion.startStr);
-                            /* setFechaActual(informacion.startStr);
-                            setModal(true); */
+                            /*  if (informacion.view.type === 'dayGridMonth') informacion.view.calendar.changeView('timeGridDay', informacion.startStr); */
+                            setFechaActual(informacion.startStr);
+                            setModal(true);
                         }} //Funcion al crear un envento.
-                        views={{
+                        /* views={{
                             day: {
                                 select: (daySelect) => {
                                     setFechaActual(daySelect.start.toISOString().split('T')[0]);
                                     setModal(true);
                                 },
                             }
-                        }}
+                        }} */
                         eventContent={allCalendars ? renderEventAdmin : renderEventContent} // custom render function
                         eventClick={handleEventClick} // Funcion que se ejecuta al editar los eventos
-                        //eventsSet={handleEvents} // called after events are initialized/added/changed/removed
+                        eventsSet={handleEvents} // called after events are initialized/added/changed/removed
                         locale={esLocale} // Traduccion a español
                     />
                 </div>

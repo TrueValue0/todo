@@ -21,9 +21,8 @@ export default function Tareas() {
 
     const { user } = useAuth();
     const { users } = useUsers();
-    const { idCustom, setIdCustom, pendientes, finalizadas } = useEventos();
+    const { idCustom, setIdCustom, pendientes, finalizadas, allCalendars, setAllCalendars } = useEventos();
     const [modal, setModal] = useState(false);
-    const [allCalendars, setAllCalendars] = useState(false);
     const [allEvents, setAllEvents] = useState([]);
     const [adminPendientes, setAdminPendientes] = useState([]);
     const [adminFinalizadas, setAdminFinalizadas] = useState([]);
@@ -41,7 +40,7 @@ export default function Tareas() {
     const currentComercial = users.find(user => user.id === idCustom);
     const movil = useMediaQuery('550');
 
-    const styleIcon = movil ? { fontSize: 55, cursor: 'pointer', position: 'fixed', bottom: '120', right: '40' } :
+    const styleIcon = movil ? { fontSize: 55, cursor: 'pointer', position: 'fixed', bottom: '120', right: '40', zIndex: 2 } :
         { fontSize: 50, cursor: 'pointer' };
 
     const cargarDatos = async () => {
@@ -64,11 +63,6 @@ export default function Tareas() {
     }
 
     useEffect(() => {
-        setIdCustom(user.id)
-        if (user.rol === 'admin') setAllCalendars(true);
-    }, [])
-
-    useEffect(() => {
         cargarDatos();
     }, [allCalendars])
 
@@ -85,8 +79,9 @@ export default function Tareas() {
 
                 <div className="d-flex justify-content-between align-items-center my-2">
                     {user.rol === 'admin' && <> <Paper className='d-inline-block p-3 my-3'>
-                        <Form.Select onChange={handleSelect} value={currentComercial ? currentComercial.id : ''} >
-                            <option value=''>Selecciona un agente</option>
+                        <Form.Select onChange={handleSelect}
+                            defaultValue={currentComercial ? currentComercial.id : user.id}
+                            value={idCustom} >
                             {users.map(user => {
                                 if (user.nombre !== 'PRUEBA') return (<option key={user.id} value={user.id}>{user.nombre}</option>)
                             })
@@ -118,10 +113,20 @@ export default function Tareas() {
                         variant="pills"
                     >
                         <Tab eventKey="pendientes" title="Pendientes">
-                            <Todos uid={idCustom} lista={user.id === idCustom && user.rol === 'admin' && allCalendars ? adminPendientes : pendientes} />
+                            <Todos
+                                calendarActivos={allCalendars}
+                                uid={idCustom}
+                                lista={user.id === idCustom && user.rol === 'admin' && allCalendars ? adminPendientes : pendientes}
+                                cargarDatos={cargarDatos}
+                            />
                         </Tab>
                         <Tab eventKey="finalizadas" title="Finalizadas">
-                            <Todos uid={idCustom} lista={user.id === idCustom && user.rol === 'admin' && allCalendars ? adminFinalizadas : finalizadas} />
+                            <Todos
+                                calendarActivos={allCalendars}
+                                uid={idCustom}
+                                lista={user.id === idCustom && user.rol === 'admin' && allCalendars ? adminFinalizadas : finalizadas}
+                                cargarDatos={cargarDatos}
+                            />
                         </Tab>
                     </Tabs>
                 </Card>

@@ -1,4 +1,4 @@
-import Home from '@/pages/Home'
+//import Home from '@/pages/Home'
 import Error from '@/pages/Error'
 import AuthProvider from '@/context/AuthProvider'
 import {
@@ -11,13 +11,13 @@ import Login from '@/pages/Login'
 import User from '@/pages/User'
 import ProtectedRouteAuth from '@/pages/ProtectedRouteAuth'
 import ProtectedAdmin from '@/pages/ProtectedAdmin'
-//import Usuarios from '@/pages/Usuarios'
 import Informes from '@/pages/Informes'
 import NoAuthorized from '@/pages/NoAuthorized';
 import ResetPassword from '@/pages/ResetPassword';
 import { EventosProvider } from '@/context/EventoProvider'
-import Cambios from '@/pages/Cambios';
-import Usuarios from '@/pages/Usuarios';
+//import Cambios from '@/pages/Cambios';
+//import Usuarios from '@/pages/Usuarios';
+import { AlertProvider } from '@/context/AlertProvider';
 
 function App() {
   const router = createBrowserRouter([
@@ -58,11 +58,13 @@ function App() {
 
   return (
     <>
-      <AuthProvider>
+      <AlertProvider>
         <EventosProvider>
-          <RouterProvider router={router} />
+          <AuthProvider>
+            <RouterProvider router={router} />
+          </AuthProvider>
         </EventosProvider>
-      </AuthProvider>
+      </AlertProvider>
     </>
   )
 }

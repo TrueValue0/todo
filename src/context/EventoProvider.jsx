@@ -12,6 +12,7 @@ export function EventosProvider({ children }) {
     const [ids, setIds] = useState([]);
     const [pendientes, setPendientes] = useState([]);
     const [finalizadas, setFinalizadas] = useState([]);
+    const [allCalendars, setAllCalendars] = useState(false);
 
     function dividirEventosPorCompletado() {
         const eventosFinalizados = eventos.filter(evento => evento.extendedProps.completed);
@@ -38,7 +39,9 @@ export function EventosProvider({ children }) {
             pendientes,
             finalizadas,
             ids,
-            setIds
+            setIds,
+            allCalendars,
+            setAllCalendars
         }}>
             {children}
         </EventosContext.Provider>

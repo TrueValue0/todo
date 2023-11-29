@@ -3,12 +3,14 @@ import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { tareas } from "@/config/firebaseapp";
 import { useAuth } from "@/context/AuthProvider";
 import { useEventos } from "@/context/EventoProvider";
+import { useAlertContext } from "@/context/AlertProvider";
 
 export function useTareaDoc({ uid = '' } = {}) {
     const { user } = useAuth();
     const id = uid === '' ? user.id : uid;
     const [datos, setDatos] = useState([]);
     const { eventos, setEventos } = useEventos();
+    const { confirmacion, error, informativo } = useAlertContext();
 
     const cargarDoc = async () => {
         try {
@@ -23,12 +25,12 @@ export function useTareaDoc({ uid = '' } = {}) {
                     else if (value.extendedProps.visita === 'Cata') color = '#cb3234'
                     return { ...value, backgroundColor: color }
                 });
-                setDatos(events)
+                setDatos(events);
             } else {
-                console.log("El documento no existe en Firestore");
+                error('Error al cargar los datos')
             }
         } catch (e) {
-            console.log(e);
+            error('Error al cargar los datos')
         }
     }
 
@@ -68,14 +70,15 @@ export function useTareaDoc({ uid = '' } = {}) {
                     }
                     return event;
                 })
-                updateDoc(documentoSF, {
+                await updateDoc(documentoSF, {
                     tareas: adminEvents,
                 })
+                confirmacion('Evento actualizado');
             } else {
-                console.log("El documento no existe en Firestore");
+                error('Error al actualizar el evento')
             }
         } catch (e) {
-            console.log(e);
+            error('Error al actualizar el evento');
         }
     }
 
@@ -94,14 +97,46 @@ export function useTareaDoc({ uid = '' } = {}) {
                 });
                 const adminEvents = events.filter(event => event.id !== id);
 
-                updateDoc(documentoSF, {
+                await updateDoc(documentoSF, {
                     tareas: adminEvents,
                 })
+                confirmacion('Evento eliminado');
             } else {
-                console.log("El documento no existe en Firestore");
+                error('Error al eliminar el evento')
             }
         } catch (e) {
-            console.log(e);
+            error('Error al eliminar el evento');
+        }
+    }
+
+    const completedAdmin = async ({ idDoc, id, completado }) => {
+        try {
+            const documentoSF = doc(tareas, idDoc);
+            const documento = await getDoc(documentoSF);
+            if (documento.exists()) {
+                let docFinal = documento.data().tareas;
+                const events = docFinal.map(value => {
+                    let color = '#008f39';
+                    if (value.extendedProps.visita === 'Comercial') color = '#008f39'
+                    else if (value.extendedProps.visita === 'Bodega') color = '#0000ff'
+                    else if (value.extendedProps.visita === 'Cata') color = '#cb3234'
+                    return { ...value, backgroundColor: color }
+                });
+                const adminEvents = events.map(event => {
+                    if (event.id === id)
+                        return { ...event, extendedProps: { ...event.extendedProps, completed: completado } }
+                    return event;
+                })
+
+                await updateDoc(documentoSF, {
+                    tareas: adminEvents,
+                })
+                informativo('Evento completado')
+            } else {
+                error('Error al completar el evento');
+            }
+        } catch (e) {
+            error('Error al completar el evento');
         }
     }
 
@@ -112,16 +147,15 @@ export function useTareaDoc({ uid = '' } = {}) {
                 tareas: eventos,
             })
         } catch (e) {
-            console.log(e);
+            error('Error al actualizar las tareas');
         }
     }
 
     const deleteEvent = (id) => {
-        console.log('pero q pasa');
         const events = eventos.filter(event => event.id !== id);
-        console.log(events);
         setEventos(events);
         actualizarDoc(events);
+        confirmacion('Evento eliminado')
     }
 
     const completeEvent = (id, completado) => {
@@ -132,6 +166,7 @@ export function useTareaDoc({ uid = '' } = {}) {
         })
         setEventos(events);
         actualizarDoc(events)
+        informativo('Evento completado')
     }
 
     const updateEvent = (id, evento) => {
@@ -159,12 +194,14 @@ export function useTareaDoc({ uid = '' } = {}) {
         })
         setEventos(events);
         actualizarDoc(events)
+        confirmacion('Evento actualizado')
     }
 
     const addEvent = (evento) => {
         const nuevosEventos = [...datos, evento];
         setEventos(nuevosEventos);
         actualizarDoc(nuevosEventos);
+        confirmacion('Evento añadido')
     }
 
     useEffect(() => {
@@ -175,5 +212,5 @@ export function useTareaDoc({ uid = '' } = {}) {
         cargarDoc();
     }, [uid]);
 
-    return { datos, deleteEvent, completeEvent, updateEvent, addEvent, actualizarDoc, cargarDoc, actualizarAdmin, eliminarAdmin };
+    return { datos, deleteEvent, completeEvent, updateEvent, addEvent, actualizarDoc, cargarDoc, actualizarAdmin, eliminarAdmin, completedAdmin };
 }

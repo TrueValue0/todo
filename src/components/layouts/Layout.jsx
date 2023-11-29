@@ -12,6 +12,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { useLocation, useNavigate } from "react-router-dom";
 import { MenuList } from './MenuList';
 import '@/components/layouts/layout.css'
+import { Alert } from 'react-bootstrap';
+import { useAlertContext } from '@/context/AlertProvider';
 
 export default function Layout({ children }) {
     const movil = useMediaQuery('550');
@@ -21,6 +23,7 @@ export default function Layout({ children }) {
     const { logout, user } = useAuth();
     const { pathname } = useLocation();
     const { navLista, navBottom } = useMenu();
+    const { alert } = useAlertContext();
 
     const cerrarSesion = () => {
         logout();
@@ -61,6 +64,7 @@ export default function Layout({ children }) {
                 </nav>
                 <section className='overlay' onClick={toogleMenu}></section>
                 {children}
+                {alert.show && <Alert style={{ marginBottom: 90, zIndex: 2 }} className="position-absolute bottom-0 start-50 translate-middle" variant={alert.variant} dismissible>{alert.message}</Alert>}
                 {movil && <NavBottom />}
             </div>
         </>

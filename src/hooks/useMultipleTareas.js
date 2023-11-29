@@ -1,10 +1,12 @@
 import { tareas } from "@/config/firebaseapp";
 import { useEventos } from "@/context/EventoProvider";
+import { useAlertContext } from "@/context/AlertProvider";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 export function useMultipleTareas() {
 
     const { ids } = useEventos();
+    const { confirmacion, error } = useAlertContext()
 
     const addEventsMultiple = (evento) => {
         ids.map(async (value) => {
@@ -18,12 +20,12 @@ export function useMultipleTareas() {
                     await updateDoc(documentRef, {
                         tareas: nuevosEventos
                     })
-                    console.log(`Evento añadido a ${usuario}`);
+                    confirmacion(`Evento añadido a ${usuario}`);
                 } else {
-                    console.log("El documento no existe en Firestore");
+                    error("Error al añadir el evento");
                 }
             } catch (e) {
-                console.log(e);
+                error("Error al añadir el evento");
             }
         })
 

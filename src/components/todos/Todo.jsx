@@ -6,6 +6,7 @@ import { formatearFecha } from '@/services/generarUUID.js'
 import { TAKS_TYPES, empresas } from '@/config/constantes';
 import Plaficicacion from './Planificacion';
 import { useAuth } from '@/context/AuthProvider';
+import { useAlertContext } from '@/context/AlertProvider';
 
 function CustomToggle({ children, eventKey }) {
     const decoratedOnClick = useAccordionButton(eventKey);
@@ -23,6 +24,7 @@ function CustomToggle({ children, eventKey }) {
 
 
 export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
+    const { confirmacion, error } = useAlertContext();
     const { user } = useAuth();
     const { title = '', id = '', allDay, end, extendedProps: { isAdmin = false, completed, objetivo = '', visita = '', conclusiones = '', empresa = '', planificacion = [] }, start } = evento;
     const pointer = { cursor: 'pointer' };
@@ -53,25 +55,28 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
             conclusiones,
             empresa,
             planificacion,
-            isAdmin
+            isAdmin,
+            idDoc: evento.extendedProps?.idDoc,
         }
 
     })
 
     const remove = () => {
         if (!disable) {
-            console.log('borrado');
-            removeTodo(id)
+            confirmacion('Evento borrado');
+            removeTodo(id, tarea)
         }
-        else return;
+        else {
+            error('No tienes permisos para borrar este evento')
+        }
     }
 
     return (
         <>
             <ListGroup.Item className='border-0'>
                 <Accordion className='border-bottom'>
-                    <div className='d-flex justify-content-between align-items-center '>
-                        <FormCheck checked={completed} onChange={(event) => completeTodo(id, event.target.checked)} />
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <FormCheck checked={completed} onChange={(event) => completeTodo(id, event.target.checked, evento.extendedProps.idDoc)} />
                         <CustomToggle eventKey='1'>
                             {evento.extendedProps.usuario && <><h4 className='m-0 my-2'>{evento.extendedProps.usuario}</h4> <span> - </span></>}
                             <h4 style={pointer} className={completed ? 'text-decoration-line-through m-0 my-2' : 'm-0 my-2'}>{tarea.title}</h4>

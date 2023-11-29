@@ -13,11 +13,12 @@ import { useAuth } from '@/context/AuthProvider';
 import Plaficicacion from '@/components/todos/Planificacion';
 import SelectorIds from '@/components/modal/SelectorIds';
 import { useMultipleTareas } from '@/hooks/useMultipleTareas';
+import { useAlertContext } from '@/context/AlertProvider';
 
 export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date().toISOString().split('T')[0] } = {}) {
 
     const { user } = useAuth();
-
+    const { confirmacion, error, alerta, informativo } = useAlertContext()
     const { agregarEvento, idCustom } = useEventos();
     const { addEventsMultiple } = useMultipleTareas();
 
