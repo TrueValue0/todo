@@ -1,13 +1,13 @@
+import ModalAnyadirEvento from '@/components/modal/ModalAnyadirEvento';
 import { Card, Container, Form } from "react-bootstrap";
-import { GoPlus } from "react-icons/go";
+import { useEventos } from "@/context/EventoProvider";
+import LogoAlargado from '@/assets/logoAlargado.jsx';
+import { useAuth } from "@/context/AuthProvider";
 import Layout from "@/components/layouts/Layout";
+import { GoPlus } from "react-icons/go";
 import Todos from "@/components/todos/Todos";
 import { useEffect, useState } from "react";
-import LogoAlargado from '@/assets/logoAlargado.jsx';
-import ModalAnyadirEvento from '@/components/modal/ModalAnyadirEvento';
-import { useAuth } from "@/context/AuthProvider";
 import { useUsers } from "@/hooks/useUser";
-import { useEventos } from "@/context/EventoProvider";
 import { Paper } from "@mui/material";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
@@ -62,7 +62,6 @@ export default function Tareas() {
         setAdminPendientes(eventosPendientes);
         setAdminFinalizadas(eventosFinalizados);
     }
-
 
     useEffect(() => {
         setIdCustom(user.id)
@@ -119,10 +118,10 @@ export default function Tareas() {
                         variant="pills"
                     >
                         <Tab eventKey="pendientes" title="Pendientes">
-                            <Todos uid={idCustom} lista={user.id === idCustom && user.rol === 'admin' ? adminPendientes : pendientes} />
+                            <Todos uid={idCustom} lista={user.id === idCustom && user.rol === 'admin' && allCalendars ? adminPendientes : pendientes} />
                         </Tab>
                         <Tab eventKey="finalizadas" title="Finalizadas">
-                            <Todos uid={idCustom} lista={user.id === idCustom && user.rol === 'admin' ? adminFinalizadas : finalizadas} />
+                            <Todos uid={idCustom} lista={user.id === idCustom && user.rol === 'admin' && allCalendars ? adminFinalizadas : finalizadas} />
                         </Tab>
                     </Tabs>
                 </Card>

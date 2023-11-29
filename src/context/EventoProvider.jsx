@@ -20,8 +20,6 @@ export function EventosProvider({ children }) {
         setFinalizadas(eventosFinalizados);
     }
 
-
-
     const agregarEvento = (evento) => {
         setEventos((prevEventos) => [...prevEventos, evento]);
     };

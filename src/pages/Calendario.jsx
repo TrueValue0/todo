@@ -11,7 +11,6 @@ import ModalEditarEvento from '@/components/modal/ModalEditarEvento'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useTareaDoc } from '@/hooks/useTareaDoc'
 import LogoAlargado from '@/assets/logoAlargado.jsx'
-import './calendario.css'
 import { useUsers } from '@/hooks/useUser'
 import { Paper } from '@mui/material'
 import Form from 'react-bootstrap/Form'
@@ -19,7 +18,7 @@ import { useAuth } from '@/context/AuthProvider'
 import { useEventos } from '@/context/EventoProvider'
 import { getAllEvents } from '@/services/data'
 import Leyenda from '@/components/Leyenda'
-import { formatearFecha } from '@/services/generarUUID'
+import './calendario.css'
 
 
 function renderEventContent(eventInfo) {
@@ -67,10 +66,7 @@ export default function Calendario() {
         cargarDatos();
     }, [allCalendars])
 
-    /*  useEffect(() => {
-         setEventos(datos)
-     }, [datos]);
-  */
+
     const tablet = useMediaQuery('1024');
 
     const eventInital = {
@@ -214,13 +210,11 @@ export default function Calendario() {
                         slotMinTime='08:00:00' // Hora de inicio
                         slotMaxTime='20:00:00' // Hora de fin
                         hiddenDays={ocultarFindes()} // Oculta domingo (0) y sábado (6)
-                        //editable
                         selectable
                         selectMirror
                         dayMaxEvents={false}
                         select={(informacion) => {
-                            if (informacion.view.type === 'dayGridMonth') informacion.view.calendar.changeView('timeGridWeek', informacion.startStr);
-                            if (informacion.view.type === 'timeGridWeek') informacion.view.calendar.changeView('timeGridDay', informacion.startStr);
+                            if (informacion.view.type === 'dayGridMonth') informacion.view.calendar.changeView('timeGridDay', informacion.startStr);
                             /* setFechaActual(informacion.startStr);
                             setModal(true); */
                         }} //Funcion al crear un envento.
