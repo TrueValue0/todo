@@ -1,25 +1,32 @@
-import React, { useEffect, useState } from 'react'
-import Layout from '@/components/layouts/Layout'
-import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import esLocale from '@fullcalendar/core/locales/es'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import interactionPlugin from '@fullcalendar/interaction'
-import bootstrap5Plugin from '@fullcalendar/bootstrap5'
+import { useEffect, useState } from 'react'
+
+// Components //
 import ModalAnyadirEvento from '@/components/modal/ModalAnyadirEvento'
 import ModalEditarEvento from '@/components/modal/ModalEditarEvento'
+import LogoAlargado from '@/assets/logoAlargado.jsx'
+import Layout from '@/components/layouts/Layout'
+import FullCalendar from '@fullcalendar/react'
+import Leyenda from '@/components/Leyenda'
+import Form from 'react-bootstrap/Form'
+import Paper from '@mui/material/Paper'
+
+// Utils //
+/* Fullcalendar utils */
+import interactionPlugin from '@fullcalendar/interaction'
+import bootstrap5Plugin from '@fullcalendar/bootstrap5'
+import esLocale from '@fullcalendar/core/locales/es'
+import timeGridPlugin from '@fullcalendar/timegrid'
+import dayGridPlugin from '@fullcalendar/daygrid'
+
+/* Mis utils */
 import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useTareaDoc } from '@/hooks/useTareaDoc'
-import LogoAlargado from '@/assets/logoAlargado.jsx'
 import { useUsers } from '@/hooks/useUser'
-import { Paper } from '@mui/material'
-import Form from 'react-bootstrap/Form'
-import { useAuth } from '@/context/AuthProvider'
 import { useEventos } from '@/context/EventoProvider'
+import { useAuth } from '@/context/AuthProvider'
 import { getAllEvents } from '@/services/data'
-import Leyenda from '@/components/Leyenda'
-import './calendario.css'
 
+import './calendario.css'
 
 function renderEventContent(eventInfo) {
     return (
@@ -32,7 +39,6 @@ function renderEventContent(eventInfo) {
 function renderEventAdmin(eventInfo) {
     return (<i>{eventInfo.event.extendedProps.usuario} - {eventInfo.event.title} - {eventInfo.event.extendedProps.empresa}</i>)
 }
-
 
 export default function Calendario() {
 
@@ -156,9 +162,6 @@ export default function Calendario() {
     }
 
     const ocultarFindes = () => tablet ? [0, 6] : [];
-
-    const currentComercial = users.find(user => user.id === idCustom);
-
 
     const handleEvents = async () => {
         await cargarDoc();
