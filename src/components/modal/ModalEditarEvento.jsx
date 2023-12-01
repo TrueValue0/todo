@@ -8,11 +8,13 @@ import { IoTrashOutline } from "react-icons/io5";
 //Utils
 import { TAKS_TYPES, empresas } from '@/config/constantes';
 import { useAuth } from '@/context/AuthProvider';
+import ModalBorrar from '@/components/modal/ModalBorrar';
 
 export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar, reset, removeTodo }) {
 
     const { user } = useAuth();
     const [disable, setDisable] = useState(true);
+    const [modalBorrar, setModalBorrar] = useState(false)
 
     const comprobarAdmin = () => {
         if (ver) {
@@ -111,7 +113,7 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    {!(disable) && <Button variant='danger' onClick={remove}>
+                    {!(disable) && <Button variant='danger' onClick={() => setModalBorrar(true)}>
                         <IoTrashOutline />
                         Eliminar
                     </Button>}
@@ -123,6 +125,7 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                     </Button>
                 </Modal.Footer>
             </Modal>
+            <ModalBorrar show={modalBorrar} onHide={() => setModalBorrar(false)} borrar={remove} />
         </>
     )
 }

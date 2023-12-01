@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 //Components
 import { FormCheck, ListGroup, Accordion, Button, Form, Row, Col } from 'react-bootstrap'
 import Plaficicacion from '@/components/todos/Planificacion';
+import ModalBorrar from '@/components/modal/ModalBorrar'
 
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import { BiTrash } from 'react-icons/bi'
@@ -32,6 +33,7 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
     const { title = '', id = '', allDay, end, extendedProps: { isAdmin = false, completed, objetivo = '', visita = '', conclusiones = '', empresa = '', planificacion = [] }, start } = evento;
     const pointer = { cursor: 'pointer' };
     const [disable, setDisable] = useState(true);
+    const [modalBorrar, setModalBorrar] = useState(false);
 
     const comprobarAdmin = () => {
         if (user.rol === 'admin') {
@@ -85,7 +87,7 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                             <h4 style={pointer} className={completed ? 'text-decoration-line-through m-0 my-2' : 'm-0 my-2'}>{tarea.title}</h4>
                             <span>{formatearFecha(tarea.start)}</span>
                         </CustomToggle>
-                        <BiTrash onClick={remove} style={pointer} className='fs-4' />
+                        <BiTrash onClick={() => setModalBorrar(true)} style={pointer} className='fs-4' />
                     </div>
                     <Accordion.Collapse eventKey='1'>
                         <Form className='d-flex flex-column justify-content-center align-content-center'>
@@ -158,6 +160,7 @@ export default function Todo({ evento, removeTodo, completeTodo, actualizar }) {
                     </Accordion.Collapse>
                 </Accordion>
             </ListGroup.Item >
+            <ModalBorrar show={modalBorrar} onHide={() => setModalBorrar(false)} borrar={remove} />
         </>
     )
 }
