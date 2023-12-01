@@ -1,7 +1,10 @@
 import { useState } from 'react';
 
 //Components
-import { Alert, Dropdown, DropdownToggle, DropdownItem, DropdownMenu } from 'react-bootstrap';
+import { Alert, Dropdown } from 'react-bootstrap';
+import DropdownMenu from 'react-bootstrap/esm/DropdownMenu';
+import DropdownItem from 'react-bootstrap/DropdownItem'
+import DropdownToggle from 'react-bootstrap/DropdownToggle';
 import { BiMenu, BiUser, BiLogOut } from 'react-icons/bi';
 import { MenuList } from '@/components/layouts/MenuList';
 import NavBottom from '@/components/layouts/NavBottom';
