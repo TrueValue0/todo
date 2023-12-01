@@ -8,19 +8,22 @@ import { doc, getDoc } from "firebase/firestore";
 import { usuarios } from "@/config/firebaseapp";
 import LogoVertical from "@/assets/logoVertical";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useEventos } from "@/context/EventoProvider";
 
 export default function Login() {
     const navigate = useNavigate();
     const [eye, setEye] = useState(true);
     const { alert, confirmacion, error } = useAlert();
     const { login, user, setUser, authState } = useAuth();
+    const { setIdCustom } = useEventos();
     const movil = useMediaQuery('990');
 
     const handleSubmit = async (event) => {
         try {
             event.preventDefault();
             const { email, password } = Object.fromEntries(new FormData(event.target));
-            await login(email, password);
+            const userCrentials = await login(email, password);
+            setIdCustom(userCrentials.user.uid);
             confirmacion('Login confirmado');
             navigate('/');
             authState(async (user) => {
