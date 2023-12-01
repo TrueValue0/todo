@@ -1,10 +1,11 @@
-import '@/pages/noAutorizado.css';
-import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
+import '@/pages/noAutorizado.css';
+
 export default function NoAuthorized() {
     const navigate = useNavigate();
     return (
-        <> 
+        <>
             <div className='general-noAuth'>
                 <div className="lock"></div>
                 <div className="message">

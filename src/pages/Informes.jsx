@@ -1,22 +1,20 @@
 import { useEffect, useState } from 'react';
-import Layout from '@/components/layouts/Layout'
-import PDFDocument from '@/components/PDFDocument'
-import { Paper } from '@mui/material';
-import { Row, Col, Container, ListGroup } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import { tareas } from '@/config/firebaseapp'
-import { getDocs } from 'firebase/firestore';
+
+//Components // 
+import { Row, Col, Container, Accordion, Form, Button } from 'react-bootstrap';
 import SelectorMultiple from '@/components/SelectorMultiple';
-import { TAKS_TYPES, empresas } from '@/config/constantes';
 import LogoAlargado from '@/assets/logoAlargado.jsx';
-import { useUsers } from '@/hooks/useUser';
-import Accordion from 'react-bootstrap/Accordion';
-import { ImCheckboxChecked } from "react-icons/im";
-import { ImCross } from "react-icons/im";
+import Layout from '@/components/layouts/Layout'
+import { ImCross, ImCheckboxChecked } from "react-icons/im";
+import { Paper } from '@mui/material';
+import PDFDocument from '@/components/PDFDocument'
+
+//Utils
 import { formatearFecha } from '@/services/generarUUID';
 import { getAllEvents } from '@/services/data';
-//  Filtrado de los informes con las horas, agentes, fechas, descripcion, nombre de empresa (BD).
+import { useUsers } from '@/hooks/useUser';
+import { TAKS_TYPES, empresas } from '@/config/constantes';
+
 export default function Informes() {
 
     const { users } = useUsers();

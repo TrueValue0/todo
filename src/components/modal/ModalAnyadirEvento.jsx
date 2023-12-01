@@ -1,24 +1,22 @@
 import { useEffect, useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Modal from 'react-bootstrap/Modal';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col'
-import { useTareaDoc } from '@/hooks/useTareaDoc'
-import { fechaConHora } from '@/services/generarUUID'
-import { TAKS_TYPES, empresas } from '@/config/constantes';
-import { useEventos } from '@/context/EventoProvider'
-import { v4 as uuidv4, } from 'uuid';
-import { useAuth } from '@/context/AuthProvider';
+
+//Components
+import { Button, Form, Modal, Row, Col } from 'react-bootstrap'
 import Plaficicacion from '@/components/todos/Planificacion';
 import SelectorIds from '@/components/modal/SelectorIds';
+
+// utils
+import { v4 as uuidv4, } from 'uuid';
 import { useMultipleTareas } from '@/hooks/useMultipleTareas';
-import { useAlertContext } from '@/context/AlertProvider';
+import { useTareaDoc } from '@/hooks/useTareaDoc';
+import { useEventos } from '@/context/EventoProvider';
+import { useAuth } from '@/context/AuthProvider';
+import { fechaConHora } from '@/services/generarUUID';
+import { TAKS_TYPES, empresas } from '@/config/constantes';
 
 export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date().toISOString().split('T')[0] } = {}) {
 
     const { user } = useAuth();
-    const { confirmacion, error, alerta, informativo } = useAlertContext()
     const { agregarEvento, idCustom } = useEventos();
     const { addEventsMultiple } = useMultipleTareas();
 

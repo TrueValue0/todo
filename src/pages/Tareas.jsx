@@ -1,18 +1,20 @@
-import ModalAnyadirEvento from '@/components/modal/ModalAnyadirEvento';
-import { Card, Container, Form } from "react-bootstrap";
-import { useEventos } from "@/context/EventoProvider";
-import LogoAlargado from '@/assets/logoAlargado.jsx';
-import { useAuth } from "@/context/AuthProvider";
-import Layout from "@/components/layouts/Layout";
-import { GoPlus } from "react-icons/go";
-import Todos from "@/components/todos/Todos";
 import { useEffect, useState } from "react";
-import { useUsers } from "@/hooks/useUser";
-import { Paper } from "@mui/material";
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
-import { useMediaQuery } from "@/hooks/useMediaQuery";
+
+//Components //
+import ModalAnyadirEvento from '@/components/modal/ModalAnyadirEvento';
+import { Card, Container, Form, Tab, Tabs } from "react-bootstrap";
+import LogoAlargado from '@/assets/logoAlargado.jsx';
+import Layout from "@/components/layouts/Layout";
+import Todos from "@/components/todos/Todos";
 import Leyenda from "@/components/Leyenda";
+import Paper from "@mui/material/Paper";
+import { GoPlus } from "react-icons/go";
+
+//Utils //
+import { useEventos } from "@/context/EventoProvider";
+import { useAuth } from "@/context/AuthProvider";
+import { useUsers } from "@/hooks/useUser";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { getAllEvents } from "@/services/data";
 
 

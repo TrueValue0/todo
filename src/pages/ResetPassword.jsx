@@ -1,14 +1,12 @@
 import { useAlert } from "@/hooks/useAlert";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Alert, Button, Col, Container, Form, Row, Card } from "react-bootstrap";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthProvider";
 
 export default function ResetPassword() {
     const navigate = useNavigate();
-    const { state } = useLocation();
-    const redirect = /* pathname?.location?.pathname ?? */ '/';
-    const [validated, setValidated] = useState(false);
+
     const { alert, confirmacion, error } = useAlert();
     const { user, resetPassword } = useAuth();
 
@@ -26,7 +24,7 @@ export default function ResetPassword() {
     };
 
     useEffect(() => {
-        if (user) navigate(redirect)
+        if (user) navigate('/')
     }, [user])
 
 
@@ -37,7 +35,7 @@ export default function ResetPassword() {
                     <Card className="p-5 w-50 m-auto">
                         <h3 className="text-center fw-bold text-primary mt-3">Reset Password</h3>
                         <img src="uriarte.png" width='150px' className="m-auto" alt="" />
-                        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+                        <Form noValidate validated={false} onSubmit={handleSubmit}>
                             <Form.Group className="form-outline mb-4">
                                 <Form.Label>Email</Form.Label >
                                 <Form.Control placeholder="" name="email" type="email" required />

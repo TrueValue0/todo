@@ -1,7 +1,5 @@
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
 import Layout from '@/components/layouts/Layout'
-import { useAuth } from '@/context/AuthProvider';
+import Card from 'react-bootstrap/Card';
 import { Link } from 'react-router-dom';
 
 const tarjetas = [

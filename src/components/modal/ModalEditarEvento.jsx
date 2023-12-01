@@ -1,13 +1,13 @@
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Modal from 'react-bootstrap/Modal';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import { TAKS_TYPES, empresas } from '@/config/constantes';
-import Plaficicacion from '@/components/todos/Planificacion';
-import { useAuth } from '@/context/AuthProvider';
-import { IoTrashOutline } from "react-icons/io5";
 import { useEffect, useState } from 'react';
+
+//Components
+import { Button, Form, Modal, Row, Col } from 'react-bootstrap'
+import Plaficicacion from '@/components/todos/Planificacion';
+import { IoTrashOutline } from "react-icons/io5";
+
+//Utils
+import { TAKS_TYPES, empresas } from '@/config/constantes';
+import { useAuth } from '@/context/AuthProvider';
 
 export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar, reset, removeTodo }) {
 

@@ -16,6 +16,7 @@ export async function getAllUsers() {
     querySnapshot.forEach(doc => usuariosData.push({ id: doc.id, ...doc.data(), }));
 
     //Ordenar nombres de usuarios alfabeticamente.
+    //Filtramos el usuario de prueba.
     usuariosData.sort((a, b) => a.nombre.localeCompare(b.nombre));
     usuariosData = usuariosData.filter(value => value.nombre !== 'PRUEBA');
 

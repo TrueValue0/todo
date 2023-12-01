@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
+
+//Components
 //import Layout from "@/components/layouts/Layout";
-import Container from "react-bootstrap/Container";
-import Button from "react-bootstrap/Button";
-import { DataGrid } from '@mui/x-data-grid';
-import { ButtonGroup } from "react-bootstrap";
+import { ButtonGroup, Container, Button } from "react-bootstrap";
+import EditUsuario from "@/components/usuarios/EditUsuario";
+import { BiEdit, BiTrash, BiPlus } from "react-icons/bi";
+import AddUser from "@/components/usuarios/AddUser";
+import DataGrid from '@mui/x-data-grid/DataGrid';
+
+//Utils
 import { getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db, usuarios } from "@/config/firebaseapp";
-import { BiEdit, BiTrash, BiPlus } from "react-icons/bi";
 import { esText } from '@/config/constantes'
-import AddUser from "@/components/usuarios/AddUser";
 import { useAuth } from "@/context/AuthProvider";
-import EditUsuario from "@/components/usuarios/EditUsuario";
 
 export default function Usuarios() {
 

@@ -1,19 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+
+//Components
+import { Alert, Dropdown, DropdownToggle, DropdownItem, DropdownMenu } from 'react-bootstrap';
 import { BiMenu, BiUser, BiLogOut } from 'react-icons/bi';
-import DropdownToggle from 'react-bootstrap/DropdownToggle'
-import DropdownMenu from 'react-bootstrap/DropdownMenu';
-import DropdownItem from 'react-bootstrap/DropdownItem';
+import { MenuList } from '@/components/layouts/MenuList';
 import NavBottom from '@/components/layouts/NavBottom';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
-import { useMenu } from "@/hooks/useMenu";
 import Imagen from '@/components/layouts/Imagen';
-import { useAuth } from '@/context/AuthProvider';
-import Dropdown from 'react-bootstrap/Dropdown';
+
+//Utils
 import { useLocation, useNavigate } from "react-router-dom";
-import { MenuList } from './MenuList';
-import '@/components/layouts/layout.css'
-import { Alert } from 'react-bootstrap';
 import { useAlertContext } from '@/context/AlertProvider';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { useAuth } from '@/context/AuthProvider';
+import { useMenu } from "@/hooks/useMenu";
+
+import '@/components/layouts/layout.css'
 
 export default function Layout({ children }) {
     const movil = useMediaQuery('550');

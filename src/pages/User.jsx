@@ -1,13 +1,12 @@
-import Layout from '@/components/layouts/Layout'
-import Container from 'react-bootstrap/Container'
-import Card from 'react-bootstrap/Card';
-import Image from 'react-bootstrap/Image';
-import Button from 'react-bootstrap/Button'
-import Col from 'react-bootstrap/Col'
-import { useAuth } from '@/context/AuthProvider';
 import { useState } from 'react';
+
+//Components
+import Layout from '@/components/layouts/Layout'
+import { Form, Row, Container, Card, Image, Button, } from 'react-bootstrap';
 import SubirImagen from '@/components/SubirImagen';
-import { Form, Row } from 'react-bootstrap';
+
+//Utils
+import { useAuth } from '@/context/AuthProvider';
 
 export default function User() {
 

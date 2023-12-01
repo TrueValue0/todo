@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
+
+//Components
 import { FormCheck, ListGroup, Accordion, Button, Form, Row, Col } from 'react-bootstrap'
+import Plaficicacion from '@/components/todos/Planificacion';
+
 import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import { BiTrash } from 'react-icons/bi'
 import { formatearFecha } from '@/services/generarUUID.js'
 import { TAKS_TYPES, empresas } from '@/config/constantes';
-import Plaficicacion from './Planificacion';
 import { useAuth } from '@/context/AuthProvider';
 import { useAlertContext } from '@/context/AlertProvider';
 
