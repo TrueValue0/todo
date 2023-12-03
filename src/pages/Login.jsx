@@ -14,8 +14,8 @@ export default function Login() {
     const navigate = useNavigate();
     const [eye, setEye] = useState(true);
     const { alert, confirmacion, error } = useAlert();
-    const { login, user, setUser, authState } = useAuth();
-    const { setIdCustom } = useEventos();
+    const { login, user, setUser } = useAuth();
+    const { setIdCustom, setAllCalendars } = useEventos();
     const movil = useMediaQuery('990');
 
     const handleSubmit = async (event) => {
@@ -23,25 +23,25 @@ export default function Login() {
             event.preventDefault();
             const { email, password } = Object.fromEntries(new FormData(event.target));
             const userCrentials = await login(email, password);
-            setIdCustom(userCrentials.user.uid);
+            const documento = await getDoc(doc(usuarios, userCrentials.user.uid))
+            if (documento.exists()) {
+                setUser({ ...documento.data(), id: userCrentials.user.uid });
+                setIdCustom(userCrentials.user.uid);
+                setAllCalendars(documento.data().rol === 'admin');
+            }
+            else setUser(null);
             confirmacion('Login confirmado');
             navigate('/');
-            authState(async (user) => {
-                if (user === null) setUser(null);
-                else {
-                    const documento = await getDoc(doc(usuarios, user.uid))
-                    if (documento.exists()) setUser({ ...documento.data(), id: user.uid });
-                    else setUser(null);
-                }
-            });
         } catch (e) {
             error('Correo o Contraseña incorrectos.');
         }
     };
 
     useEffect(() => {
-        if (user) navigate('/')
-    }, [user])
+        if (user !== null) {
+            navigate('/');
+        }
+    }, [user]);
 
 
     return (

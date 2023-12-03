@@ -168,6 +168,12 @@ export default function Calendario() {
         await cargarDatos();
     }
 
+
+    useEffect(() => {
+        handleEvents();
+    }, [idCustom, allCalendars]);
+
+
     return (
         <Layout>
             <div className='d-flex justify-content-center align-items-center w-100' style={{ marginTop: 80 }}>
@@ -231,7 +237,7 @@ export default function Calendario() {
                         }} */
                         eventContent={allCalendars ? renderEventAdmin : renderEventContent} // custom render function
                         eventClick={handleEventClick} // Funcion que se ejecuta al editar los eventos
-                        eventsSet={handleEvents} // called after events are initialized/added/changed/removed
+                        //eventsSet={handleEvents} // called after events are initialized/added/changed/removed
                         locale={esLocale} // Traduccion a español
                     />
                 </div>

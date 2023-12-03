@@ -208,6 +208,8 @@ export function useTareaDoc({ uid = '' } = {}) {
         setEventos(datos)
     }, [datos])
 
+    console.log(datos);
+
     useEffect(() => {
         cargarDoc();
     }, [uid]);
