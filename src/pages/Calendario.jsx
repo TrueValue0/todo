@@ -85,6 +85,11 @@ export default function Calendario() {
         }
     }
 
+    const handleEvents = async () => {
+        await cargarDoc();
+        await cargarDatos();
+    }
+
     const [evento, setEvento] = useState(eventInital);
     const [modalEdit, setModalEdit] = useState(false);
     const [modal, setModal] = useState(false);
@@ -150,6 +155,7 @@ export default function Calendario() {
             })
             setEventos(events);
             actualizarDoc(events);
+            await handleEvents();
         }
     }
 
@@ -163,15 +169,6 @@ export default function Calendario() {
 
     const ocultarFindes = () => tablet ? [0, 6] : [];
 
-    const handleEvents = async () => {
-        await cargarDoc();
-        await cargarDatos();
-    }
-
-
-    useEffect(() => {
-        handleEvents();
-    }, [idCustom, allCalendars]);
 
 
     return (
@@ -250,6 +247,7 @@ export default function Calendario() {
                     seter={setEvento} guardar={actualizar}
                 />
                 <ModalAnyadirEvento
+                    actualizar={handleEvents}
                     ver={modal}
                     cerrar={() => setModal(false)}
                     fechaActual={fechaActual}

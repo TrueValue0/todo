@@ -14,7 +14,7 @@ import { useAuth } from '@/context/AuthProvider';
 import { fechaConHora } from '@/services/generarUUID';
 import { TAKS_TYPES, empresas } from '@/config/constantes';
 
-export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date().toISOString().split('T')[0] } = {}) {
+export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date().toISOString().split('T')[0], actualizar } = {}) {
 
     const { user } = useAuth();
     const { agregarEvento, idCustom } = useEventos();
@@ -121,14 +121,16 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
         addEventsMultiple(event)
         setEvento(eventoInicial)
         await cargarDoc();
+        await actualizar();
         cerrar();
     }
 
-    const guardarEvento = () => {
+    const guardarEvento = async () => {
         const event = crearEvento();
         agregarEvento(event);
-        addEvent(event);
+        await addEvent(event);
         setEvento(eventoInicial)
+        await actualizar()
         cerrar();
     }
 

@@ -50,7 +50,7 @@ export default function Tareas() {
         fusion = fusion.map(value => value.tareas.map(evnt => ({
             ...evnt,
             extendedProps: { ...evnt.extendedProps, usuario: value.usuario, idDoc: value.uid },
-            backgroundColor: (evnt.extendedProps.visita === 'Comercial') ? '#008f39' : (evnt.extendedProps.visita === 'Bodega') ? '#0000ff' : (evnt.extendedProps.visita === 'Cata') ? '#cb3234' : '#008f39',
+            backgroundColor: (evnt.extendedProps.visita === 'Comercial') ? '#008f39' : (evnt.extendedProps.visita === 'Bodega') ? '#3788d8' : (evnt.extendedProps.visita === 'Cata') ? '#cb3234' : '#008f39',
         }))).flatMap(value => value);
         if (allCalendars) {
             setAllEvents(fusion);
@@ -62,6 +62,10 @@ export default function Tareas() {
         const eventosPendientes = lista.filter(evento => !evento.extendedProps.completed);
         setAdminPendientes(eventosPendientes);
         setAdminFinalizadas(eventosFinalizados);
+    }
+
+    const actualizarLista = async () => {
+        await cargarDatos()
     }
 
     useEffect(() => {
@@ -133,7 +137,7 @@ export default function Tareas() {
                     </Tabs>
                 </Card>
             </Container>
-            <ModalAnyadirEvento ver={modal} cerrar={cerrarModal} />
+            <ModalAnyadirEvento actualizar={actualizarLista} ver={modal} cerrar={cerrarModal} />
         </Layout>
     )
 }

@@ -19,7 +19,7 @@ export default function ModalBorrar(props) {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <h4>¿Seguro de que quieres borrar este evento?</h4>
+                <h4>¿Está seguro de eliminar el evento?</h4>
             </Modal.Body>
             <Modal.Footer>
                 <Button onClick={onHide}>Cerrar</Button>
