@@ -10,7 +10,6 @@ export default function ModalBorrar(props) {
     return (
         <Modal
             {...props}
-            size="md"
             centered
         >
             <Modal.Header closeButton>
