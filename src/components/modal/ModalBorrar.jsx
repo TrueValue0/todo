@@ -1,5 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import './modal.css'
 
 export default function ModalBorrar(props) {
     const { onHide, borrar } = props;
@@ -11,6 +12,8 @@ export default function ModalBorrar(props) {
         <Modal
             {...props}
             centered
+            contentClassName="content-delete"
+            dialogClassName="justify-content-center"
         >
             <Modal.Header closeButton>
                 <Modal.Title className='text-danger'>
@@ -21,8 +24,8 @@ export default function ModalBorrar(props) {
                 <h4>¿Está seguro de eliminar el evento?</h4>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={onHide}>Cerrar</Button>
-                <Button variant='danger' onClick={eliminar} >Borrar</Button>
+                <Button variant='danger' onClick={eliminar} >SI</Button>
+                <Button onClick={onHide}>No</Button>
             </Modal.Footer>
         </Modal>
     );
