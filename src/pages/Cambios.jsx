@@ -2,6 +2,7 @@ import { cambiarTipoEvento } from '@/services/generarUUID'
 import { tareas } from '@/config/firebaseapp'
 import { doc, getDocs, setDoc } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
+import SubirDocumentos from '@/components/SubirDocumentos';
 
 export default function Cambios() {
 
@@ -41,7 +42,8 @@ export default function Cambios() {
     return (
         <>
             <h1>CAMBIOS</h1>
-            <button onClick={handleCambiar}>Cambiar</button>
+            {/* <button onClick={handleCambiar}>Cambiar</button> */}
+            <SubirDocumentos />
         </>
     )
 }

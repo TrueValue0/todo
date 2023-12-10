@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { storage } from '@/config/firebaseapp'; // Asegúrate de importar tu configuración de Firebase
 import { useAlert } from '@/hooks/useAlert';
-/* import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row'; */
+
 import Image from 'react-bootstrap/Image';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
@@ -32,7 +31,7 @@ export default function SubirImagen({ imagen = '' } = {}) {
     };
 
     const handleUpload = async () => {
-        const uploadRef = ref(storage, `avatars/${image.name}`);
+        const uploadRef = ref(storage, `avatars/${image?.name}`);
 
         const uploadTask = uploadBytesResumable(uploadRef, image);
 

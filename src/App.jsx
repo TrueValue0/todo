@@ -18,6 +18,7 @@ import { EventosProvider } from '@/context/EventoProvider'
 //import Cambios from '@/pages/Cambios';
 //import Usuarios from '@/pages/Usuarios';
 import { AlertProvider } from '@/context/AlertProvider';
+import Cambios from '@/pages/Cambios';
 
 function App() {
   const router = createBrowserRouter([
@@ -54,6 +55,10 @@ function App() {
       path: '/resetPassword',
       element: <ResetPassword />
     },
+    {
+      path: '/cambios',
+      element: <Cambios />
+    }
   ])
 
   return (

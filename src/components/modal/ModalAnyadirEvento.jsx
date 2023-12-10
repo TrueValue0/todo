@@ -13,6 +13,8 @@ import { useEventos } from '@/context/EventoProvider';
 import { useAuth } from '@/context/AuthProvider';
 import { fechaConHora } from '@/services/generarUUID';
 import { TAKS_TYPES, empresas } from '@/config/constantes';
+import SubirDocumentos from '@/components/SubirDocumentos';
+import ListarDocumentos from '@/components/ListarDocumentos';
 
 export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date().toISOString().split('T')[0], actualizar } = {}) {
 
@@ -26,6 +28,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
     });
 
     const eventoInicial = {
+        id: uuidv4(),
         title: '', // Cambiar el nombre de 'title' a 'asunto'
         start: fechaActual,
         end: fechaActual,
@@ -38,6 +41,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
             conclusiones: '', // Agregar un campo 'conclusiones'
             planificacion: [],
             isAdmin: false,
+            idDoc: user.id,
         }
     }
 
@@ -76,7 +80,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
 
         if (evento.allDay) {
             event = {
-                id: uuidv4(),
+                id: evento.id,
                 title: evento.title, // Cambiar el nombre de 'title' a 'asunto'
                 start: fechaConHora({ fecha: evento.start, horas: horas.inicio }),
                 end: fechaConHora({ fecha: evento.start, horas: horas.inicio }),
@@ -89,12 +93,12 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                     conclusiones: evento.extendedProps.conclusiones,
                     planificacion: evento.extendedProps.planificacion,
                     isAdmin: Boolean(user.rol === 'admin'),
-                    idDoc: user.id,
+                    idDoc: evento.extendedProps.idDoc,
                 }
             }
         } else {
             event = {
-                id: uuidv4(),
+                id: evento.id,
                 title: evento.title, // Cambiar el nombre de 'title' a 'asunto'
                 start: fechaConHora({ fecha: evento.start, horas: horas.inicio }),
                 end: fechaConHora({ fecha: evento.end, horas: horas.fin }),
@@ -107,7 +111,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                     conclusiones: evento.extendedProps.conclusiones,
                     planificacion: evento.extendedProps.planificacion,
                     isAdmin: Boolean(user.rol === 'admin'),
-                    idDoc: user.id,
+                    idDoc: evento.extendedProps.idDoc,
                 }
             }
         }
@@ -248,6 +252,10 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                             <Form.Label>Objetivo</Form.Label>
                             <Form.Control as="textarea" rows={3} value={evento.objetivo} onChange={changeObjetivo} />
                         </Form.Group>
+                        <Row>
+                            <ListarDocumentos id={evento.id} idDoc={evento.extendedProps.idDoc} />
+                            <SubirDocumentos id={evento.id} idDoc={evento.extendedProps.idDoc} />
+                        </Row>
                         <Plaficicacion
                             lista={evento.extendedProps.planificacion}
                             setLista={array => setEvento(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, planificacion: array } }))}
