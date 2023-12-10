@@ -113,7 +113,10 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
-                    {!(disable) && <Button variant='danger' onClick={() => setModalBorrar(true)}>
+                    {!(disable) && <Button variant='danger' onClick={() => {
+                        setModalBorrar(true)
+                        cerrar();
+                    }}>
                         <IoTrashOutline />
                         Eliminar
                     </Button>}

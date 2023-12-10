@@ -46,10 +46,10 @@ export default function Login() {
 
     return (
         <>
-            <div className="d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: '#808080' }}>
+            <div className="d-flex justify-content-center align-items-center" style={{ backgroundColor: '#808080' }}>
                 <Container className="my-4">
                     <div className={`px-2 py-5 p-md-4 p m-auto bg-white rounded-4 ${movil ? 'w-100' : 'w-50'}`}>
-                        <LogoVertical className='m-auto d-block' width='100%' />
+                        <LogoVertical className='m-auto d-block' width='90%' />
                         <h3 className="text-center fw-bold text-primary mt-3">Login</h3>
                         <Form noValidate onSubmit={handleSubmit} className="w-100">
                             <Form.Group className="form-outline mb-4">
