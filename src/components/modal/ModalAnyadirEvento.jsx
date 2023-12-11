@@ -253,7 +253,6 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                             <Form.Control as="textarea" rows={3} value={evento.objetivo} onChange={changeObjetivo} />
                         </Form.Group>
                         <Row>
-                            <ListarDocumentos id={evento.id} idDoc={evento.extendedProps.idDoc} />
                             <SubirDocumentos id={evento.id} idDoc={evento.extendedProps.idDoc} />
                         </Row>
                         <Plaficicacion

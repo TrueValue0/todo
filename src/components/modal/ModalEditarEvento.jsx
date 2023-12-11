@@ -9,6 +9,7 @@ import { IoTrashOutline } from "react-icons/io5";
 import { TAKS_TYPES, empresas } from '@/config/constantes';
 import { useAuth } from '@/context/AuthProvider';
 import ModalBorrar from '@/components/modal/ModalBorrar';
+import ListarDocumentos from '@/components/ListarDocumentos';
 
 export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar, reset, removeTodo }) {
 
@@ -97,6 +98,9 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                                 as="textarea"
                                 rows={3} />
                         </Form.Group>
+                        <Row>
+                            <ListarDocumentos id={evento.id} idDoc={evento.extendedProps.idDoc} />
+                        </Row>
                         <Plaficicacion
                             lista={evento.extendedProps.planificacion}
                             setLista={array => seter(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, planificacion: array } }))}
