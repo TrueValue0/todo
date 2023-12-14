@@ -1,48 +1,48 @@
-import { ref, listAll, getDownloadURL } from "firebase/storage";
-import { storage } from "@/config/firebaseapp";
-import { useEffect, useState } from "react";
+import { deleteObject, getDownloadURL, updateMetadata } from "firebase/storage";
 import { FaRegFilePdf } from "react-icons/fa6";
-import { BsFiletypeTxt } from "react-icons/bs";
-import { FaRegFileWord, FaCircle } from "react-icons/fa";
+import { BsFiletypeTxt, BsThreeDots } from "react-icons/bs";
+import { FaRegFileWord, FaRegTrashAlt } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
+import { FiFile, FiDownload } from "react-icons/fi";
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Dropdown from 'react-bootstrap/Dropdown';
+import { forwardRef, useState } from "react";
+import { Button } from "react-bootstrap";
 
 
-export default function ListarDocumentos({ idDoc, id } = { idDoc: '', id: '' }) {
-    const [documentos, setDocumentos] = useState([{ url: '', name: '' }])
-    const listaRef = ref(storage, `${idDoc}/${id}/documentos`);
+function IconsDocumets({ tipo, ...props }) {
+    return (
+        <>
+            {tipo === 'pdf' && <FaRegFilePdf {...props} color="red" />}
+            {tipo === 'txt' && <BsFiletypeTxt {...props} color="#949494" />}
+            {tipo === 'word' && <FaRegFileWord {...props} color="#239AFF" />}
+            {tipo === 'desconocido' && <FiFile />}
+        </>
+    )
+}
 
-    useEffect(() => {
-        listAll(listaRef)
-            .then(async (res) => {
-                let ficheros = [];
+const CustomToggle = forwardRef(({ children, onClick }, ref) => {
+    return (
+        <a
+            href=""
+            ref={ref}
+            onClick={(e) => {
+                e.preventDefault();
+                onClick(e);
+            }}
+        >
+            {children}
+        </a>
+    )
+});
 
-                // Usamos Promise.all para esperar a que todas las promesas se resuelvan
-                await Promise.all(res.items.map(async (fichero) => {
-                    const url = await getDownloadURL(fichero);
-                    const tipoArchivo = obtenerTipoArchivo(fichero.name);
-                    ficheros.push({ url, name: fichero.name, type: tipoArchivo });
-                }));
+export default function ListarDocumentos({ documentos, setDocumentos }) {
+    const [isHovered, setIsHovered] = useState(false);
 
-                setDocumentos(ficheros);
-            })
-            .catch((error) => {
-                console.error("Error al obtener la lista de documentos:", error);
-            });
-    }, []);
+    const handleMouseEnter = () => setIsHovered(true);
 
-    // Función para obtener el tipo de archivo basado en la extensión
-    const obtenerTipoArchivo = (nombreArchivo) => {
-        const extension = nombreArchivo.split('.').pop().toLowerCase();
-        if (extension === 'pdf') {
-            return 'pdf';
-        } else if (extension === 'txt') {
-            return 'txt';
-        } else if (extension === 'docx' || extension === 'doc') {
-            return 'word';
-        } else {
-            return 'Desconocido';
-        }
-    };
+    const handleMouseLeave = () => setIsHovered(false);
 
     const eliminar = async (index) => {
         const fichero = documentos[index];
@@ -53,34 +53,68 @@ export default function ListarDocumentos({ idDoc, id } = { idDoc: '', id: '' }) 
                 nuevosDocumentos.splice(index, 1);
                 setDocumentos(nuevosDocumentos);
             } catch (error) {
-                console.error("Error al eliminar el documento:", error);
+                console.error("Error al eliminar el documento.", error);
             }
         }
     }
 
+    const descargar = async (documento) => {
+        try {
+            const url = await getDownloadURL(documento.ref);
+
+            // Crear un elemento <a> invisible
+            const link = document.createElement('a');
+            link.href = url;
+            link.target = '_blank'; // Abrir en una nueva pestaña/tab
+            link.download = documento.name; // Nombre del archivo al descargar
+
+            // Simular un clic en el enlace para iniciar la descarga
+            document.body.appendChild(link);
+            link.click();
+
+            // Eliminar el elemento <a> después de la descarga
+            document.body.removeChild(link);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
         <>
-            <h3>Documentos</h3>
-            {documentos.length > 0 && documentos.map((documento, index) => (
-                <div key={documento.url}>
-                    <div className="d-flex justify-content-around align-items-center">
-                        <a className="text-decoration-none" href={documento.url} target="_blank" rel="noopener noreferrer">
-                            {documento.type === 'pdf' &&
-                                <div className="position-relative">
-                                    <FaRegFilePdf color="#8b0000" size={75} />
-                                    <button type="button" onClick={() => eliminar(index)} style={{ position: 'absolute', fontSize: 30, top: -22, zIndex: 60, left: -12, color: 'red', cursor: 'pointer', width: 'auto', background: 'transparent', border: 'none', height: 'auto', display: 'inline-block' }}>
-                                        <IoMdCloseCircle />
-                                    </button>
-                                </div>
-                            }
-                            {documento.type === 'txt' && <BsFiletypeTxt color="#9b9b9b" size={75} />}
-                            {documento.type === 'word' && <FaRegFileWord color="#92c5fc" size={75} />}
-                            <p className="text-center text-truncate m-0 text-black " style={{ fontSize: 12 }}>{documento.name}</p>
-                        </a>
-                    </div>
-                </div>
-            ))}
+            <h3 className="m-0">Documentos</h3>
+            {/*  { url, name: fichero.name, type: tipoArchivo, ref: fichero, metadata } */}
+            <div className="p-3 d-flex flex-column gap-2">
+                {documentos.length > 0 && documentos.map((documento, index) => (
+                    <ListGroup key={documento.url} horizontal>
+                        <ListGroup.Item className="d-flex align-items-center">{documento.name}</ListGroup.Item>
+                        <ListGroup.Item className="d-flex align-items-center"> <IconsDocumets size={20} tipo={documento.type} /></ListGroup.Item>
+                        <ListGroup.Item className="border-start-0">
+                            <Dropdown as={ButtonGroup}>
+                                <Dropdown.Toggle as={CustomToggle}>
+                                    <BsThreeDots
+                                        className={`${isHovered ? 'shadow-lg' : ''}`}
+                                        onMouseEnter={handleMouseEnter}
+                                        onMouseLeave={handleMouseLeave}
+                                        size={25}
+                                    /></Dropdown.Toggle>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item
+                                        className="text-center"
+                                        eventKey="1"
+                                        onClick={() => descargar(documento)}
+                                    >Descargar <FiDownload style={{ marginLeft: 6, marginRight: 6 }} /></Dropdown.Item>
+                                    <Dropdown.Item
+                                        onClick={() => eliminar(index)}
+                                        className="text-center"
+                                        eventKey="2"
+                                    >Eliminar
+                                        <FaRegTrashAlt style={{ marginLeft: 6, marginRight: 6 }} /></Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
+                        </ListGroup.Item>
+                    </ListGroup>
+                ))}
+            </div>
         </>
     );
 }

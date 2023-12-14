@@ -252,9 +252,6 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                             <Form.Label>Objetivo</Form.Label>
                             <Form.Control as="textarea" rows={3} value={evento.objetivo} onChange={changeObjetivo} />
                         </Form.Group>
-                        <Row>
-                            <SubirDocumentos id={evento.id} idDoc={evento.extendedProps.idDoc} />
-                        </Row>
                         <Plaficicacion
                             lista={evento.extendedProps.planificacion}
                             setLista={array => setEvento(prev => ({ ...prev, extendedProps: { ...prev.extendedProps, planificacion: array } }))}
@@ -263,6 +260,9 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                             <Form.Label>Conclusiones</Form.Label>
                             <Form.Control as="textarea" rows={3} value={evento.extendedProps.conclusiones} onChange={changeConclusiones} />
                         </Form.Group>
+                        <Row>
+                            <SubirDocumentos id={evento.id} idDoc={evento.extendedProps.idDoc} />
+                        </Row>
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>

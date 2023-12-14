@@ -1,5 +1,6 @@
-import { tareas, usuarios } from "@/config/firebaseapp";
+import { tareas, usuarios, storage } from "@/config/firebaseapp";
 import { getDocs } from "firebase/firestore";
+import { getDownloadURL, getMetadata, listAll, ref } from "firebase/storage";
 
 export async function getAllEvents() {
     const querySnapshot = await getDocs(tareas);
@@ -22,3 +23,35 @@ export async function getAllUsers() {
 
     return usuariosData;
 };
+
+export function obtenerTipoArchivo(nombreArchivo) {
+    const extension = nombreArchivo.split('.').pop().toLowerCase();
+    if (extension === 'pdf') {
+        return 'pdf';
+    } else if (extension === 'txt') {
+        return 'txt';
+    } else if (extension === 'docx' || extension === 'doc') {
+        return 'word';
+    } else {
+        return 'desconocido';
+    }
+};
+
+export async function getDocumentos({ idDoc, id }) {
+    try {
+        const listaRef = ref(storage, `${idDoc}/${id}/documentos`);
+        const { items } = await listAll(listaRef);
+        // Usamos Promise.all para esperar a que todas las promesas se resuelvan
+        return await Promise.all(items.map(async (fichero) => {
+            const url = await getDownloadURL(fichero);
+            const metadata = await getMetadata(fichero)
+            const tipoArchivo = obtenerTipoArchivo(fichero.name);
+
+            return { url, name: fichero.name, type: tipoArchivo, ref: fichero, metadata }
+        }));
+
+
+    } catch (e) {
+        console.error("Error al obtener la lista de documentos", e)
+    }
+}
