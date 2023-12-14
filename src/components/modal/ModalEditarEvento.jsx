@@ -3,13 +3,14 @@ import { useEffect, useState } from 'react';
 //Components
 import { Button, Form, Modal, Row, Col } from 'react-bootstrap'
 import Plaficicacion from '@/components/todos/Planificacion';
+import SubirDocumentos from '@/components/SubirDocumentos';
+import ModalBorrar from '@/components/modal/ModalBorrar';
 import { IoTrashOutline } from "react-icons/io5";
 
 //Utils
 import { TAKS_TYPES, empresas } from '@/config/constantes';
 import { useAuth } from '@/context/AuthProvider';
-import ModalBorrar from '@/components/modal/ModalBorrar';
-import SubirDocumentos from '@/components/SubirDocumentos';
+import { deleteAllDocuments } from '@/services/data'
 
 export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar, reset, removeTodo }) {
 
@@ -43,12 +44,13 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
         cerrar();
     }
 
-    const remove = () => {
+    const remove = async () => {
         if (disable) {
             reset();
             cerrar();
         } else {
             removeTodo(evento.id)
+            await deleteAllDocuments({ idDoc: evento.extendedProps.idDoc, id: evento.id })
             reset();
             cerrar();
         }
@@ -131,7 +133,11 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                     </Button>
                 </Modal.Footer>
             </Modal>
-            <ModalBorrar show={modalBorrar} onHide={() => setModalBorrar(false)} borrar={remove} />
+            <ModalBorrar
+                show={modalBorrar}
+                onHide={() => setModalBorrar(false)}
+                borrar={remove}
+            />
         </>
     )
 }

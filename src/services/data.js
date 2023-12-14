@@ -1,6 +1,6 @@
 import { tareas, usuarios, storage } from "@/config/firebaseapp";
 import { getDocs } from "firebase/firestore";
-import { getDownloadURL, getMetadata, listAll, ref } from "firebase/storage";
+import { deleteObject, getDownloadURL, getMetadata, listAll, ref } from "firebase/storage";
 
 export async function getAllEvents() {
     const querySnapshot = await getDocs(tareas);
@@ -53,5 +53,15 @@ export async function getDocumentos({ idDoc, id }) {
 
     } catch (e) {
         console.error("Error al obtener la lista de documentos", e)
+    }
+}
+
+export async function deleteAllDocuments({ idDoc, id }) {
+    try {
+        const listaRef = ref(storage, `${idDoc}/${id}/documentos`);
+        const { items } = await listAll(listaRef);
+        items.map(async fichero => await deleteObject(fichero))
+    } catch (error) {
+        console.error("Error al eliminar los documento.", error);
     }
 }

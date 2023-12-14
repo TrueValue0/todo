@@ -4,6 +4,7 @@ import './modal.css'
 
 export default function ModalBorrar(props) {
     const { onHide, borrar } = props;
+
     const eliminar = () => {
         borrar();
         onHide();
@@ -24,7 +25,7 @@ export default function ModalBorrar(props) {
                 <h4>¿Está seguro de eliminar el evento?</h4>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant='danger' onClick={eliminar} >SI</Button>
+                <Button variant='danger' onClick={eliminar}>Si</Button>
                 <Button onClick={onHide}>No</Button>
             </Modal.Footer>
         </Modal>
