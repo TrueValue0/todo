@@ -54,7 +54,7 @@ export default function Plaficicacion({ lista, setLista }) {
 
     return (
         <>
-            <Form.Label>Planificacion: </Form.Label>
+            <Form.Label>Planificación </Form.Label>
             <Form.Group className='d-flex gap-3'>
                 <Form.Control
                     type="text"
