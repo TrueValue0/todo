@@ -81,9 +81,9 @@ export default function ListarDocumentos({ documentos, setDocumentos }) {
 
     return (
         <>
-            <h3 className="m-0">Documentos</h3>
+            <p className="m-0">Examinar: </p>
             {/*  { url, name: fichero.name, type: tipoArchivo, ref: fichero, metadata } */}
-            <div className="p-3 d-flex flex-column gap-2">
+            <div className={`${documentos.length > 0 ? 'p-2 gap-2' : 'p-0'} d-flex flex-column `}>
                 {documentos.length > 0 && documentos.map((documento, index) => (
                     <ListGroup key={documento.url} horizontal>
                         <ListGroup.Item className="d-flex align-items-center">{documento.name}</ListGroup.Item>

@@ -64,7 +64,7 @@ export default function SubirDocumentos({ idDoc, id } = { idDoc: '', id: '' }) {
                 <Form.Control
                     multiple
                     className='w-auto'
-                    accept='.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf,text/plain'
+                    accept='*'
                     type="file"
                     onChange={handleChange}
                 />
