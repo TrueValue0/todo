@@ -81,7 +81,6 @@ export default function ListarDocumentos({ documentos, setDocumentos }) {
 
     return (
         <>
-            <p className="m-0">Examinar: </p>
             {/*  { url, name: fichero.name, type: tipoArchivo, ref: fichero, metadata } */}
             <div className={`${documentos.length > 0 ? 'p-2 gap-2' : 'p-0'} d-flex flex-column `}>
                 {documentos.length > 0 && documentos.map((documento, index) => (

@@ -182,8 +182,13 @@ export default function Calendario() {
                                 <Form.Select onChange={handleSelect}
                                     value={idCustom}
                                 >
+                                    <option value=''>Selecciona un agente</option>
                                     {users.map(user => {
-                                        if (user.nombre !== 'PRUEBA') return (<option key={user.id} value={user.id}>{user.nombre}</option>)
+                                        if (user.nombre !== 'PRUEBA') return (
+                                            <>
+                                                <option key={user.id} value={user.id}>{user.nombre}</option>
+                                            </>
+                                        )
                                     })}
                                 </Form.Select>
                             </Paper>
