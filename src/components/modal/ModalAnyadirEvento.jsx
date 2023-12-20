@@ -41,7 +41,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
             conclusiones: '', // Agregar un campo 'conclusiones'
             planificacion: [],
             isAdmin: false,
-            idDoc: user.id,
+            idDoc: idCustom,
         }
     }
 
