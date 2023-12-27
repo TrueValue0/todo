@@ -11,12 +11,13 @@ export function useMultipleTareas() {
     const addEventsMultiple = (evento) => {
         ids.map(async (value) => {
             try {
+                const event = { ...evento, extendedProps: { ...evento.extendedProps, idDoc: value } };
                 const documentRef = doc(tareas, value);
                 const documento = await getDoc(documentRef);
                 if (documento.exists()) {
                     const eventos = documento.data().tareas;
                     const usuario = documento.data().usuario;
-                    const nuevosEventos = [...eventos, evento];
+                    const nuevosEventos = [...eventos, event];
                     await updateDoc(documentRef, {
                         tareas: nuevosEventos
                     })

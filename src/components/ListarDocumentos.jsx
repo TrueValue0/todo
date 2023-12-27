@@ -1,14 +1,12 @@
-import { deleteObject, getDownloadURL, updateMetadata } from "firebase/storage";
+import { getDownloadURL } from "firebase/storage";
 import { FaRegFilePdf } from "react-icons/fa6";
 import { BsFiletypeTxt, BsThreeDots } from "react-icons/bs";
 import { FaRegFileWord, FaRegTrashAlt } from "react-icons/fa";
-import { IoMdCloseCircle } from "react-icons/io";
 import { FiFile, FiDownload } from "react-icons/fi";
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { forwardRef, useState } from "react";
-import { Button } from "react-bootstrap";
 
 
 function IconsDocumets({ tipo, ...props }) {
@@ -37,26 +35,12 @@ const CustomToggle = forwardRef(({ children, onClick }, ref) => {
     )
 });
 
-export default function ListarDocumentos({ documentos, setDocumentos }) {
+export default function ListarDocumentos({ documentos, eliminar }) {
     const [isHovered, setIsHovered] = useState(false);
 
     const handleMouseEnter = () => setIsHovered(true);
 
     const handleMouseLeave = () => setIsHovered(false);
-
-    const eliminar = async (index) => {
-        const fichero = documentos[index];
-        if (fichero && fichero.ref) {
-            try {
-                await deleteObject(fichero.ref);
-                const nuevosDocumentos = [...documentos];
-                nuevosDocumentos.splice(index, 1);
-                setDocumentos(nuevosDocumentos);
-            } catch (error) {
-                console.error("Error al eliminar el documento.", error);
-            }
-        }
-    }
 
     const descargar = async (documento) => {
         try {

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Button, Form, Modal, Row, Col } from 'react-bootstrap'
 import Plaficicacion from '@/components/todos/Planificacion';
 import SelectorIds from '@/components/modal/SelectorIds';
+import SubirDocumentos from '@/components/SubirDocumentos';
 
 // utils
 import { v4 as uuidv4, } from 'uuid';
@@ -13,14 +14,19 @@ import { useEventos } from '@/context/EventoProvider';
 import { useAuth } from '@/context/AuthProvider';
 import { fechaConHora } from '@/services/generarUUID';
 import { TAKS_TYPES, empresas } from '@/config/constantes';
-import SubirDocumentos from '@/components/SubirDocumentos';
-import ListarDocumentos from '@/components/ListarDocumentos';
+import { useAlertContext } from '@/context/AlertProvider';
+import { deleteObject, listAll, ref } from 'firebase/storage';
+import { storage } from '@/config/firebaseapp';
 
 export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date().toISOString().split('T')[0], actualizar } = {}) {
 
     const { user } = useAuth();
-    const { agregarEvento, idCustom } = useEventos();
+    const { agregarEvento, idCustom, ids } = useEventos();
     const { addEventsMultiple } = useMultipleTareas();
+    const { confirmacion, error, alerta, informativo } = useAlertContext();
+
+
+
 
     const [horas, setHoras] = useState({
         inicio: '00:00',
@@ -48,6 +54,28 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
     const { addEvent, cargarDoc } = useTareaDoc({ uid: idCustom });
 
     const [evento, setEvento] = useState(eventoInicial);
+
+    async function deleteAllDocuments() {
+        if (user.rol === 'admin') {
+            ids.map(async value => {
+                try {
+                    const listaRef = ref(storage, `${value}/${evento.id}/documentos`);
+                    const { items } = await listAll(listaRef);
+                    items.map(async fichero => await deleteObject(fichero))
+                } catch (error) {
+                    console.error("Error al eliminar los documento.", error);
+                }
+            })
+        } else {
+            try {
+                const listaRef = ref(storage, `${evento.extendedProps.idDoc}/${evento.id}/documentos`);
+                const { items } = await listAll(listaRef);
+                items.map(async fichero => await deleteObject(fichero))
+            } catch (error) {
+                console.error("Error al eliminar los documento.", error);
+            }
+        }
+    }
 
     useEffect(() => {
         setEvento(eventoInicial);
@@ -120,6 +148,8 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
     }
 
 
+
+
     const guardarVarios = async () => {
         const event = crearEvento();
         addEventsMultiple(event)
@@ -140,6 +170,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
 
     const cerrarBien = () => {
         setEvento(eventoInicial);
+        deleteAllDocuments();
         cerrar();
     }
 
@@ -261,7 +292,7 @@ export default function ModalAnyadirEvento({ ver, cerrar, fechaActual = new Date
                             <Form.Control as="textarea" rows={3} value={evento.extendedProps.conclusiones} onChange={changeConclusiones} />
                         </Form.Group>
                         <Row>
-                            <SubirDocumentos id={evento.id} idDoc={evento.extendedProps.idDoc} />
+                            <SubirDocumentos id={evento.id} idDoc={evento.extendedProps.idDoc} anyadir />
                         </Row>
                     </Form>
                 </Modal.Body>

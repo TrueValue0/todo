@@ -11,9 +11,11 @@ import { IoTrashOutline } from "react-icons/io5";
 import { TAKS_TYPES, empresas } from '@/config/constantes';
 import { useAuth } from '@/context/AuthProvider';
 import { deleteAllDocuments } from '@/services/data'
+import { useEventos } from '@/context/EventoProvider';
 
 export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar, reset, removeTodo }) {
 
+    console.log(evento.extendedProps.idDoc);
     const { user } = useAuth();
     const [disable, setDisable] = useState(true);
     const [modalBorrar, setModalBorrar] = useState(false)

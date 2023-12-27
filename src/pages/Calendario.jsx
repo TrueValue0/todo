@@ -56,7 +56,6 @@ export default function Calendario() {
             extendedProps: { ...evnt.extendedProps, usuario: value.usuario, idDoc: value.uid },
             backgroundColor: (evnt.extendedProps.visita === 'Comercial') ? '#008f39' : (evnt.extendedProps.visita === 'Bodega') ? '#3788d8d9' : (evnt.extendedProps.visita === 'Cata') ? '#cb3234' : '#008f39',
         }))).flatMap(value => value);
-        console.log(fusion);
         if (allCalendars) {
             setAllEvents(fusion);
         }
