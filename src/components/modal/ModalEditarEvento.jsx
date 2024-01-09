@@ -10,12 +10,9 @@ import { IoTrashOutline } from "react-icons/io5";
 //Utils
 import { TAKS_TYPES, empresas } from '@/config/constantes';
 import { useAuth } from '@/context/AuthProvider';
-import { deleteAllDocuments } from '@/services/data'
-import { useEventos } from '@/context/EventoProvider';
+import { deleteAllDocuments } from '@/services/data';
 
 export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar, reset, removeTodo }) {
-
-    console.log(evento.extendedProps.idDoc);
     const { user } = useAuth();
     const [disable, setDisable] = useState(true);
     const [modalBorrar, setModalBorrar] = useState(false)
@@ -115,7 +112,7 @@ export default function ModalEditarEvento({ ver, evento, cerrar, seter, guardar,
                                 rows={3} />
                         </Form.Group>
                         <Row>
-                            <SubirDocumentos id={evento.id} idDoc={evento.extendedProps.idDoc} />
+                            <SubirDocumentos anyadir={false} id={evento.id} idDoc={evento.extendedProps.idDoc} />
                         </Row>
                     </Form>
                 </Modal.Body>

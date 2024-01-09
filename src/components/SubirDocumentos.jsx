@@ -3,7 +3,7 @@ import ListarDocumentos from './ListarDocumentos';
 import { useEffect, useState } from 'react';
 import { useAuth } from "@/context/AuthProvider";
 import { useEventos } from "@/context/EventoProvider";
-import { ref, uploadBytesResumable, listAll, getMetadata, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytesResumable, listAll, getMetadata, getDownloadURL, deleteObject } from 'firebase/storage';
 import { storage } from '@/config/firebaseapp'; // Asegúrate de importar tu configuración de Firebase
 import { useAlertContext } from '@/context/AlertProvider';
 import { obtenerTipoArchivo } from '@/services/data'
@@ -29,11 +29,7 @@ export default function SubirDocumentos({ idDoc, id, anyadir } = { idDoc: '', id
                         return { url, name: fichero.name, type: tipoArchivo, ref: fichero, metadata }
                     })))
                 })
-
-                console.log(datos);
                 return []
-                // Usamos Promise.all para esperar a que todas las promesas se resuelvan
-
 
             } catch (e) {
                 console.error("Error al obtener la lista de documentos", e)
@@ -63,7 +59,7 @@ export default function SubirDocumentos({ idDoc, id, anyadir } = { idDoc: '', id
     const handleChange = (e) => {
         const ficheros = e.target.files;
         if (ficheros.length > 0) {
-            if (user.rol === 'admin') {
+            if (user.rol === 'admin' && anyadir) {
                 const files = Array.from(ficheros);
                 files.map(file => {
 
@@ -116,7 +112,7 @@ export default function SubirDocumentos({ idDoc, id, anyadir } = { idDoc: '', id
                             error(e.message);
                         },
                         () => {
-                            cargarDocumentos();
+                            getDocumentos();
                         }
                     );
                 });
@@ -143,8 +139,6 @@ export default function SubirDocumentos({ idDoc, id, anyadir } = { idDoc: '', id
     useEffect(() => {
         getDocumentos();
     }, []);
-
-    console.log(documentos);
 
     return (
         <>
