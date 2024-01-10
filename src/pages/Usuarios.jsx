@@ -6,7 +6,7 @@ import { ButtonGroup, Container, Button } from "react-bootstrap";
 import EditUsuario from "@/components/usuarios/EditUsuario";
 import { BiEdit, BiTrash, BiPlus } from "react-icons/bi";
 import AddUser from "@/components/usuarios/AddUser";
-import DataGrid from '@mui/x-data-grid/DataGrid';
+import { DataGrid } from '@mui/x-data-grid/DataGrid';
 
 //Utils
 import { getDocs, deleteDoc, doc } from 'firebase/firestore';
