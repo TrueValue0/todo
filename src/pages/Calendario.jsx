@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 // Components //
 import ModalAnyadirEvento from '@/components/modal/ModalAnyadirEvento'
@@ -55,15 +55,11 @@ export default function Calendario() {
             ...evnt,
             extendedProps: { ...evnt.extendedProps, usuario: value.usuario, idDoc: value.uid },
             backgroundColor: (evnt.extendedProps.visita === 'Comercial') ? '#008f39' : (evnt.extendedProps.visita === 'Bodega') ? '#3788d8d9' : (evnt.extendedProps.visita === 'Cata') ? '#cb3234' : '#008f39',
-        }))).flatMap(value => value);
+        }))).flatMap(value => value)
         if (allCalendars) {
             setAllEvents(fusion);
         }
     }
-
-    useEffect(() => {
-        cargarDatos();
-    }, [allCalendars])
 
     const tablet = useMediaQuery('1024');
 
@@ -167,28 +163,24 @@ export default function Calendario() {
         }
     }
 
+    useEffect(() => {
+        cargarDatos();
+    }, [allCalendars]);
+
     const ocultarFindes = () => tablet ? [0, 6] : [];
-
-
 
     return (
         <Layout>
             <div className='d-flex justify-content-center align-items-center w-100' style={{ marginTop: 80 }}>
                 <div className='w-100 p-1 px-md-5'>
-                    <LogoAlargado className='m-auto d-block' width='400px' />
+                    <LogoAlargado className='m-auto d-block' width='350px' />
                     <div className='d-flex gap-5 align-items-center'>
                         {user.rol === 'admin' && <>
                             <Paper className='d-inline-block p-3 my-3'>
-                                <Form.Select onChange={handleSelect}
-                                    value={idCustom}
-                                >
-                                    <option value=''>Selecciona un agente</option>
+                                <Form.Select onChange={handleSelect} value={idCustom}>
+                                    <option key={''} value=''>Selecciona un agente</option>
                                     {users.map(user => {
-                                        if (user.nombre !== 'PRUEBA') return (
-                                            <>
-                                                <option key={user.id} value={user.id}>{user.nombre}</option>
-                                            </>
-                                        )
+                                        if (user.nombre !== 'PRUEBA') return (<option key={user.id} value={user.id}>{user.nombre}</option>)
                                     })}
                                 </Form.Select>
                             </Paper>
@@ -204,11 +196,12 @@ export default function Calendario() {
                         <Leyenda />
                     </div>
                     <FullCalendar
+
                         events={allCalendars ? allEvents : eventos}
                         selectLongPressDelay={1}
                         themeSystem='bootstrap5'
                         expandRows
-                        height='550px'
+                        height='auto'
                         aspectRatio={0.8}
                         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, bootstrap5Plugin]}
                         headerToolbar={{

@@ -39,10 +39,8 @@ export function obtenerTipoArchivo(nombreArchivo) {
 
 export async function getDocumentos({ idDoc, id }) {
     try {
-        console.log(id);
         const listaRef = ref(storage, `${idDoc}/${id}/documentos`);
         const { items } = await listAll(listaRef);
-        console.log(items);
         // Usamos Promise.all para esperar a que todas las promesas se resuelvan
         return await Promise.all(items.map(async (fichero) => {
             const url = await getDownloadURL(fichero);
